@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  JOB_SEEKER
+  RECRUITER
+  ADMIN
+}
+
+enum VideoType {
+  LINK
+  UPLOAD
+}
+
+enum InteractionType {
+  VIEW
+  CONTACT
+  FAVORITE
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile      Profile?
+  interactions Interaction[] @relation("RecruiterInteractions")
+}
+
+model Profile {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  fullName     String
+  targetSector String?
+  location     String?
+
+  videoType VideoType?
+  videoUrl  String?
+
+  certificationScore Int?
+  hasBadge           Boolean @default(false)
+
+  skills Skill[]
+
+  interactions Interaction[] @relation("ProfileInteractions")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  profiles Profile[]
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  text      String
+  weighting Int      @default(1)
+  options   Option[]
+}
+
+model Option {
+  id         String   @id @default(uuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  text       String
+  isCorrect  Boolean  @default(false)
+}
+
+model Interaction {
+  id          String @id @default(uuid())
+  recruiterId String
+  recruiter   User   @relation("RecruiterInteractions", fields: [recruiterId], references: [id])
+
+  profileId String
+  profile   Profile @relation("ProfileInteractions", fields: [profileId], references: [id], onDelete: Cascade)
+
+  type      InteractionType
+  createdAt DateTime        @default(now())
+}
