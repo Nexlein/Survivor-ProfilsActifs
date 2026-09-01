@@ -10,9 +10,14 @@
     "setup": "npm install && npm run db:start && cd backend && npx prisma generate",
     "db:start": "docker compose -f backend/docker-compose.yml up -d",
     "db:stop": "docker compose -f backend/docker-compose.yml down",
+    "db:clean": "docker compose -f backend/docker-compose.yml down -v",
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",
-    "dev": "npm run db:start && concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+    "dev": "npm run db:start && concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
+    "start:backend": "npm run start --workspace=backend",
+    "start:frontend": "npm run start --workspace=frontend",
+    "start": "npm run db:start && concurrently \"npm run start:backend\" \"npm run start:frontend\""
   },
   "devDependencies": {
     "concurrently": "^10.0.5"
