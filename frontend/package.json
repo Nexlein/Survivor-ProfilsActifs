@@ -1,12 +1,13 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "description": "Next.js UI for ProfilsActifs",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 3001",
-    "lint": "eslint"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "16.3.4",

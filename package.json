@@ -1,6 +1,7 @@
 {
-  "name": "profilsactifs-root",
+  "name": "survivor-profilsactifs",
   "private": true,
+  "description": "Video-based professional networking platform for the Ministère du Job et Bonheur",
   "workspaces": [
     "frontend",
     "backend"

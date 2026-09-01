@@ -1,25 +1,14 @@
 {
-  "name": "profilsactifs",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "TikTok for the unemployed - Ministère du Job et Bonheur",
-  "main": "index.js",
+  "description": "Express API for ProfilsActifs",
+  "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Nexlein/Survivor-ProfilsActifs.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Nexlein/Survivor-ProfilsActifs/issues"
-  },
-  "homepage": "https://github.com/Nexlein/Survivor-ProfilsActifs#readme",
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
