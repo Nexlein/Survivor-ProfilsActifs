@@ -1,24 +1,28 @@
 {
   "name": "jibjob",
   "version": "1.0.0",
-  "description": "Video-based professional networking platform for the Ministère du Job et Bonheur. Features job seeker profiles, video pitches, recruiter catalogs, and a certification questionnaire.",
+  "description": "TikTok for the unemployed - Ministère du Job et Bonheur",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EpitechPGE3-2026/G-SVR-500-MPL-5-1-survivor-4.git"
+    "url": "git+https://github.com/Nexlein/Survivor-ProfilsActifs.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/EpitechPGE3-2026/G-SVR-500-MPL-5-1-survivor-4/issues"
+    "url": "https://github.com/Nexlein/Survivor-ProfilsActifs/issues"
   },
-  "homepage": "https://github.com/EpitechPGE3-2026/G-SVR-500-MPL-5-1-survivor-4#readme",
+  "homepage": "https://github.com/Nexlein/Survivor-ProfilsActifs#readme",
   "devDependencies": {
     "prisma": "^7.10.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.10.0",
+    "dotenv": "^16.4.7"
   }
 }
