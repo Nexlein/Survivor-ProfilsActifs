@@ -9,6 +9,10 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 
 - 📖 [Installation Guide](docs/installation.md)
 - 🏗️ [Architecture & Schema](docs/architecture.md)
+- 🏢 [Project Hierarchy & Authority](docs/project_hierarchy.md)
+- ⚖️ [Legal Requirements](docs/mails/exigences_juridiques.md)
+- 🛡️ [Data Register](docs/legal_data_register.md)
+- 📄 [Brief](docs/brief_jibjob_en.pdf)
 
 ## Quick Start
 
