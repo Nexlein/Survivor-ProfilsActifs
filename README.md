@@ -21,12 +21,17 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 ## Quick Start
 
 ```bash
-# 1. Start the local database
-cd backend && docker compose up -d
-
-# 2. Setup environment and install dependencies
+# 1. Setup environment and install dependencies
+cd backend
 cp .env.example .env
-cd backend && npm install
+npm install
+
+# VERY IMPORTANT: Open backend/.env and change POSTGRES_PASSWORD before running Step 2!
+
+# 2. Start the local database
+docker compose up -d
+
+# 3. Initialize Prisma and start the server
 npx prisma generate
 npx prisma migrate dev
 npm run dev
