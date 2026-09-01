@@ -21,15 +21,18 @@ We use **Prisma ORM** with **PostgreSQL**. During development, each developer us
 
 The easiest way to start the database is using Docker. We have provided a `docker-compose.yml` file.
 
+**IMPORTANT**: Open your `.env` file and change `POSTGRES_PASSWORD` and `DATABASE_URL` to something secure, even for local development.
+
 ```bash
 # Start the database in the background
 docker compose up -d
 ```
 
-Create a `.env` in the root (you can copy `.env.example`):
+**DOCKER TRAP**: If you change your password in `.env` *after* you have already started the database once, Postgres will ignore the new password. You MUST delete the old database volume first by running:
 
-```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/profilsactifs?schema=public"
+```bash
+docker compose down -v
+docker compose up -d
 ```
 
 ### Option B: Free Online Database (Prisma 7)
