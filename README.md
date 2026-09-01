@@ -22,11 +22,11 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 
 ```bash
 # 1. Start the local database
-docker compose up -d
+cd backend && docker compose up -d
 
 # 2. Setup environment and install dependencies
 cp .env.example .env
-npm install
+cd backend && npm install
 npx prisma generate
 npx prisma migrate dev
 npm run dev
