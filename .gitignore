@@ -5,13 +5,20 @@ node_modules/
 .env
 .env.*
 !.env.example
+!backend/.env.example
+!frontend/.env.example
 
 # Build outputs
 dist/
 build/
 .next/
+out/
 generated/
 
 # Logs and OS files
 *.log
 .DS_Store
+*.pem
+.vercel
+*.tsbuildinfo
+next-env.d.ts
