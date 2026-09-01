@@ -39,6 +39,7 @@ model User {
 
   profile      Profile?
   interactions Interaction[] @relation("RecruiterInteractions")
+  loginLogs    LoginLog[]
 }
 
 model Profile {
@@ -71,12 +72,14 @@ model Video {
   url         String
   subtitleUrl String? // Legal: RGAA accessibility
   likes       Int       @default(0) // Product: Determines benefits
+  views       Int       @default(0)
 
   // Legal: Consent tracking
   consentDate        DateTime?
   consentTextVersion String?
 
-  createdAt DateTime @default(now())
+  createdAt    DateTime      @default(now())
+  interactions Interaction[]
 }
 
 model Skill {
@@ -108,6 +111,17 @@ model Interaction {
   profileId String
   profile   Profile @relation("ProfileInteractions", fields: [profileId], references: [id], onDelete: Cascade)
 
+  videoId String?
+  video   Video?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
   type      InteractionType
   createdAt DateTime        @default(now())
+}
+
+model LoginLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress String
+  createdAt DateTime @default(now())
 }
