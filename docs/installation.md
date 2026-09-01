@@ -21,10 +21,11 @@ We use **Prisma ORM** with **PostgreSQL**. During development, each developer us
 
 We now use an automated Monorepo setup to make this completely effortless.
 
-**IMPORTANT**: First, copy the environment file and edit it to secure your database:
+**IMPORTANT**: First, copy the environment files and edit them to secure your database:
 
 ```bash
 cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 # Open backend/.env and change POSTGRES_PASSWORD!
 ```
 

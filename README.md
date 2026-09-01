@@ -23,6 +23,7 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 ```bash
 # 1. Setup environment and install dependencies globally
 cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 # VERY IMPORTANT: Open backend/.env and change POSTGRES_PASSWORD!
 
 # 2. Setup the Monorepo (Installs everything, builds Prisma, and boots the DB)
