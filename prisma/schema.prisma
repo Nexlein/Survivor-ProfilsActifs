@@ -55,9 +55,10 @@ model Profile {
   certificationScore Int?
   hasWorkPermit      Boolean @default(false)
 
-  skills       Skill[]
-  videos       Video[]
-  interactions Interaction[] @relation("ProfileInteractions")
+  skills             Skill[]
+  videos             Video[]
+  interactions       Interaction[]          @relation("ProfileInteractions")
+  questionnaireState QuestionnaireProgress?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -124,4 +125,13 @@ model LoginLog {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   ipAddress String
   createdAt DateTime @default(now())
+}
+
+model QuestionnaireProgress {
+  id        String  @id @default(uuid())
+  profileId String  @unique
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  answers     Json
+  lastSavedAt DateTime @updatedAt
 }

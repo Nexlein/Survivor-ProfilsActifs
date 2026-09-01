@@ -2,7 +2,7 @@
 
 ## 1. Objet
 
-JibJob est un service de mise en relation professionnelle par vidéo.
+ProfilsActifs est un service de mise en relation professionnelle par vidéo.
 
 ## 2. Données Personnelles
 

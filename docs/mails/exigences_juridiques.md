@@ -56,3 +56,11 @@ Cabinet du Ministre - Ministère du Job et Bonheur
 2. **Accessibility Declaration**: Results of RGAA AA manual checks (keyboard navigation, focus, contrast) for 3 specific screens: Signup, Public Profile, Recruiter Catalog.
 3. **Draft Terms of Service (CGU)**: Must match the data register perfectly. Cannot publish site without this.
 4. **Filtering Criteria Memo (1 page)**: List of all search filters exposed in API/UI, with a 1-sentence professional justification for each to prove non-discrimination. (Any unjustified filters must be removed).
+
+---
+
+## DECISION TRACE: Non-Discrimination Filters (OVERRIDE)
+
+- **Decision:** We accept Florine Pontaillac's strict non-discrimination filtering rules (enforcing professional-only criteria like sector and skills).
+- **Override Trace:** This explicitly OVERRIDES the implicit "beauty contest" mechanics that a "TikTok for the unemployed" concept (JEB's vision) naturally encourages.
+- **Reasoning:** Legal compliance outranks conceptual aesthetics. We refuse demographic or visual-based search filters to comply with labor laws.

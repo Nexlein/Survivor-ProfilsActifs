@@ -20,6 +20,7 @@
 erDiagram
     User ||--o| Profile : has
     User ||--o{ LoginLog : generates
+    Profile ||--o| QuestionnaireProgress : saves
     Profile ||--o{ Video : uploads
     User ||--o{ Interaction : makes
     Profile ||--o{ Interaction : receives

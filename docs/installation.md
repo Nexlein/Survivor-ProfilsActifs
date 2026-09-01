@@ -22,7 +22,7 @@ We use **Prisma ORM** with **PostgreSQL**. During development, each developer us
 Create `.env` in root:
 
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/jibjob?schema=public"
+DATABASE_URL="postgresql://user:password@localhost:5432/profilsactifs?schema=public"
 ```
 
 ### Option B: Free Online Database (Prisma 7)
