@@ -18,19 +18,21 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 - 🛡️ [Data Register](docs/legal_data_register.md)
 - 📄 [Brief](docs/brief_jibjob_en.pdf)
 
-## Quick Start
+## Quick Start (Monorepo)
 
 ```bash
-# 1. Start the local database
-docker compose up -d
+# 1. Setup environment and install dependencies globally
+cp backend/.env.example backend/.env
+# VERY IMPORTANT: Open backend/.env and change POSTGRES_PASSWORD!
 
-# 2. Setup environment and install dependencies
-cp .env.example .env
-npm install
-npx prisma generate
-npx prisma migrate dev
+# 2. Setup the Monorepo (Installs everything, builds Prisma, and boots the DB)
+npm run setup
+
+# 3. Start everything! (Boots both Backend & Frontend simultaneously)
 npm run dev
 ```
 
-Once running, the Swagger API Documentation is available at:
-**[http://localhost:3000/api-docs](http://localhost:3000/api-docs)**
+Once running:
+
+- **Frontend** is available at: [http://localhost:3001](http://localhost:3001)
+- **Swagger API Docs** are at: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
