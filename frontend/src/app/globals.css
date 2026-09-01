@@ -24,12 +24,40 @@
   /* Ombres */
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
   --shadow-modal: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+  /* Typographie — Marianne (titres, police officielle d'État), Spectral (corps) */
+  --font-heading: var(--font-marianne), sans-serif;
+  --font-body: var(--font-spectral), serif;
 }
 
 body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  margin: 0;
+}
+
+h1 {
+  font-size: 32px;
+  line-height: 40px;
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 32px;
+}
+
+h3 {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 700;
 }
 
 * {
