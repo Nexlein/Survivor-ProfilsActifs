@@ -49,6 +49,15 @@ npx prisma generate
 
 ## 4. Run Application
 
+We use `nodemon` to run the TypeScript Express server with hot-reloading.
+
 ```bash
 npm run dev
+```
+
+You should see the following in your terminal:
+
+```text
+Server ready at http://localhost:3000
+Swagger UI available at http://localhost:3000/api-docs
 ```
