@@ -7,29 +7,20 @@ on:
     branches: ["main"]
 
 jobs:
-  backend:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      
+      # 1. Install EVERYTHING at the root level using the master package-lock.json
       - run: npm ci
-      - run: npx prisma generate
-      - run: npm run build
-
-  frontend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run build
+      
+      # 2. Build Backend
+      - run: cd backend && npx prisma generate
+      - run: npm run build --workspace=backend
+      
+      # 3. Build Frontend
+      - run: npm run build --workspace=frontend
