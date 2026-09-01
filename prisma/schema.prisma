@@ -16,15 +16,11 @@ enum Role {
   ADMIN
 }
 
-enum VideoType {
-  LINK
-  UPLOAD
-}
-
 enum InteractionType {
   VIEW
   CONTACT
   FAVORITE
+  LIKE
 }
 
 model User {
@@ -48,18 +44,27 @@ model Profile {
   targetSector String?
   location     String?
 
-  videoType VideoType?
-  videoUrl  String?
-
+  // JEB Work Permit
   certificationScore Int?
-  hasBadge           Boolean @default(false)
+  hasWorkPermit      Boolean @default(false)
 
-  skills Skill[]
-
+  skills       Skill[]
+  videos       Video[]
   interactions Interaction[] @relation("ProfileInteractions")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Video {
+  id        String  @id @default(uuid())
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  url   String
+  likes Int    @default(0)
+
+  createdAt DateTime @default(now())
 }
 
 model Skill {
