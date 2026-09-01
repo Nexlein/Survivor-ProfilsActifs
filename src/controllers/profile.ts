@@ -57,3 +57,58 @@ export const deleteProfile = async (req: Request, res: Response, next: NextFunct
         return next(error);
     }
 };
+
+/**
+ * Controller: Consult current profile
+ * @route GET /api/profile/me
+ * @access Private
+ */
+export const getCurrentProfile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.body.user;
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
+        return res.json(profile);
+    } catch (error) {
+        return next(error);
+    }
+};
+
+/**
+ * Controller: Get all profiles
+ * @route Get /api/profiles/all
+ * @access Private
+ */
+export const getAllProfiles = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.body.user;
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const profiles = await prisma.profile.findMany();
+        return res.json(profiles);
+    } catch (error) {
+        return next(error);
+    }
+};
+
+/**
+ * Controller: Get profile by user ID
+ * @route Get /api/profiles/user/:id
+ * @access Private
+ */
+export const getProfileByUserId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.body.user;
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const profile = await prisma.profile.findUnique({ where: { userId: req.params.id } });
+        return res.json(profile);
+    } catch (error) {
+        return next(error);
+    }
+};
+
