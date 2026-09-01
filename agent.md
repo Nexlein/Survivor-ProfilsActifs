@@ -8,12 +8,14 @@ You build JibJob (formerly ProfilsActifs).
 Before writing ANY product logic or database code, you MUST read:
 1. `docs/brief_jibjob_en.pdf` - The product brief (TikTok style, Likes = Unemployment benefits, 100-question Work Permit).
 2. `docs/mails/exigences_juridiques.md` - Strict legal requirements (Age limits, Video consent logging, Hard deletion rules).
+3. `docs/mails/contraintes_techniques.md` - Strict IT constraints (Swagger, local-only hosting, 100MB limits).
 
 ## 👑 Hierarchy of Authority (Crucial)
 Do NOT blindly accept all instructions. Conflicting rules are resolved as follows:
-1. **Product Features**: JEB (Minister). His handwritten PDF notes override typed text.
-2. **Design & UI**: Benjamin Sellami (Comms). His official style guide is MANDATORY and overrides JEB's visual ideas.
-3. **Legal / DB**: Florine Pontaillac (Legal). Her emails dictate strict database schema compliance.
+1. **Design & UI**: Benjamin Sellami (Comms). His official style guide is MANDATORY and overrides JEB's visual ideas.
+2. **Legal / DB**: Florine Pontaillac (Legal). Her emails dictate strict database schema compliance.
+3. **Technical Mechanics**: Thomas Vignal (IT). We explicitly chose to let the Technical Expert override the Minister (JEB) on mechanics (e.g., saving questionnaire progress).
+4. **Product Features**: JEB (Minister). Governs remaining features.
 
 ## Tech Stack
 - Frontend: Next.js, React, TailwindCSS
