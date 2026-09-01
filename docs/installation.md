@@ -19,20 +19,33 @@ We use **Prisma ORM** with **PostgreSQL**. During development, each developer us
 
 ### Option A: Local Database (Recommended)
 
-The easiest way to start the database is using Docker. We have provided a `docker-compose.yml` file.
+We now use an automated Monorepo setup to make this completely effortless.
 
-**IMPORTANT**: Open your `.env` file and change `POSTGRES_PASSWORD` and `DATABASE_URL` to something secure, even for local development.
+**IMPORTANT**: First, copy the environment file and edit it to secure your database:
 
 ```bash
-# Start the database in the background
-docker compose up -d
+cp backend/.env.example backend/.env
+# Open backend/.env and change POSTGRES_PASSWORD!
 ```
 
-**DOCKER TRAP**: If you change your password in `.env` *after* you have already started the database once, Postgres will ignore the new password. You MUST delete the old database volume first by running:
+Once your `.env` is secure, run the magic setup script at the root of the project:
 
 ```bash
-docker compose down -v
-docker compose up -d
+# This installs all dependencies, generates Prisma, and boots the Docker database!
+npm run setup
+```
+
+**DOCKER TRAP**: If you change your password in `.env` *after* you have already run setup, Postgres will ignore the new password. You MUST delete the old database volume first by running:
+
+```bash
+npm run db:stop -v
+npm run db:start
+```
+
+To start the entire platform (Frontend + Backend) simultaneously:
+
+```bash
+npm run dev
 ```
 
 ### Option B: Free Online Database (Prisma 7)
