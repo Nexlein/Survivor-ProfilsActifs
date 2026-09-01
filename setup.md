@@ -1,4 +1,4 @@
-# Setup JibJob
+# Setup ProfilsActifs
 
 ## Stack
 
@@ -15,7 +15,7 @@
 ## Environment Variables
 
 Create `.env` in backend root:
-DATABASE_URL="postgresql://user:password@localhost:5432/jibjob"
+DATABASE_URL="postgresql://user:password@localhost:5432/profilsactifs"
 JWT_SECRET="secret"
 
 ## Database Setup
