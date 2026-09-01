@@ -33,7 +33,7 @@ paths:
         '503':
           description: Service Unavailable (Database is down).
 
-  /api/auth/register:
+  /auth/register:
     post:
       summary: User Registration
       tags:
@@ -73,7 +73,7 @@ paths:
         '422':
           description: Age restriction violation (<16 years)
 
-  /api/auth/login:
+  /auth/login:
     post:
       summary: User Login
       tags:
@@ -100,7 +100,7 @@ paths:
         '401':
           description: Invalid credentials
 
-  /api/auth/get-current-user:
+  /auth/get-current-user:
     get:
       summary: Get Current User
       tags:
