@@ -17,12 +17,22 @@ npm install
 
 We use **Prisma ORM** with **PostgreSQL**. During development, each developer uses their own local database.
 
-### Option A: Local Database
+### Option A: Local Database (Recommended)
 
-Create `.env` in root:
+The easiest way to start the database is using Docker. We have provided a `docker-compose.yml` file.
 
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/profilsactifs?schema=public"
+**IMPORTANT**: Open your `.env` file and change `POSTGRES_PASSWORD` and `DATABASE_URL` to something secure, even for local development.
+
+```bash
+# Start the database in the background
+docker compose up -d
+```
+
+**DOCKER TRAP**: If you change your password in `.env` *after* you have already started the database once, Postgres will ignore the new password. You MUST delete the old database volume first by running:
+
+```bash
+docker compose down -v
+docker compose up -d
 ```
 
 ### Option B: Free Online Database (Prisma 7)
