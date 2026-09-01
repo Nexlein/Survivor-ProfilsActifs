@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../prisma';
 
-/**
- * Health Check Controller
- * Directly answers Thomas Vignal's IT constraint:
- * Must return 503 if the database is unreachable, 200 otherwise.
- */
+// Health Check Controller
+// Directly answers Thomas Vignal's IT constraint:
+// Must return 503 if the database is unreachable, 200 otherwise.
+
 export const checkHealth = async (
   req: Request,
   res: Response,

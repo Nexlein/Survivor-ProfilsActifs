@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 
-/**
- * Global Error Handler Middleware
- * Catches all unhandled exceptions thrown by routes or controllers.
- * Ensures the API always returns a clean JSON response instead of an HTML stack trace.
- */
+// Global Error Handler Middleware
+// Catches all unhandled exceptions thrown by routes or controllers.
+// Ensures the API always returns a clean JSON response instead of an HTML stack trace.
+
 export const errorHandler = (
   err: Error,
   req: Request,
