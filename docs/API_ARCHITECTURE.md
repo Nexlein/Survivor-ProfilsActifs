@@ -1,6 +1,8 @@
 # API Architecture Guide (ProfilsActifs)
 
-This document is the absolute source of truth for how the backend is structured. **Any human or AI agent working on this repository MUST follow these rules when adding new routes.**
+This document is the absolute source of truth for how the backend is structured.
+
+**You MUST follow these rules when adding new routes.**
 
 ## 1. Directory Structure
 
@@ -26,6 +28,7 @@ src/
 ## 3. Example: Adding an Auth Route
 
 If the Auth team wants to add registration:
+
 1. Create `src/controllers/auth.ts` -> Write `export const registerUser = async (req, res, next) => { ... }`
 2. Create `src/routes/auth.ts` -> `router.post('/register', registerUser)`
 3. Mount it in `src/routes/index.ts` -> `router.use('/auth', authRoutes)`

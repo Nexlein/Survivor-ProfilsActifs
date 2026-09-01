@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -28,6 +29,6 @@ app.use('/', routes);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server ready at http://localhost:${PORT}`);
-  console.log(`📖 Swagger UI available at http://localhost:${PORT}/api-docs`);
+  console.log(`Server ready at http://localhost:${PORT}`);
+  console.log(`Swagger UI available at http://localhost:${PORT}/api-docs`);
 });

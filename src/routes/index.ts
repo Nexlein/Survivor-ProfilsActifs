@@ -5,6 +5,8 @@ const router = Router();
 
 // Mount sub-routers
 router.use('/health', healthRoutes);
-// e.g., router.use('/auth', authRoutes); // Auth team will add this
+
+// Auth team will add this :
+// e.g., router.use('/auth', authRoutes);
 
 export default router;
