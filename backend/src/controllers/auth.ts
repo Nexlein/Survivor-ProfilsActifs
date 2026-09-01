@@ -93,7 +93,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
 export const getCurrentUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body.user;
+        const user = req.body?.user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }

@@ -8,7 +8,7 @@ import prisma from '../prisma';
  */
 export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body.user;
+        const user = req.body?.user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
@@ -26,7 +26,7 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
  */
 export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body.user;
+        const user = req.body?.user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
@@ -47,7 +47,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
  */
 export const deleteProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body.user;
+        const user = req.body?.user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
@@ -65,7 +65,7 @@ export const deleteProfile = async (req: Request, res: Response, next: NextFunct
  */
 export const getCurrentProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body.user;
+        const user = req.body?.user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
@@ -83,7 +83,7 @@ export const getCurrentProfile = async (req: Request, res: Response, next: NextF
  */
 export const getAllProfiles = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body.user;
+        const user = req.body?.user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
@@ -101,7 +101,7 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
  */
 export const getProfileByUserId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body.user;
+        const user = req.body?.user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
