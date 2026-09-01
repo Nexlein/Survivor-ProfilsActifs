@@ -4,7 +4,7 @@
   "description": "TikTok for the unemployed - Ministère du Job et Bonheur",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -27,9 +27,8 @@
     "@types/pg": "^8.23.1",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/yamljs": "^0.2.34",
-    "nodemon": "^3.1.14",
     "prisma": "^7.10.0",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   },
   "dependencies": {
