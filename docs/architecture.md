@@ -19,6 +19,7 @@
 ```mermaid
 erDiagram
     User ||--o| Profile : has
+    Profile ||--o{ Video : uploads
     User ||--o{ Interaction : makes
     Profile ||--o{ Interaction : receives
     Profile }o--o{ Skill : possesses

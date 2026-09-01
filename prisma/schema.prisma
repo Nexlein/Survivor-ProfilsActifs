@@ -16,6 +16,11 @@ enum Role {
   ADMIN
 }
 
+enum VideoType {
+  LINK
+  UPLOAD
+}
+
 enum InteractionType {
   VIEW
   CONTACT
@@ -24,12 +29,13 @@ enum InteractionType {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
+  id           String    @id @default(uuid())
+  email        String    @unique
   passwordHash String
   role         Role
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  dateOfBirth  DateTime? // Legal: Age verification (16-18 rules)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   profile      Profile?
   interactions Interaction[] @relation("RecruiterInteractions")
@@ -61,8 +67,14 @@ model Video {
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  url   String
-  likes Int    @default(0)
+  type        VideoType @default(LINK)
+  url         String
+  subtitleUrl String? // Legal: RGAA accessibility
+  likes       Int       @default(0) // Product: Determines benefits
+
+  // Legal: Consent tracking
+  consentDate        DateTime?
+  consentTextVersion String?
 
   createdAt DateTime @default(now())
 }
