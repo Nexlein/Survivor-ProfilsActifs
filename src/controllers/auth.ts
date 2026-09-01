@@ -90,3 +90,16 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         return next(error);
     }
 };
+
+export const getCurrentUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.body.user;
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
+        return res.json({ ...user, profile });
+    } catch (error) {
+        return next(error);
+    }
+};
