@@ -105,7 +105,7 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const profile = await prisma.profile.findUnique({ where: { userId: req.params.id } });
+        const profile = await prisma.profile.findUnique({ where: { userId: req.params.id as string } });
         return res.json(profile);
     } catch (error) {
         return next(error);
