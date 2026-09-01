@@ -8,8 +8,8 @@
 ## 1. Clone Repository
 
 ```bash
-git clone https://github.com/EpitechPGE3-2026/G-SVR-500-MPL-5-1-survivor-4.git
-cd G-SVR-500-MPL-5-1-survivor-4
+git clone git@github.com:Nexlein/Survivor-ProfilsActifs.git
+cd Survivor-ProfilsActifs
 npm install
 ```
 
@@ -22,7 +22,7 @@ We use **Prisma ORM** with **PostgreSQL**. During development, each developer us
 Create `.env` in root:
 
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/profilsactifs?schema=public"
+DATABASE_URL="postgresql://user:password@localhost:5432/jibjob?schema=public"
 ```
 
 ### Option B: Free Online Database (Prisma 7)

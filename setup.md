@@ -15,7 +15,7 @@
 ## Environment Variables
 
 Create `.env` in backend root:
-DATABASE_URL="postgresql://user:password@localhost:5432/profilsactifs"
+DATABASE_URL="postgresql://user:password@localhost:5432/jibjob"
 JWT_SECRET="secret"
 
 ## Database Setup
