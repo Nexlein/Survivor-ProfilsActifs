@@ -1,8 +1,8 @@
-# Agent Context: ProfilsActifs
+# Agent Context: JibJob
 
 ## Role
 
-You build ProfilsActifs: a video-based job platform.
+You build JibJob: a video-based job platform.
 
 ## Tech Stack
 
