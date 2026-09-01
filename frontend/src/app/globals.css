@@ -1,9 +1,60 @@
 @import "tailwindcss";
 
+@theme {
+  /* Couleurs — charte ProfilsActifs (Ministère du Job et Bonheur) */
+  --color-primary: #1b3a6b; /* institutionnel — jamais en fond de bouton */
+  --color-action: #ff9900; /* action / CTA — orange sécurité */
+  --color-success: #1a7f4b; /* succès / certifié */
+  --color-error: #c0392b; /* erreur / alerte */
+  --color-bg: #ffffff; /* fond principal */
+  --color-bg-secondary: #f4f6fa; /* fond secondaire */
+  --color-border: #dde2ec;
+  --color-text: #1a1a2e; /* texte principal */
+  --color-text-secondary: #5a6478; /* texte secondaire */
+  --color-chip-bg: #ebf0f8;
+  --color-chip-text: #1b3a6b;
+  --color-badge-contact-bg: #ffe9cc;
+  --color-badge-contact-text: #8a5200;
+
+  /* Rayons */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* Ombres */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-modal: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
 body {
   margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 * {
   box-sizing: border-box;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-action);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 6px;
 }
