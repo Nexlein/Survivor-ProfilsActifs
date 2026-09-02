@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Chip } from "@/components/ui/Chip";
 import { Tabs } from "@/components/ui/Tabs";
 import { ProfileCard, InfoCard } from "@/components/ui/Card";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 
 export default function DesignSystemPage() {
   return (
@@ -76,6 +77,13 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-4">
           <ProfileCard name="Marie Dupont" role="Assistante de gestion" certified />
           <InfoCard label="Consentement">Encadré informatif — fond secondaire, sans ombre.</InfoCard>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2>Progress bar</h2>
+        <div className="max-w-sm">
+          <ProgressBar current={34} total={100} />
         </div>
       </section>
     </main>
