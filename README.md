@@ -21,16 +21,19 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 ## Quick Start (Monorepo)
 
 ```bash
-# 1. Setup environment and install dependencies globally
+# 1. Setup environment and secure database
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 # VERY IMPORTANT: Open backend/.env and change POSTGRES_PASSWORD!
 
-# 2. Setup the Monorepo (Installs everything, builds Prisma, and boots the DB)
+# 2. Automated Setup (Installs everything, boots DB, pushes schema)
 npm run setup
 
-# 3. Start everything! (Boots both Backend & Frontend simultaneously)
+# 3. Start Development Mode (Boots Frontend & Backend simultaneously)
 npm run dev
+
+# 4. Start Production Mode (Builds and runs optimized bundles)
+# npm run build && npm run start
 ```
 
 Once running:
