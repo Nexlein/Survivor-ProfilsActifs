@@ -1,11 +1,12 @@
 import { ButtonHTMLAttributes } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "destructive";
+type ButtonVariant = "primary" | "secondary" | "destructive" | "outline-light";
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary: "bg-action text-white hover:bg-[#e68a00]",
   secondary: "bg-white border border-primary text-primary hover:bg-bg-secondary",
   destructive: "bg-white border border-error text-error hover:bg-[#fdf0ee]",
+  "outline-light": "bg-transparent border border-white text-white hover:bg-white/10",
 };
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
