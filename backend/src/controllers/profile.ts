@@ -87,7 +87,36 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const profiles = await prisma.profile.findMany();
+
+        // Calculate the date 18 years ago to filter out minors for non-recruiters
+        const eighteenYearsAgo = new Date();
+        eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+
+        const whereClause: any = {};
+
+        // If the user is NOT a recruiter, strictly hide all minors (< 18)
+        if (user.role !== 'RECRUITER') {
+            whereClause.user = {
+                dateOfBirth: { lte: eighteenYearsAgo }
+            };
+        }
+
+        const profiles = await prisma.profile.findMany({
+            where: whereClause,
+            include: {
+                videos: {
+                    where: { status: 'APPROVED' }, // Only show approved videos
+                    select: {
+                        id: true,
+                        type: true,
+                        // DO NOT EXPOSE DIRECT URL OUTSIDE OF STREAMING IF PENDING, BUT HERE WE FILTER BY APPROVED
+                        createdAt: true,
+                        // INTENTIONALLY EXCLUDING 'likes' AND 'views' TO COMPLY WITH LEGAL REQUIREMENTS
+                    }
+                }
+            }
+        });
+
         return res.json(profiles);
     } catch (error) {
         return next(error);
