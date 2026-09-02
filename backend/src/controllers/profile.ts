@@ -1,3 +1,4 @@
+import { getEighteenYearsAgo } from '../utils/date';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma';
 
@@ -94,9 +95,7 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        // Calculate the date 18 years ago to filter out minors for non-recruiters
-        const eighteenYearsAgo = new Date();
-        eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+        const eighteenYearsAgo = getEighteenYearsAgo();
 
         const whereClause: any = {};
 

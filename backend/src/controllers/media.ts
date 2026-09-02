@@ -3,6 +3,21 @@ import prisma from '../prisma';
 import fs from 'fs';
 import path from 'path';
 
+const verifyMediaAccess = async (user: any, video: any) => {
+    const userProfile = await prisma.profile.findUnique({ where: { userId: user.id } });
+    const isOwner = userProfile?.id === video.profileId;
+    const isAdmin = user.role === 'ADMIN';
+
+    if (video.status === 'PENDING' && !isOwner && !isAdmin) {
+        return 'This video is pending moderation and cannot be accessed.';
+    }
+    if (video.status === 'REJECTED' && !isOwner && !isAdmin) {
+        return 'This video was rejected by moderation.';
+    }
+    return null;
+};
+
+
 export const streamVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = req.body?.user;
@@ -19,15 +34,9 @@ export const streamVideo = async (req: Request, res: Response, next: NextFunctio
             return res.status(404).json({ error: 'Video not found' });
         }
 
-        const userProfile = await prisma.profile.findUnique({ where: { userId: user.id } });
-        const isOwner = userProfile?.id === video.profileId;
-        const isAdmin = user.role === 'ADMIN';
-
-        if (video.status === 'PENDING' && !isOwner && !isAdmin) {
-            return res.status(403).json({ error: 'This video is pending moderation and cannot be accessed.' });
-        }
-        if (video.status === 'REJECTED' && !isOwner && !isAdmin) {
-            return res.status(403).json({ error: 'This video was rejected by moderation.' });
+        const accessError = await verifyMediaAccess(user, video);
+        if (accessError) {
+            return res.status(403).json({ error: accessError });
         }
 
         const uploadDir = process.env.UPLOAD_DIR || './uploads';
@@ -86,15 +95,9 @@ export const streamSubtitle = async (req: Request, res: Response, next: NextFunc
             return res.status(404).json({ error: 'Subtitle not found' });
         }
 
-        const userProfile = await prisma.profile.findUnique({ where: { userId: user.id } });
-        const isOwner = userProfile?.id === video.profileId;
-        const isAdmin = user.role === 'ADMIN';
-
-        if (video.status === 'PENDING' && !isOwner && !isAdmin) {
-            return res.status(403).json({ error: 'This video is pending moderation and cannot be accessed.' });
-        }
-        if (video.status === 'REJECTED' && !isOwner && !isAdmin) {
-            return res.status(403).json({ error: 'This video was rejected by moderation.' });
+        const accessError = await verifyMediaAccess(user, video);
+        if (accessError) {
+            return res.status(403).json({ error: accessError });
         }
 
         const uploadDir = process.env.UPLOAD_DIR || './uploads';

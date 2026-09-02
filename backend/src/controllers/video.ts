@@ -1,3 +1,4 @@
+import { getEighteenYearsAgo } from '../utils/date';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma';
 import fs from 'fs';
@@ -195,9 +196,7 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
         const take = 20;
         const skip = (page - 1) * take;
 
-        // Calculate the date 18 years ago to filter out minors for non-recruiters
-        const eighteenYearsAgo = new Date();
-        eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+        const eighteenYearsAgo = getEighteenYearsAgo();
 
         const whereClause: any = {
             status: 'APPROVED'
