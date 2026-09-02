@@ -30,6 +30,10 @@ export default function DesignSystemPage() {
             Disabled
           </Button>
         </div>
+        <div className="bg-primary p-4 rounded-lg flex gap-4 items-center flex-wrap">
+          <Button variant="primary">Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+        </div>
       </section>
 
       <section className="flex flex-col gap-4">
