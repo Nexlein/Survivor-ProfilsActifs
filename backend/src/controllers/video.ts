@@ -101,3 +101,57 @@ export const getVideo = async (req: Request, res: Response, next: NextFunction) 
         return next(error);
     }
 }
+
+/**
+ * Controller: POST Like a video
+ * @route POST /api/video/like
+ * @access Private
+ */
+export const likeVideo = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.body;
+        if (!id) {
+            return res.status(400).json({ error: 'Video ID is required' });
+        }
+        const video = await prisma.video.update({
+            where: {
+                id: id,
+            },
+            data: {
+                likes: {
+                    increment: 1,
+                },
+            },
+        });
+        return res.status(200).json(video);
+    } catch (error) {
+        return next(error);
+    }
+}
+
+/**
+ * Controller: POST view a video
+ * @route POST /api/video/view
+ * @access Private
+ */
+export const viewVideo = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.body;
+        if (!id) {
+            return res.status(400).json({ error: 'Video ID is required' });
+        }
+        const video = await prisma.video.update({
+            where: {
+                id: id,
+            },
+            data: {
+                views: {
+                    increment: 1,
+                },
+            },
+        });
+        return res.status(200).json(video);
+    } catch (error) {
+        return next(error);
+    }
+}

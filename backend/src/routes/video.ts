@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { uploadVideoFile, uploadVideoLink, deleteVideo, getVideo } from '../controllers/video';
+import { uploadVideoFile, uploadVideoLink, deleteVideo, getVideo, likeVideo, viewVideo } from '../controllers/video';
 import { authenticateToken } from '../middlewares/auth';
 import { upload } from '../middlewares/upload';
 
@@ -9,5 +9,7 @@ videoRouter.post('/upload-file', authenticateToken, upload.single('video'), uplo
 videoRouter.post('/upload-link', authenticateToken, uploadVideoLink);
 videoRouter.delete('/delete', authenticateToken, deleteVideo);
 videoRouter.get('/get', authenticateToken, getVideo);
+videoRouter.post('/like', authenticateToken, likeVideo);
+videoRouter.post('/view', authenticateToken, viewVideo);
 
 export default videoRouter;
