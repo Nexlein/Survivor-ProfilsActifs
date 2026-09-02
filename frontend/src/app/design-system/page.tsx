@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Checkbox } from "@/components/ui/Checkbox";
@@ -10,8 +11,11 @@ import { Chip } from "@/components/ui/Chip";
 import { Tabs } from "@/components/ui/Tabs";
 import { ProfileCard, InfoCard } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { Modal } from "@/components/ui/Modal";
 
 export default function DesignSystemPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <main className="flex flex-col gap-12 p-12 max-w-3xl mx-auto">
       <h1>Design System</h1>
@@ -85,6 +89,28 @@ export default function DesignSystemPage() {
         <div className="max-w-sm">
           <ProgressBar current={34} total={100} />
         </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2>Modal</h2>
+        <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+          Ouvrir un exemple
+        </Button>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title="Contacter Marie Dupont"
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
+                Annuler
+              </Button>
+              <Button variant="primary">Envoyer</Button>
+            </>
+          }
+        >
+          Exemple de fenêtre modale — actions à droite, fermeture au clic extérieur.
+        </Modal>
       </section>
     </main>
   );
