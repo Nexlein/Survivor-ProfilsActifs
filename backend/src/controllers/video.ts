@@ -57,18 +57,47 @@ export const uploadVideoLink = async (req: Request, res: Response, next: NextFun
 
 /**
  * Controller: Delete video profile.
- * @route DELETE /api/v1/video/:id
+ * @route DELETE /api/video/:id
  * @access Private
  */
 export const deleteVideo = async (req: Request, res: Response, next: NextFunction) => {
-
+    try {
+        const { id } = req.body;
+        if (!id) {
+            return res.status(400).json({ error: 'Video ID is required' });
+        }
+        const video = await prisma.video.delete({
+            where: {
+                id: id,
+            },
+        });
+        return res.status(200).json({
+            message: 'Video deleted successfully',
+            id: video.id
+        });
+    } catch (error) {
+        return next(error);
+    }
 }
 
 /**
  * Controller: Get video profile.
- * @route GET /api/v1/video/:id
+ * @route GET /api/video/:id
  * @access Private
  */
 export const getVideo = async (req: Request, res: Response, next: NextFunction) => {
-
+    try {
+        const { id } = req.body;
+        if (!id) {
+            return res.status(400).json({ error: 'Video ID is required' });
+        }
+        const video = await prisma.video.findUnique({
+            where: {
+                id: id,
+            },
+        });
+        return res.status(200).json(video);
+    } catch (error) {
+        return next(error);
+    }
 }
