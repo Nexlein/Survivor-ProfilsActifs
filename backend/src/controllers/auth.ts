@@ -103,3 +103,29 @@ export const getCurrentUser = async (req: Request, res: Response, next: NextFunc
         return next(error);
     }
 };
+
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        return res.json({ message: 'Logout successful' });
+    } catch (error) {
+        return next(error);
+    }
+};
+
+export const refresh = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { token } = req.body;
+        if (!token) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret');
+        const user = await prisma.user.findUnique({ where: { id: (decodedToken as any).id } });
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const newToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET || 'dev-secret', { expiresIn: '24h' });
+        return res.json({ token: newToken, user: { id: user.id, email: user.email, role: user.role } });
+    } catch (error) {
+        return next(error);
+    }
+};
