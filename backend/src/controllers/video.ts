@@ -110,6 +110,19 @@ export const getVideo = async (req: Request, res: Response, next: NextFunction) 
         const video = await prisma.video.findUnique({
             where: { id: id },
         });
+
+        if (!video) {
+            return res.status(404).json({ error: 'Video not found' });
+        }
+
+        const user = req.body?.user;
+        const userProfile = user ? await prisma.profile.findUnique({ where: { userId: user.id } }) : null;
+        const isOwner = userProfile?.id === video.profileId;
+        const isAdmin = user?.role === 'ADMIN';
+
+        if ((video.status === 'PENDING' || video.status === 'REJECTED') && !isOwner && !isAdmin) {
+            return res.status(403).json({ error: 'This video is not available.' });
+        }
         
         // Strip stats for standard view (owner should use a different endpoint or logic)
         return res.status(200).json(stripPublicVideoStats(video));
@@ -124,6 +137,10 @@ export const likeVideo = async (req: Request, res: Response, next: NextFunction)
         if (!id) {
             return res.status(400).json({ error: 'Video ID is required' });
         }
+        const existingVideo = await prisma.video.findUnique({ where: { id: id } });
+        if (!existingVideo) return res.status(404).json({ error: 'Video not found' });
+        if (existingVideo.status !== 'APPROVED') return res.status(403).json({ error: 'Cannot interact with unapproved video' });
+
         const video = await prisma.video.update({
             where: { id: id },
             data: { likes: { increment: 1 } },
@@ -140,6 +157,10 @@ export const viewVideo = async (req: Request, res: Response, next: NextFunction)
         if (!id) {
             return res.status(400).json({ error: 'Video ID is required' });
         }
+        const existingVideo = await prisma.video.findUnique({ where: { id: id } });
+        if (!existingVideo) return res.status(404).json({ error: 'Video not found' });
+        if (existingVideo.status !== 'APPROVED') return res.status(403).json({ error: 'Cannot interact with unapproved video' });
+
         const video = await prisma.video.update({
             where: { id: id },
             data: { views: { increment: 1 } },
