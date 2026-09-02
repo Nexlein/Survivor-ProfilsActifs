@@ -69,3 +69,46 @@ export const streamVideo = async (req: Request, res: Response, next: NextFunctio
         return next(error);
     }
 };
+
+export const streamSubtitle = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.body?.user;
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const videoId = req.params.id as string;
+        const video = await prisma.video.findUnique({
+            where: { id: videoId },
+        });
+
+        if (!video || !video.subtitleUrl) {
+            return res.status(404).json({ error: 'Subtitle not found' });
+        }
+
+        const userProfile = await prisma.profile.findUnique({ where: { userId: user.id } });
+        const isOwner = userProfile?.id === video.profileId;
+        const isAdmin = user.role === 'ADMIN';
+
+        if (video.status === 'PENDING' && !isOwner && !isAdmin) {
+            return res.status(403).json({ error: 'This video is pending moderation and cannot be accessed.' });
+        }
+        if (video.status === 'REJECTED' && !isOwner && !isAdmin) {
+            return res.status(403).json({ error: 'This video was rejected by moderation.' });
+        }
+
+        const uploadDir = process.env.UPLOAD_DIR || './uploads';
+        const absoluteUploadDir = path.resolve(process.cwd(), uploadDir);
+        const filename = path.basename(video.subtitleUrl);
+        const subtitlePath = path.join(absoluteUploadDir, filename);
+
+        if (!fs.existsSync(subtitlePath)) {
+            return res.status(404).json({ error: 'Media file not found on disk' });
+        }
+
+        res.setHeader('Content-Type', 'text/vtt');
+        fs.createReadStream(subtitlePath).pipe(res);
+    } catch (error) {
+        return next(error);
+    }
+};

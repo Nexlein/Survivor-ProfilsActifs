@@ -5,7 +5,7 @@ import { upload } from '../middlewares/upload';
 
 export const videoRouter = Router();
 
-videoRouter.post('/upload-file', authenticateToken, upload.single('video'), uploadVideoFile);
+videoRouter.post('/upload-file', authenticateToken, upload.fields([{ name: 'video', maxCount: 1 }, { name: 'subtitle', maxCount: 1 }]), uploadVideoFile);
 videoRouter.post('/upload-link', authenticateToken, uploadVideoLink);
 videoRouter.delete('/delete', authenticateToken, deleteVideo);
 videoRouter.get('/get', authenticateToken, getVideo);

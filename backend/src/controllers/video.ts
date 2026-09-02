@@ -12,8 +12,11 @@ const stripPublicVideoStats = (video: any) => {
 
 export const uploadVideoFile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const file = req.file;
-        if (!file) {
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+        const videoFile = files?.['video']?.[0];
+        const subtitleFile = files?.['subtitle']?.[0];
+
+        if (!videoFile) {
             return res.status(400).json({ error: 'No video file provided' });
         }
         const { profileId, consentTextVersion } = req.body;
@@ -30,7 +33,8 @@ export const uploadVideoFile = async (req: Request, res: Response, next: NextFun
             data: {
                 profileId,
                 type: 'UPLOAD',
-                url: `/uploads/videos/${file.filename}`,
+                url: `/uploads/videos/${videoFile.filename}`,
+                subtitleUrl: subtitleFile ? `/uploads/videos/${subtitleFile.filename}` : null,
                 consentDate: new Date(),
                 consentTextVersion: consentTextVersion || 'v1.0',
                 status: 'PENDING'
@@ -85,10 +89,14 @@ export const deleteVideo = async (req: Request, res: Response, next: NextFunctio
             where: { id: id },
         });
 
-        if (video.type === 'UPLOAD' && video.url) {
-            const filePath = path.resolve(__dirname, '../../', video.url.replace(/^\//, ''));
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
+        if (video.type === 'UPLOAD') {
+            if (video.url) {
+                const filePath = path.resolve(__dirname, '../../', video.url.replace(/^\//, ''));
+                if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+            }
+            if (video.subtitleUrl) {
+                const subPath = path.resolve(__dirname, '../../', video.subtitleUrl.replace(/^\//, ''));
+                if (fs.existsSync(subPath)) fs.unlinkSync(subPath);
             }
         }
 
@@ -97,8 +105,8 @@ export const deleteVideo = async (req: Request, res: Response, next: NextFunctio
             id: video.id
         });
     } catch (error) {
-        return next(error);
-    }
+    return next(error);
+}
 };
 
 export const getVideo = async (req: Request, res: Response, next: NextFunction) => {
@@ -123,7 +131,7 @@ export const getVideo = async (req: Request, res: Response, next: NextFunction) 
         if ((video.status === 'PENDING' || video.status === 'REJECTED') && !isOwner && !isAdmin) {
             return res.status(403).json({ error: 'This video is not available.' });
         }
-        
+
         // Strip stats for standard view (owner should use a different endpoint or logic)
         return res.status(200).json(stripPublicVideoStats(video));
     } catch (error) {
