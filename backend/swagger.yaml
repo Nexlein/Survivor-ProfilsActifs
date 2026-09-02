@@ -110,3 +110,164 @@ paths:
           description: Successful retrieval of current user
         '401':
           description: Unauthorized
+
+  /profile:
+    get:
+      summary: Get Profile of Current User
+      tags:
+        - Profile
+      responses:
+        '200':
+          description: Profile object retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          description: Unauthorized
+    put:
+      summary: Update Current User Profile
+      tags:
+        - Profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileInput'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          description: Unauthorized
+    delete:
+      summary: Delete Current User Profile
+      tags:
+        - Profile
+      responses:
+        '200':
+          description: Profile deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          description: Unauthorized
+
+  /profile/me:
+    get:
+      summary: Consult Active Profile
+      tags:
+        - Profile
+      responses:
+        '200':
+          description: Active profile details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          description: Unauthorized
+
+  /profile/all:
+    get:
+      summary: Get All Profiles
+      tags:
+        - Profile
+      responses:
+        '200':
+          description: List of all user profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+        '401':
+          description: Unauthorized
+
+  /profile/user/{id}:
+    get:
+      summary: Get Profile by User ID
+      tags:
+        - Profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Profile not found
+
+components:
+  schemas:
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        userId:
+          type: string
+          format: uuid
+          example: "987f6543-e21b-12d3-a456-426614174000"
+        fullName:
+          type: string
+          example: "Jean Dupont"
+        targetSector:
+          type: string
+          nullable: true
+          example: "Développement Informatique"
+        location:
+          type: string
+          nullable: true
+          example: "Paris"
+        certificationScore:
+          type: integer
+          nullable: true
+          example: 85
+        hasWorkPermit:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-09-01T12:00:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-09-01T12:00:00.000Z"
+    ProfileInput:
+      type: object
+      properties:
+        fullName:
+          type: string
+          example: "Jean Dupont"
+        targetSector:
+          type: string
+          example: "Développement Informatique"
+        location:
+          type: string
+          example: "Paris"
+        certificationScore:
+          type: integer
+          example: 85
+        hasWorkPermit:
+          type: boolean
+          example: true
