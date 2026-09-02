@@ -101,11 +101,20 @@ model Skill {
   profiles Profile[]
 }
 
+model QuestionnaireSettings {
+  id              String   @id @default("global")
+  currentVersion  Int      @default(1)
+  updatedAt       DateTime @updatedAt
+}
+
 model Question {
   id        String   @id @default(uuid())
   text      String
   weighting Int      @default(1)
   options   Option[]
+
+  version   Int      @default(1)
+  isActive  Boolean  @default(true)
 }
 
 model Option {
@@ -143,6 +152,8 @@ model QuestionnaireProgress {
   id        String  @id @default(uuid())
   profileId String  @unique
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  questionnaireVersion Int @default(1)
 
   answers     Json
   lastSavedAt DateTime @updatedAt
