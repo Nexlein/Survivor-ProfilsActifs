@@ -3,85 +3,62 @@
 ## Prerequisites
 
 - Node.js (v18+)
-- PostgreSQL (Local install or Docker)
+- Docker & Docker Compose (required for local PostgreSQL)
 
 ## 1. Clone Repository
 
 ```bash
 git clone git@github.com:Nexlein/Survivor-ProfilsActifs.git
 cd Survivor-ProfilsActifs
-npm install
 ```
 
-## 2. Database Setup
+## 2. Environment Configuration
 
-We use **Prisma ORM** with **PostgreSQL**. During development, each developer uses their own local database.
-
-### Option A: Local Database (Recommended)
-
-We now use an automated Monorepo setup to make this completely effortless.
-
-**IMPORTANT**: First, copy the environment files and edit them to secure your database:
+Copy the template environment files and secure your database password:
 
 ```bash
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
-# Open backend/.env and change POSTGRES_PASSWORD!
 ```
 
-Once your `.env` is secure, run the magic setup script at the root of the project:
+**IMPORTANT:** Open `backend/.env` and change `POSTGRES_PASSWORD` to a secure value before proceeding.
+
+## 3. Automated Setup
+
+We use an automated Monorepo setup to install dependencies, boot the database, push the schema, and generate the ORM client in a single command.
 
 ```bash
-# This installs all dependencies, generates Prisma, and boots the Docker database!
 npm run setup
 ```
 
-**DOCKER TRAP**: If you change your password in `.env` *after* you have already run setup, Postgres will ignore the new password. You MUST delete the old database volume first by running:
+**DOCKER TRAP:** If you change your password in `backend/.env` *after* you have already run setup, Postgres will ignore the new password because the volume is already initialized. You MUST delete the old database volume first by running:
 
 ```bash
-npm run db:stop -v
+npm run db:clean
 npm run db:start
 ```
 
-To start the entire platform (Frontend + Backend) simultaneously:
+## 4. Running the Application
+
+### Development Mode (Hot-Reloading)
+
+Start both the Next.js frontend and Express backend simultaneously:
 
 ```bash
 npm run dev
 ```
 
-### Option B: Free Online Database (Prisma 7)
+### Production Mode
 
-If you don't want to install PostgreSQL locally, Prisma 7 provides a free cloud database:
-
-```bash
-npx create-db
-```
-
-*(This automatically configures your `prisma7.config.ts` with a cloud `DATABASE_URL`)*.
-
-## 3. Apply Schema & Generate Client
-
-Prisma needs to build the SQL tables and generate the JS client.
+Build and start the highly optimized production bundles:
 
 ```bash
-# Push schema to database
-npx prisma migrate dev
-
-# Generate JS/TS client
-npx prisma generate
+npm run build
+npm run start
 ```
 
-## 4. Run Application
+## 5. Access Points
 
-We use `nodemon` to run the TypeScript Express server with hot-reloading.
-
-```bash
-npm run dev
-```
-
-You should see the following in your terminal:
-
-```text
-Server ready at http://localhost:3000
-Swagger UI available at http://localhost:3000/api-docs
-```
+- **Frontend:** [http://localhost:3001](http://localhost:3001)
+- **Backend API:** [http://localhost:3000](http://localhost:3000)
+- **Swagger Documentation:** [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
