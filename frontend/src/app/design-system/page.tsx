@@ -1,8 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Radio } from "@/components/ui/Radio";
 import { Switch } from "@/components/ui/Switch";
+import { Badge } from "@/components/ui/Badge";
+import { Chip } from "@/components/ui/Chip";
 
 export default function DesignSystemPage() {
   return (
@@ -33,6 +37,22 @@ export default function DesignSystemPage() {
             <Radio id="radio-demo" name="radio-demo" label="Radio button (selected)" defaultChecked />
             <Switch id="switch-demo" label="Switch" defaultChecked />
           </div>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2>Badges &amp; chips</h2>
+        <div className="flex flex-wrap gap-3 items-center">
+          <Badge variant="success">★ Certifié JEB</Badge>
+          <Badge variant="neutral">Certification en cours</Badge>
+          <Badge variant="admin">ADMIN</Badge>
+          <Badge variant="vue">Vue</Badge>
+          <Badge variant="contact">Contact</Badge>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Chip onRemove={() => {}}>JavaScript</Chip>
+          <Chip onRemove={() => {}}>Gestion de projet</Chip>
+          <Chip>Communication</Chip>
         </div>
       </section>
     </main>
