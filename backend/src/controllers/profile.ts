@@ -107,8 +107,14 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
             };
         }
 
+        const page = Math.max(1, parseInt(req.query.page as string) || 1);
+        const take = 20;
+        const skip = (page - 1) * take;
+
         const profiles = await prisma.profile.findMany({
             where: whereClause,
+            take,
+            skip,
             include: {
                 videos: {
                     where: { status: 'APPROVED' }, // Only show approved videos
