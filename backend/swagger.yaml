@@ -293,6 +293,221 @@ paths:
         '404':
           description: Profile not found
 
+  /video/upload-file:
+    post:
+      summary: Upload Video File
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - video
+                - profileId
+              properties:
+                video:
+                  type: string
+                  format: binary
+                  description: The video file to upload
+                profileId:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                consentTextVersion:
+                  type: string
+                  example: "v1.0"
+      responses:
+        '201':
+          description: Video uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: Bad request (missing file or profileId)
+        '401':
+          description: Unauthorized
+
+  /video/upload-link:
+    post:
+      summary: Upload Video Link
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - videoUrl
+                - profileId
+              properties:
+                videoUrl:
+                  type: string
+                  example: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                profileId:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                consentTextVersion:
+                  type: string
+                  example: "v1.0"
+      responses:
+        '201':
+          description: Video link created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+
+  /video/delete:
+    delete:
+      summary: Delete Video Profile
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Video deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Video deleted successfully"
+                  id:
+                    type: string
+                    format: uuid
+                    example: "123e4567-e89b-12d3-a456-426614174000"
+        '400':
+          description: Video ID is required
+        '401':
+          description: Unauthorized
+
+  /video/get:
+    get:
+      summary: Get Video Profile
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Video retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: Video ID is required
+        '401':
+          description: Unauthorized
+
+  /video/like:
+    post:
+      summary: Like a Video
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Video liked successfully (likes count incremented)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: Video ID is required
+        '401':
+          description: Unauthorized
+
+  /video/view:
+    post:
+      summary: Register a Video View
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Video view registered successfully (views count incremented)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: Video ID is required
+        '401':
+          description: Unauthorized
+
 components:
   securitySchemes:
     bearerAuth:
@@ -355,3 +570,42 @@ components:
         hasWorkPermit:
           type: boolean
           example: true
+    Video:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        profileId:
+          type: string
+          format: uuid
+          example: "987f6543-e21b-12d3-a456-426614174000"
+        type:
+          type: string
+          enum: [LINK, UPLOAD]
+          example: UPLOAD
+        url:
+          type: string
+          example: "/uploads/videos/172528765-video.mp4"
+        subtitleUrl:
+          type: string
+          nullable: true
+          example: null
+        likes:
+          type: integer
+          example: 0
+        views:
+          type: integer
+          example: 0
+        consentDate:
+          type: string
+          format: date-time
+          example: "2026-09-02T12:00:00.000Z"
+        consentTextVersion:
+          type: string
+          example: "v1.0"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-09-02T12:00:00.000Z"
