@@ -3,7 +3,7 @@
 @theme {
   /* Couleurs — charte ProfilsActifs (Ministère du Job et Bonheur) */
   --color-primary: #1b3a6b; /* institutionnel — jamais en fond de bouton */
-  --color-action: #ff9900; /* action / CTA — orange sécurité */
+  --color-action: #ff9900; /* action / CTA — orange sécurité, remplace le bleu en fond de bouton, lisible fond blanc et fond bleu */
   --color-success: #1a7f4b; /* succès / certifié */
   --color-error: #c0392b; /* erreur / alerte */
   --color-bg: #ffffff; /* fond principal */

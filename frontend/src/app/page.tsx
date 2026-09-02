@@ -36,15 +36,14 @@ export default function Home() {
         <div className="flex-1 flex flex-col gap-6 max-w-lg">
           <h1 className="text-white">Valorisez vos compétences. Soyez vu.</h1>
           <p className="font-body text-lg text-white max-w-md">
-            ProfilsActifs met en relation les demandeurs d&apos;emploi et les recruteurs grâce à la vidéo
-            et à la certification officielle JEB.
+            ProfilsActifs relie candidats et recruteurs par la vidéo, avec certification officielle JEB.
           </p>
           <div className="flex gap-3 flex-wrap">
             <Link href="/register">
               <Button variant="primary">Créer mon profil</Button>
             </Link>
             <Link href="/profils">
-              <Button variant="outline-light">Parcourir les profils</Button>
+              <Button variant="secondary">Parcourir les profils</Button>
             </Link>
           </div>
         </div>
