@@ -62,9 +62,36 @@ export function login(email: string, password: string) {
   });
 }
 
+export type RegisterPayload = {
+  email: string;
+  password: string;
+  fullName: string;
+  role: "JOB_SEEKER" | "RECRUITER";
+  dateOfBirth?: string;
+};
+
+export type RegisterResponse = {
+  message: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+    dateOfBirth: string | null;
+    createdAt: string;
+  };
+};
+
+export function register(payload: RegisterPayload) {
+  return request<RegisterResponse>("/auth/register", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 const ERROR_TRANSLATIONS: Record<string, string> = {
   "Invalid credentials": "Adresse e-mail ou mot de passe incorrect.",
   "Email and password are required": "L'adresse e-mail et le mot de passe sont requis.",
+  "Email, password and fullName are required": "L'adresse e-mail, le mot de passe et le nom complet sont requis.",
   "Unauthorized": "Vous devez être connecté pour accéder à cette page.",
 };
 
