@@ -21,6 +21,12 @@ enum VideoType {
   UPLOAD
 }
 
+enum VideoStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum InteractionType {
   VIEW
   CONTACT
@@ -45,7 +51,7 @@ model User {
 model Profile {
   id     String @id @default(uuid())
   userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   fullName     String
   targetSector String?
@@ -69,15 +75,21 @@ model Video {
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  type        VideoType @default(LINK)
+  type        VideoType   @default(LINK)
+  status      VideoStatus @default(PENDING) // Legal: A priori moderation
   url         String
   subtitleUrl String? // Legal: RGAA accessibility
-  likes       Int       @default(0) // Product: Determines benefits
-  views       Int       @default(0)
+  likes       Int       @default(0) // Product: Determines benefits (Hidden publicly)
+  views       Int       @default(0) // Hidden publicly
 
   // Legal: Consent tracking
   consentDate        DateTime?
   consentTextVersion String?
+
+  // Moderation tracking
+  rejectionReason    String?
+  moderatedById      String?
+  moderatedAt        DateTime?
 
   createdAt    DateTime      @default(now())
   interactions Interaction[]
@@ -107,7 +119,7 @@ model Option {
 model Interaction {
   id          String @id @default(uuid())
   recruiterId String
-  recruiter   User   @relation("RecruiterInteractions", fields: [recruiterId], references: [id])
+  recruiter   User   @relation("RecruiterInteractions", fields: [recruiterId], references: [id], onDelete: Cascade)
 
   profileId String
   profile   Profile @relation("ProfileInteractions", fields: [profileId], references: [id], onDelete: Cascade)

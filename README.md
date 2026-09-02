@@ -31,7 +31,10 @@ cp frontend/.env.example frontend/.env
 # 2. Automated Setup (Installs everything, boots DB, pushes schema)
 npm run setup
 
-# 3. Start Development Mode (Boots Frontend & Backend simultaneously)
+# 3. Seed Database (Optional: populates DB with mock users and videos)
+npm run db:seed
+
+# 4. Start Development Mode (Boots Frontend & Backend simultaneously)
 npm run dev
 
 # 4. Start Production Mode (Builds and runs optimized bundles)

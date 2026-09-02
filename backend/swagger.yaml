@@ -570,6 +570,28 @@ components:
         hasWorkPermit:
           type: boolean
           example: true
+  /compliance/data-export:
+    get:
+      summary: Exportation des donnees personnelles (RGPD)
+      description: Droit d'acces aux donnees. Renvoie l'integralite des donnees liees au compte.
+      tags:
+        - Conformite
+      responses:
+        '200':
+          description: Export reussi
+        '401':
+          description: Non autorise
+  /compliance/account:
+    delete:
+      summary: Droit a l'oubli (RGPD)
+      description: Suppression integrale et definitive du compte, y compris les fichiers physiques (.mp4, .vtt).
+      tags:
+        - Conformite
+      responses:
+        '200':
+          description: Suppression reussie
+        '401':
+          description: Non autorise
     Video:
       type: object
       properties:

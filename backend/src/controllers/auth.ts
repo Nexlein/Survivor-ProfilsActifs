@@ -63,13 +63,13 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
             const ageDate = new Date(Date.now() - dob.getTime());
             const age = Math.abs(ageDate.getUTCFullYear() - 1970);
             if (age < 16) {
-                return res.status(422).json({ error: 'Inscription interdite aux moins de 16 ans' });
+                return res.status(422).json({ error: 'Registration is prohibited for users under 16 years old' });
             }
         }
 
         const existingUser = await prisma.user.findUnique({ where: { email } });
         if (existingUser) {
-            return res.status(409).json({ error: 'Cet email est déjà utilisé' });
+            return res.status(409).json({ error: 'Email is already in use' });
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
@@ -97,7 +97,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
             }
         });
 
-        return res.status(201).json({ message: 'Compte créé avec succès', user: newUser });
+        return res.status(201).json({ message: 'Account created successfully', user: newUser });
     } catch (error) {
         return next(error);
     }
