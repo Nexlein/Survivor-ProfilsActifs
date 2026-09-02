@@ -38,7 +38,17 @@ npm run db:clean
 npm run db:start
 ```
 
-## 4. Running the Application
+## 4. Database Seeding (Optional)
+
+To automatically populate your database with test users (Admin, Recruiter, Job Seekers), skills, videos, and questionnaire data, run the seeder:
+
+```bash
+npm run db:seed
+```
+
+*Note: This will erase all existing data in your local database before injecting the fresh data.*
+
+## 5. Running the Application
 
 ### Development Mode (Hot-Reloading)
 
