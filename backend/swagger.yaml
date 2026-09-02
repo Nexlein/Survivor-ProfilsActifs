@@ -105,6 +105,8 @@ paths:
       summary: Get Current User
       tags:
         - Authentication
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Successful retrieval of current user
@@ -116,6 +118,8 @@ paths:
       summary: User Logout
       tags:
         - Authentication
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Successful logout
@@ -179,6 +183,8 @@ paths:
       summary: Get Profile of Current User
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Profile object retrieved successfully
@@ -192,6 +198,8 @@ paths:
       summary: Update Current User Profile
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -211,6 +219,8 @@ paths:
       summary: Delete Current User Profile
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Profile deleted successfully
@@ -226,6 +236,8 @@ paths:
       summary: Consult Active Profile
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Active profile details retrieved successfully
@@ -241,6 +253,8 @@ paths:
       summary: Get All Profiles
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: List of all user profiles
@@ -258,6 +272,8 @@ paths:
       summary: Get Profile by User ID
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -278,6 +294,11 @@ paths:
           description: Profile not found
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Profile:
       type: object
