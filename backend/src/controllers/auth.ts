@@ -15,7 +15,10 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
             return res.status(400).json({ error: 'Email and password are required' });
         }
 
-        const user = await prisma.user.findUnique({ where: { email } });
+        const user = await prisma.user.findUnique({
+            where: { email },
+            include: { profile: true },
+        });
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
@@ -28,7 +31,15 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         const secret = process.env.JWT_SECRET || 'dev-secret';
         const token = jwt.sign({ id: user.id, role: user.role }, secret, { expiresIn: '24h' });
 
-        return res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
+        return res.json({
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                profile: user.profile,
+            }
+        });
     } catch (error) {
         return next(error);
     }
@@ -70,11 +81,11 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                 passwordHash,
                 role: userRole,
                 dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
-                profile: userRole === 'JOB_SEEKER' ? {
+                profile: {
                     create: {
                         fullName,
                     }
-                } : undefined,
+                },
             },
             select: {
                 id: true,
@@ -82,6 +93,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                 role: true,
                 dateOfBirth: true,
                 createdAt: true,
+                profile: true,
             }
         });
 

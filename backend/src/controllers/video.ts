@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma';
-
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Controller: Upload video file for profile.
@@ -14,6 +15,14 @@ export const uploadVideoFile = async (req: Request, res: Response, next: NextFun
             return res.status(400).json({ error: 'No video file provided' });
         }
         const { profileId, consentTextVersion } = req.body;
+        if (!profileId) {
+            return res.status(400).json({ error: 'profileId is required' });
+        }
+
+        const profileExists = await prisma.profile.findUnique({ where: { id: profileId } });
+        if (!profileExists) {
+            return res.status(404).json({ error: `Profile with ID '${profileId}' does not exist` });
+        }
 
         const video = await prisma.video.create({
             data: {
@@ -38,6 +47,17 @@ export const uploadVideoFile = async (req: Request, res: Response, next: NextFun
 export const uploadVideoLink = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { profileId, videoUrl, consentTextVersion } = req.body;
+        if (!profileId) {
+            return res.status(400).json({ error: 'profileId is required' });
+        }
+        if (!videoUrl) {
+            return res.status(400).json({ error: 'videoUrl is required' });
+        }
+
+        const profileExists = await prisma.profile.findUnique({ where: { id: profileId } });
+        if (!profileExists) {
+            return res.status(404).json({ error: `Profile with ID '${profileId}' does not exist` });
+        }
 
         const video = await prisma.video.create({
             data: {
@@ -71,6 +91,15 @@ export const deleteVideo = async (req: Request, res: Response, next: NextFunctio
                 id: id,
             },
         });
+
+        // Local suppression
+        if (video.type === 'UPLOAD' && video.url) {
+            const filePath = path.resolve(__dirname, '../../', video.url.replace(/^\//, ''));
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        }
+
         return res.status(200).json({
             message: 'Video deleted successfully',
             id: video.id

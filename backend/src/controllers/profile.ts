@@ -30,9 +30,15 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const profile = await prisma.profile.update({
+        const { user: _, ...updateData } = req.body;
+        const profile = await prisma.profile.upsert({
             where: { userId: user.id },
-            data: req.body
+            update: updateData,
+            create: {
+                userId: user.id,
+                fullName: updateData.fullName || 'Utilisateur',
+                ...updateData,
+            },
         });
         return res.json(profile);
     } catch (error) {
