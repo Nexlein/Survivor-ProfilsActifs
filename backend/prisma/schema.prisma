@@ -45,7 +45,7 @@ model User {
 model Profile {
   id     String @id @default(uuid())
   userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   fullName     String
   targetSector String?
@@ -107,7 +107,7 @@ model Option {
 model Interaction {
   id          String @id @default(uuid())
   recruiterId String
-  recruiter   User   @relation("RecruiterInteractions", fields: [recruiterId], references: [id])
+  recruiter   User   @relation("RecruiterInteractions", fields: [recruiterId], references: [id], onDelete: Cascade)
 
   profileId String
   profile   Profile @relation("ProfileInteractions", fields: [profileId], references: [id], onDelete: Cascade)
