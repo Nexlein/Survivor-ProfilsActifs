@@ -7,6 +7,7 @@ import { Radio } from "@/components/ui/Radio";
 import { Switch } from "@/components/ui/Switch";
 import { Badge } from "@/components/ui/Badge";
 import { Chip } from "@/components/ui/Chip";
+import { Tabs } from "@/components/ui/Tabs";
 
 export default function DesignSystemPage() {
   return (
@@ -53,6 +54,19 @@ export default function DesignSystemPage() {
           <Chip onRemove={() => {}}>JavaScript</Chip>
           <Chip onRemove={() => {}}>Gestion de projet</Chip>
           <Chip>Communication</Chip>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2>Tabs</h2>
+        <div className="max-w-sm">
+          <Tabs
+            tabs={[
+              { id: "video", label: "Vidéo", content: "Lecteur vidéo intégré, sous-titres disponibles." },
+              { id: "skills", label: "Compétences", content: "Chips de compétences, fond #1B3A6B, texte blanc." },
+              { id: "about", label: "À propos", content: "Texte de présentation en Spectral." },
+            ]}
+          />
         </div>
       </section>
     </main>
