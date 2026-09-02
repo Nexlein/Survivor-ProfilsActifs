@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/Switch";
 import { Badge } from "@/components/ui/Badge";
 import { Chip } from "@/components/ui/Chip";
 import { Tabs } from "@/components/ui/Tabs";
+import { ProfileCard, InfoCard } from "@/components/ui/Card";
 
 export default function DesignSystemPage() {
   return (
@@ -67,6 +68,14 @@ export default function DesignSystemPage() {
               { id: "about", label: "À propos", content: "Texte de présentation en Spectral." },
             ]}
           />
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2>Cards</h2>
+        <div className="flex flex-wrap gap-4">
+          <ProfileCard name="Marie Dupont" role="Assistante de gestion" certified />
+          <InfoCard label="Consentement">Encadré informatif — fond secondaire, sans ombre.</InfoCard>
         </div>
       </section>
     </main>
