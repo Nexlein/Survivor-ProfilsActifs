@@ -105,17 +105,86 @@ paths:
       summary: Get Current User
       tags:
         - Authentication
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Successful retrieval of current user
         '401':
           description: Unauthorized
 
+  /auth/logout:
+    post:
+      summary: User Logout
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful logout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logout successful"
+
+  /auth/refresh:
+    post:
+      summary: Refresh JWT Token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Token refreshed successfully, returns new JWT token and user info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        example: "123e4567-e89b-12d3-a456-426614174000"
+                      email:
+                        type: string
+                        example: jean.dupont@example.fr
+                      role:
+                        type: string
+                        enum: [JOB_SEEKER, RECRUITER]
+                        example: JOB_SEEKER
+        '401':
+          description: Unauthorized (Invalid or missing token)
+
+
   /profile:
     get:
       summary: Get Profile of Current User
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Profile object retrieved successfully
@@ -129,6 +198,8 @@ paths:
       summary: Update Current User Profile
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -148,6 +219,8 @@ paths:
       summary: Delete Current User Profile
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Profile deleted successfully
@@ -163,6 +236,8 @@ paths:
       summary: Consult Active Profile
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Active profile details retrieved successfully
@@ -178,6 +253,8 @@ paths:
       summary: Get All Profiles
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: List of all user profiles
@@ -195,6 +272,8 @@ paths:
       summary: Get Profile by User ID
       tags:
         - Profile
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -215,6 +294,11 @@ paths:
           description: Profile not found
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Profile:
       type: object

@@ -7,16 +7,18 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 
 ## Documentation
 
-- 📖 [Installation Guide](docs/installation.md)
-- 🚀 [Deployment Note](docs/deployment_note.md)
-- 🏗️ [Architecture & Schema](docs/architecture.md)
-- 🏢 [Project Hierarchy & Authority](docs/project_hierarchy.md)
-- ⚖️ [Legal Requirements](docs/mails/exigences_juridiques.md)
-- ⚙️ [Technical Constraints](docs/mails/contraintes_techniques.md)
-- 🎨 [Visual Identity & Comms](docs/mails/identite_visuelle.md)
-- 📢 [Comms Deliverables](docs/comms_deliverables.md)
-- 🛡️ [Data Register](docs/legal_data_register.md)
-- 📄 [Brief](docs/brief_jibjob_en.pdf)
+- [Installation Guide](docs/installation.md)
+- [Swagger UI Guide](docs/swagger_guide.md)
+- [API Routes Roadmap](docs/ROUTES_ROADMAP.md)
+- [Deployment Note](docs/deployment_note.md)
+- [Architecture & Schema](docs/architecture.md)
+- [Project Hierarchy & Authority](docs/project_hierarchy.md)
+- [Legal Requirements](docs/mails/exigences_juridiques.md)
+- [Technical Constraints](docs/mails/contraintes_techniques.md)
+- [Visual Identity & Comms](docs/mails/identite_visuelle.md)
+- [Comms Deliverables](docs/comms_deliverables.md)
+- [Data Register](docs/legal_data_register.md)
+- [Brief](docs/brief_jibjob_en.pdf)
 
 ## Quick Start (Monorepo)
 
