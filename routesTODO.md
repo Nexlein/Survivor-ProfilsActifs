@@ -13,7 +13,7 @@ Ce document répertorie l'ensemble des routes API du projet ProfilsActifs, avec 
 | **Système / Santé (`/health`)** | 100% Terminé |
 | **Authentification (`/auth`)** | 100% Terminé (Register, Login, Get Current User, Logout, Refresh) |
 | **Gestion des Profils (`/profile`)** | 100% Terminé |
-| **Vidéos & Feed (`/videos`)** | A faire |
+| **Vidéos & Feed (`/video` & `/media`)** | 100% Terminé |
 | **Questionnaire & Certification JEB (`/questionnaire`)** | A faire |
 | **Interactions Recruteur (`/interactions`)** | A faire |
 | **Compétences / Skills (`/skills`)** | A faire |
@@ -60,9 +60,9 @@ Ce document répertorie l'ensemble des routes API du projet ProfilsActifs, avec 
 
 | Méthode | Route | Accès | Description | Statut |
 | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/videos/feed` | Public / Privé | Feed vidéo paginé (20 profils par page `?page=1&limit=20` max). | A faire |
-| `POST` | `/videos/upload` | Privé (Candidat) | Upload vidéo CV + sous-titres (max 100Mo, enregistrement consentement RGPD). | A faire |
-| `GET` | `/videos/:id` | Public / Privé | Récupération des métadonnées d'une vidéo et streaming. | A faire |
+| `GET` | `/video/feed` | Public / Privé | Feed vidéo paginé (20 profils par page `?page=1&limit=20` max). | A faire |
+| `POST` | `/video/upload-file` | Privé (Candidat) | Upload vidéo CV + sous-titres (max 100Mo, enregistrement consentement RGPD). | A faire |
+| `GET` | `/media/:id` | Public / Privé | Récupération des métadonnées d'une vidéo et streaming. | A faire |
 | `GET` | `/videos/:id/subtitles` | Public / Privé | Serveur du fichier de sous-titre (.vtt) pour le lecteur vidéo (Accessibilité RGAA). | A faire |
 | `DELETE` | `/videos/:id` | Privé (Propriétaire) | Révocation Consentement : **Suppression physique** (`fs.unlinkSync`) du disque et de la BDD. | A faire |
 | `POST` | `/videos/:id/like` | Privé | Ajouter un "Like" sur une vidéo. | A faire |

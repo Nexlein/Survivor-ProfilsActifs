@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: ProfilsActifs API
-  description: "TikTok for the unemployed - Core API Documentation"
+  description: TikTok for the unemployed - Core API Documentation
   version: 1.0.0
 servers:
   - url: http://localhost:3000
@@ -14,7 +14,7 @@ paths:
       tags:
         - System
       responses:
-        '200':
+        "200":
           description: Service is healthy and database is connected.
           content:
             application/json:
@@ -23,16 +23,19 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: "ok"
+                    example: ok
                   database:
                     type: string
-                    example: "connected"
+                    example: connected
                   timestamp:
                     type: string
                     example: "2026-09-01T12:00:00.000Z"
-        '503':
+        "503":
           description: Service Unavailable (Database is down).
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /auth/register:
     post:
       summary: User Registration
@@ -60,19 +63,28 @@ paths:
                   example: Jean Dupont
                 role:
                   type: string
-                  enum: [JOB_SEEKER, RECRUITER]
+                  enum:
+                    - JOB_SEEKER
+                    - RECRUITER
                   example: JOB_SEEKER
                 dateOfBirth:
                   type: string
                   example: "1998-05-14"
       responses:
-        '201':
+        "201":
           description: User created successfully
-        '400':
+        "400":
           description: Bad request (missing fields)
-        '422':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
           description: Age restriction violation (<16 years)
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /auth/login:
     post:
       summary: User Login
@@ -95,11 +107,14 @@ paths:
                   type: string
                   example: Password123!
       responses:
-        '200':
+        "200":
           description: Successful login, returns JWT token
-        '401':
+        "401":
           description: Invalid credentials
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /auth/get-current-user:
     get:
       summary: Get Current User
@@ -108,11 +123,14 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Successful retrieval of current user
-        '401':
+        "401":
           description: Unauthorized
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /auth/logout:
     post:
       summary: User Logout
@@ -121,7 +139,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Successful logout
           content:
             application/json:
@@ -130,8 +148,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Logout successful"
-
+                    example: Logout successful
   /auth/refresh:
     post:
       summary: Refresh JWT Token
@@ -148,10 +165,12 @@ paths:
               properties:
                 token:
                   type: string
-                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
       responses:
-        '200':
-          description: Token refreshed successfully, returns new JWT token and user info
+        "200":
+          description:
+            Token refreshed successfully, returns new JWT token and user
+            info
           content:
             application/json:
               schema:
@@ -159,25 +178,29 @@ paths:
                 properties:
                   token:
                     type: string
-                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
                   user:
                     type: object
                     properties:
                       id:
                         type: string
                         format: uuid
-                        example: "123e4567-e89b-12d3-a456-426614174000"
+                        example: 123e4567-e89b-12d3-a456-426614174000
                       email:
                         type: string
                         example: jean.dupont@example.fr
                       role:
                         type: string
-                        enum: [JOB_SEEKER, RECRUITER]
+                        enum:
+                          - JOB_SEEKER
+                          - RECRUITER
                         example: JOB_SEEKER
-        '401':
+        "401":
           description: Unauthorized (Invalid or missing token)
-
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /profile:
     get:
       summary: Get Profile of Current User
@@ -186,14 +209,18 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Profile object retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
-        '401':
+                $ref: "#/components/schemas/Profile"
+        "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     put:
       summary: Update Current User Profile
       tags:
@@ -205,16 +232,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProfileInput'
+              $ref: "#/components/schemas/ProfileInput"
       responses:
-        '200':
+        "200":
           description: Profile updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
-        '401':
+                $ref: "#/components/schemas/Profile"
+        "401":
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
       summary: Delete Current User Profile
       tags:
@@ -222,15 +253,18 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Profile deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
-        '401':
+                $ref: "#/components/schemas/Profile"
+        "401":
           description: Unauthorized
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /profile/me:
     get:
       summary: Consult Active Profile
@@ -239,15 +273,18 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Active profile details retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
-        '401':
+                $ref: "#/components/schemas/Profile"
+        "401":
           description: Unauthorized
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /profile/all:
     get:
       summary: Get All Profiles
@@ -256,17 +293,20 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: List of all user profiles
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Profile'
-        '401':
+                  $ref: "#/components/schemas/Profile"
+        "401":
           description: Unauthorized
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /profile/user/{id}:
     get:
       summary: Get Profile by User ID
@@ -282,17 +322,413 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Profile retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
-        '401':
+                $ref: "#/components/schemas/Profile"
+        "401":
           description: Unauthorized
-        '404':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Profile not found
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/upload-file:
+    post:
+      summary: Upload Video File
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - video
+                - profileId
+              properties:
+                video:
+                  type: string
+                  format: binary
+                  description: The video file to upload
+                profileId:
+                  type: string
+                  format: uuid
+                  example: 123e4567-e89b-12d3-a456-426614174000
+                consentTextVersion:
+                  type: string
+                  example: v1.0
+      responses:
+        "201":
+          description: Video uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "400":
+          description: Bad request (missing file or profileId)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/upload-link:
+    post:
+      summary: Upload Video Link
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - videoUrl
+                - profileId
+              properties:
+                videoUrl:
+                  type: string
+                  example: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+                profileId:
+                  type: string
+                  format: uuid
+                  example: 123e4567-e89b-12d3-a456-426614174000
+                consentTextVersion:
+                  type: string
+                  example: v1.0
+      responses:
+        "201":
+          description: Video link created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/delete:
+    delete:
+      summary: Delete Video Profile
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        "200":
+          description: Video deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Video deleted successfully
+                  id:
+                    type: string
+                    format: uuid
+                    example: 123e4567-e89b-12d3-a456-426614174000
+        "400":
+          description: Video ID is required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/get:
+    get:
+      summary: Get Video Profile
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        "200":
+          description: Video retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "400":
+          description: Video ID is required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/like:
+    post:
+      summary: Like a Video
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        "200":
+          description: Video liked successfully (likes count incremented)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "400":
+          description: Video ID is required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/view:
+    post:
+      summary: Register a Video View
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        "200":
+          description: Video view registered successfully (views count incremented)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "400":
+          description: Video ID is required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /compliance/data-export:
+    get:
+      summary: Personal Data Export (GDPR)
+      description:
+        Right of access to data. Returns all personal data associated with
+        the account.
+      tags:
+        - Compliance
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Export successful
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /compliance/account:
+    delete:
+      summary: Right to be Forgotten (GDPR)
+      description:
+        Full and permanent account deletion, including physical files (.mp4,
+        .vtt).
+      tags:
+        - Compliance
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Deletion successful
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /media/{id}:
+    get:
+      summary: Stream a video
+      tags:
+        - Media
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        "200":
+          description: Full video stream
+        "206":
+          description: Partial video stream (Range)
+        "403":
+          description: Forbidden (Video is PENDING or REJECTED)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Video not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/feed:
+    get:
+      summary: Get public video feed
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Paginated video feed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Video"
+  /video/approval:
+    put:
+      summary: Approve or reject a video (ADMIN only)
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - approved
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                approved:
+                  type: boolean
+                reason:
+                  type: string
+      responses:
+        "200":
+          description: Video updated
+        "400":
+          description: Reason required if rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Admin role required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   securitySchemes:
     bearerAuth:
@@ -306,22 +742,22 @@ components:
         id:
           type: string
           format: uuid
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          example: 123e4567-e89b-12d3-a456-426614174000
         userId:
           type: string
           format: uuid
-          example: "987f6543-e21b-12d3-a456-426614174000"
+          example: 987f6543-e21b-12d3-a456-426614174000
         fullName:
           type: string
-          example: "Jean Dupont"
+          example: Jean Dupont
         targetSector:
           type: string
           nullable: true
-          example: "Développement Informatique"
+          example: Software Development
         location:
           type: string
           nullable: true
-          example: "Paris"
+          example: Paris
         certificationScore:
           type: integer
           nullable: true
@@ -342,38 +778,68 @@ components:
       properties:
         fullName:
           type: string
-          example: "Jean Dupont"
+          example: Jean Dupont
         targetSector:
           type: string
-          example: "Développement Informatique"
+          example: Software Development
         location:
           type: string
-          example: "Paris"
+          example: Paris
         certificationScore:
           type: integer
           example: 85
         hasWorkPermit:
           type: boolean
           example: true
-  /compliance/data-export:
-    get:
-      summary: Exportation des donnees personnelles (RGPD)
-      description: Droit d'acces aux donnees. Renvoie l'integralite des donnees liees au compte.
-      tags:
-        - Conformite
-      responses:
-        '200':
-          description: Export reussi
-        '401':
-          description: Non autorise
-  /compliance/account:
-    delete:
-      summary: Droit a l'oubli (RGPD)
-      description: Suppression integrale et definitive du compte, y compris les fichiers physiques (.mp4, .vtt).
-      tags:
-        - Conformite
-      responses:
-        '200':
-          description: Suppression reussie
-        '401':
-          description: Non autorise
+    Video:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        profileId:
+          type: string
+          format: uuid
+          example: 987f6543-e21b-12d3-a456-426614174000
+        type:
+          type: string
+          enum:
+            - LINK
+            - UPLOAD
+          example: UPLOAD
+        url:
+          type: string
+          example: /uploads/videos/172528765-video.mp4
+        subtitleUrl:
+          type: string
+          nullable: true
+          example: null
+        consentDate:
+          type: string
+          format: date-time
+          example: "2026-09-02T12:00:00.000Z"
+        consentTextVersion:
+          type: string
+          example: v1.0
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-09-02T12:00:00.000Z"
+        status:
+          type: string
+          enum:
+            - PENDING
+            - APPROVED
+            - REJECTED
+          example: PENDING
+        rejectionReason:
+          type: string
+          nullable: true
+          example: Inappropriate content
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Description d\xE9taill\xE9e de l'erreur."

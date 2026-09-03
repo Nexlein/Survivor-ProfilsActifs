@@ -1,3 +1,4 @@
+import { getEighteenYearsAgo } from '../utils/date';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma';
 
@@ -30,9 +31,15 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const profile = await prisma.profile.update({
+        const { user: _, ...updateData } = req.body;
+        const profile = await prisma.profile.upsert({
             where: { userId: user.id },
-            data: req.body
+            update: updateData,
+            create: {
+                userId: user.id,
+                fullName: updateData.fullName || 'Utilisateur',
+                ...updateData,
+            },
         });
         return res.json(profile);
     } catch (error) {
@@ -88,9 +95,7 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        // Calculate the date 18 years ago to filter out minors for non-recruiters
-        const eighteenYearsAgo = new Date();
-        eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+        const eighteenYearsAgo = getEighteenYearsAgo();
 
         const whereClause: any = {};
 
@@ -101,8 +106,14 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
             };
         }
 
+        const page = Math.max(1, parseInt(req.query.page as string) || 1);
+        const take = 20;
+        const skip = (page - 1) * take;
+
         const profiles = await prisma.profile.findMany({
             where: whereClause,
+            take,
+            skip,
             include: {
                 videos: {
                     where: { status: 'APPROVED' }, // Only show approved videos
