@@ -131,7 +131,11 @@ export default function PublicProfilePage() {
             {
               id: "about",
               label: "À propos",
-              content: <p>Aucune présentation renseignée pour l&apos;instant.</p>,
+              content: profile.bio ? (
+                <p className="whitespace-pre-line">{profile.bio}</p>
+              ) : (
+                <p>Aucune présentation renseignée pour l&apos;instant.</p>
+              ),
             },
           ]}
         />

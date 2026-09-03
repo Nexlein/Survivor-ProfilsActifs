@@ -193,6 +193,10 @@ export type Profile = {
   targetSector: string | null;
   location: string | null;
   avatarUrl: string | null;
+  bio: string | null;
+  companyName: string | null;
+  industry: string | null;
+  position: string | null;
   certificationScore: number | null;
   hasWorkPermit: boolean;
   skills?: { id: string; name: string }[];
@@ -213,6 +217,11 @@ export type UpdateProfilePayload = {
   fullName?: string;
   targetSector?: string;
   location?: string;
+  bio?: string;
+  skills?: string[];
+  companyName?: string;
+  industry?: string;
+  position?: string;
 };
 
 export function updateProfile(payload: UpdateProfilePayload) {

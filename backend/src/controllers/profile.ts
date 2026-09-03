@@ -38,7 +38,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const { fullName, targetSector, location, companyName, industry, position, skills, visible, dateOfBirth } = req.body;
+        const { fullName, targetSector, location, bio, companyName, industry, position, skills, visible, dateOfBirth } = req.body;
 
         if (skills && Array.isArray(skills) && skills.length > 10) {
             return res.status(400).json({ error: 'Maximum 10 skills allowed' });
@@ -48,6 +48,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
         if (fullName !== undefined) updateData.fullName = fullName;
         if (targetSector !== undefined) updateData.targetSector = targetSector;
         if (location !== undefined) updateData.location = location;
+        if (bio !== undefined) updateData.bio = bio;
 
         if (user.role === 'RECRUITER') {
             if (companyName !== undefined) updateData.companyName = companyName;
@@ -55,14 +56,19 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
             if (position !== undefined) updateData.position = position;
         }
 
-        if (skills && Array.isArray(skills)) {
-            updateData.skills = {
-                set: [], // Clear existing relations
-                connectOrCreate: skills.map((skillName: string) => ({
-                    where: { name: skillName },
-                    create: { name: skillName }
-                }))
-            };
+        const skillsConnectOrCreate = skills && Array.isArray(skills)
+            ? skills.map((skillName: string) => ({
+                where: { name: skillName },
+                create: { name: skillName }
+            }))
+            : undefined;
+
+        if (skillsConnectOrCreate) {
+            // `set: []` first so re-saving a shorter list actually drops the
+            // removed skills instead of only ever adding new ones — only valid
+            // on the update branch below, a nested `create` has no existing
+            // relations to clear.
+            updateData.skills = { set: [], connectOrCreate: skillsConnectOrCreate };
         }
 
         const profile = await prisma.profile.upsert({
@@ -73,8 +79,9 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
                 fullName: fullName || 'Utilisateur',
                 targetSector,
                 location,
+                bio,
                 ...(user.role === 'RECRUITER' ? { companyName, industry, position } : {}),
-                ...(updateData.skills ? { skills: updateData.skills } : {})
+                ...(skillsConnectOrCreate ? { skills: { connectOrCreate: skillsConnectOrCreate } } : {})
             },
             include: { skills: true }
         });
