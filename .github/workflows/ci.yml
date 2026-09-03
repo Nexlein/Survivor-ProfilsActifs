@@ -9,25 +9,49 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: profilsactifs
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 1. Install EVERYTHING at the root level using the master package-lock.json
+      # 1. Install everything
       - run: npm ci
 
-      # 2. Build Backend
+      # 2. Generate Prisma client + push schema + seed
       - run: cd backend && npx prisma generate
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/profilsactifs
+      - run: cd backend && npx prisma db push --accept-data-loss
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/profilsactifs
+      - run: cd backend && npx prisma db seed
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/profilsactifs
+
+      # 3. Build backend
       - run: npm run build --workspace=backend
 
-      # 3. Build Frontend (explicit cd to ensure .next is written in frontend/)
+      # 4. Build frontend
       - run: cd frontend && npm run build
 
-      # 4. Upload build artifacts
+      # 5. Upload artifacts
       - name: Upload backend build
         uses: actions/upload-artifact@v4
         with:
