@@ -85,50 +85,55 @@ export const saveCandidateProgression = async (req: Request, res: Response, next
     }
 };
 
-/**
- * Controller: Submit the questionnaire for scoring
- * @route POST /api/questionnaire/submit
- * @access Private
- */
 export const submitQuestionnaire = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body?.user;
-        if (!user) {
+        const user = (req as any).user;
+        if (!user || !user.profile) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const answers = Array.isArray(req.body?.answers) ? req.body.answers : [];
+        const { answers } = req.body;
 
-        const totalScore = answers.reduce((sum: number, answer: any) => {
-            if (!answer) return sum;
+        if (!answers || typeof answers !== 'object') {
+            return res.status(400).json({ error: 'Invalid answers format' });
+        }
 
-            if (typeof answer.score === 'number') {
-                return sum + answer.score;
-            }
+        const selectedOptionIds = Object.values(answers) as string[];
 
-            if (answer.option && typeof answer.option.score === 'number') {
-                return sum + answer.option.score;
-            }
+        const selectedOptions = await prisma.option.findMany({
+            where: {
+                id: {
+                    in: selectedOptionIds,
+                },
+            },
+            select: {
+                points: true,
+            },
+        });
 
-            if (answer.selectedOption && typeof answer.selectedOption.score === 'number') {
-                return sum + answer.selectedOption.score;
-            }
+        const totalScore = selectedOptions.reduce((sum, opt) => sum + opt.points, 0);
+        // const hasCertification = totalScore >= THRESHOLD_VALUE;
 
-            if (Array.isArray(answer.options)) {
-                const optionScore = answer.options.reduce((optionSum: number, option: any) => {
-                    if (option?.selected === true && typeof option?.score === 'number') {
-                        return optionSum + option.score;
-                    }
-                    return optionSum;
-                }, 0);
-                return sum + optionScore;
-            }
-            return sum;
-        }, 0);
+        await prisma.profile.update({
+            where: {
+                id: user.profile.id,
+            },
+            data: {
+                certificationScore: totalScore,
+                // hasWorkPermit: hasCertification,
+            },
+        });
+
+        await prisma.questionnaireProgress.deleteMany({
+            where: {
+                profileId: user.profile.id,
+            },
+        });
 
         return res.status(200).json({
             message: 'Questionnaire submitted successfully',
-            score: totalScore,
+            totalScore,
+            completedAt: new Date(),
         });
     } catch (error) {
         return next(error);
