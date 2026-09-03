@@ -159,6 +159,7 @@ export default function ProfileCatalogPage() {
                     key={profile.id}
                     name={profile.fullName}
                     role={profile.targetSector ?? "Secteur non renseigné"}
+                    avatarUrl={profile.avatarUrl ?? undefined}
                     certified={profile.hasWorkPermit}
                     footer={
                       <Link

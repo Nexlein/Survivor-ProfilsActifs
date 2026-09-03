@@ -22,13 +22,13 @@ const STEPS = [
 
 const FEATURED_PROFILES = [
   { name: "Amina K.", role: "Développeuse web", certified: true, avatarUrl: "/images/demo-avatars/avatar-1.jpg" },
-  { name: "Marie Dupont", role: "Assistante de gestion", certified: true, avatarUrl: "/images/demo-avatars/avatar-3.jpg" },
+  { name: "Marie Dupont", role: "Assistante de gestion", certified: true, avatarUrl: "https://randomuser.me/api/portraits/women/68.jpg" },
   { name: "Karim Belkacem", role: "Technicien logistique", certified: true, avatarUrl: "/images/demo-avatars/avatar-2.jpg" },
-  { name: "Sophie Martin", role: "Chargée de communication", certified: false, avatarUrl: "/images/demo-avatars/avatar-1.jpg" },
+  { name: "Sophie Martin", role: "Chargée de communication", certified: false, avatarUrl: "https://randomuser.me/api/portraits/women/23.jpg" },
   { name: "Julien Petit", role: "Comptable", certified: true, avatarUrl: "/images/demo-avatars/avatar-3.jpg" },
-  { name: "Lucie Bernard", role: "Community manager", certified: false, avatarUrl: "/images/demo-avatars/avatar-2.jpg" },
-  { name: "Thomas Roy", role: "Chargé de recrutement", certified: true, avatarUrl: "/images/demo-avatars/avatar-2.jpg" },
-  { name: "Sonia Lefèvre", role: "Chef de projet", certified: false, avatarUrl: "/images/demo-avatars/avatar-1.jpg" },
+  { name: "Lucie Bernard", role: "Community manager", certified: false, avatarUrl: "https://randomuser.me/api/portraits/women/33.jpg" },
+  { name: "Thomas Roy", role: "Chargé de recrutement", certified: true, avatarUrl: "https://randomuser.me/api/portraits/men/76.jpg" },
+  { name: "Sonia Lefèvre", role: "Chef de projet", certified: false, avatarUrl: "https://randomuser.me/api/portraits/women/50.jpg" },
 ];
 
 export default function Home() {

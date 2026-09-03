@@ -53,7 +53,12 @@ export default function PublicProfilePage() {
   return (
     <main className="flex flex-col lg:flex-row gap-8 p-6 sm:p-12 max-w-5xl mx-auto">
       <aside className="flex-none w-full lg:max-w-[260px]">
-        <div className="w-[110px] h-[110px] rounded-full bg-border mx-auto mb-3" />
+        <div className="w-[110px] h-[110px] rounded-full bg-border mx-auto mb-3 overflow-hidden">
+          {profile.avatarUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={profile.avatarUrl} alt="" className="w-full h-full object-cover" />
+          )}
+        </div>
         <h2 className="text-center mb-1">{profile.fullName}</h2>
         {profile.targetSector && (
           <p className="text-center italic font-body text-sm text-text-secondary mb-1.5">

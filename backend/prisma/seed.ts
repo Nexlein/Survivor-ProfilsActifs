@@ -66,6 +66,7 @@ async function main() {
       fullName: 'Jean Dupont',
       targetSector: 'Web Development',
       location: 'Paris, France',
+      avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
       hasWorkPermit: true,
       skills: {
         connect: [{ id: skillReact.id }, { id: skillNode.id }],
@@ -93,6 +94,7 @@ async function main() {
       fullName: 'Marie Curie',
       targetSector: 'Research & Development',
       location: 'Lyon, France',
+      avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
       hasWorkPermit: true,
       skills: {
         connect: [{ id: skillManagement.id }],

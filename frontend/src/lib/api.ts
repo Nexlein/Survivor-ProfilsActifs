@@ -164,6 +164,7 @@ export type Profile = {
   fullName: string;
   targetSector: string | null;
   location: string | null;
+  avatarUrl: string | null;
   certificationScore: number | null;
   hasWorkPermit: boolean;
   skills?: { id: string; name: string }[];
