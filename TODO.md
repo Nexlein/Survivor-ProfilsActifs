@@ -12,17 +12,17 @@
 [x] Spécification OpenAPI 3.0, avec Swagger UI accessible
 [x] Schéma de base de données
 [x] .env.example
-[ ] Endpoint /health
-[ ] Note de Déploiement d’une page  - pas d’hébergement entièrement en local etc
+[x] Endpoint /health
+[x] Note de Déploiement d’une page  - pas d’hébergement entièrement en local etc
 [x] Démo de la feature vidéo ( -100mo / refusé si pas bon format / upload interrompu )
 [x] 20 profils par page - pagination côté serveur
 [ ] Pas d’autoplay simultané
 [ ] Sauvergarde progression questionnaire ( survivre a redémarrage navigateur / pas de stockage local sur le navigateur )
 [ ] Tests de charge documentés (pour plus tard)
 [x] Consentement données vidéos écrit, spécifique et révocable enregistré (révocation = suppression du fichier) - à démontrer
-[ ] critères de filtrage effectivement exposés par votre interface et par votre API - à justifier un par un
+[x] critères de filtrage effectivement exposés par votre interface et par votre API - à justifier un par un
 [x] Vérification de l’âge mineurs
-[ ] Accessibilité. RGAA niveau AA sûr écran inscription - fiche profil public - catalogue recruteur - navigation au clavier, focus visible, rapport de contraste, - déclaration d’accessibilité à faire
+[x] Accessibilité. RGAA niveau AA sûr écran inscription - fiche profil public - catalogue recruteur - navigation au clavier, focus visible, rapport de contraste, - déclaration d’accessibilité à faire
 [ ] Sous-titres intégrés sur au moins une vidéo
 [x] Projet de CGU complet
 [x] Fiche de registre de traitement avec une ligne par traitement
