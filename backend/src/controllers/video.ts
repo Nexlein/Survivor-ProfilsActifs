@@ -4,92 +4,102 @@ import prisma from '../prisma';
 import fs from 'fs';
 import path from 'path';
 
-// Helper to remove likes and views
-const stripPublicVideoStats = (video: any) => {
-    if (!video) return video;
-    const { likes, views, ...safeVideo } = video;
-    return safeVideo;
-};
-
-export const uploadVideoFile = async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * Controller: Create Profile Video (Unified LINK/UPLOAD)
+ * @route POST /api/profile/videos
+ * @access Private
+ */
+export const createProfileVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-        const videoFile = files?.['video']?.[0];
-        const subtitleFile = files?.['subtitle']?.[0];
-
-        if (!videoFile) {
-            return res.status(400).json({ error: 'No video file provided' });
-        }
-        const { profileId, consentTextVersion } = req.body;
-        if (!profileId) {
-            return res.status(400).json({ error: 'profileId is required' });
+        // req.body.user (set by authenticateToken) doesn't survive here: multer
+        // parses the multipart body *after* auth runs and replaces req.body
+        // wholesale. req.user is set independently by the same middleware and
+        // isn't affected, so read from there instead (same fix as the avatar
+        // upload route).
+        const user = (req as any).user;
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const profileExists = await prisma.profile.findUnique({ where: { id: profileId } });
-        if (!profileExists) {
-            return res.status(404).json({ error: `Profile with ID '${profileId}' does not exist` });
+        const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
+        if (!profile) {
+            return res.status(404).json({ error: 'Profile not found' });
+        }
+
+        const { type, videoUrl, consentTextVersion, subtitleUrl: linkSubtitleUrl } = req.body;
+
+        let finalUrl = '';
+        let subtitleUrl: string | null = null;
+
+        if (type === 'UPLOAD') {
+            const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+            const videoFile = files?.['video']?.[0];
+            const subtitleFile = files?.['subtitle']?.[0];
+
+            if (!videoFile) {
+                return res.status(400).json({ error: 'No video file provided for UPLOAD type' });
+            }
+            finalUrl = `/uploads/videos/${videoFile.filename}`;
+            subtitleUrl = subtitleFile ? `/uploads/videos/${subtitleFile.filename}` : null;
+        } else if (type === 'LINK') {
+            if (!videoUrl) {
+                return res.status(400).json({ error: 'videoUrl is required for LINK type' });
+            }
+            finalUrl = videoUrl;
+            subtitleUrl = linkSubtitleUrl || null;
+        } else {
+            return res.status(400).json({ error: 'type must be LINK or UPLOAD' });
         }
 
         const video = await prisma.video.create({
             data: {
-                profileId,
-                type: 'UPLOAD',
-                url: `/uploads/videos/${videoFile.filename}`,
-                subtitleUrl: subtitleFile ? `/uploads/videos/${subtitleFile.filename}` : null,
+                profileId: profile.id,
+                type,
+                url: finalUrl,
+                subtitleUrl,
                 consentDate: new Date(),
                 consentTextVersion: consentTextVersion || 'v1.0',
                 status: 'PENDING'
             },
         });
 
-        return res.status(201).json(stripPublicVideoStats(video));
+        return res.status(201).json(video);
     } catch (error) {
         return next(error);
     }
 };
 
-export const uploadVideoLink = async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * Controller: Delete Profile Video
+ * @route DELETE /api/profile/videos/:id
+ * @access Private
+ */
+export const deleteProfileVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { profileId, videoUrl, consentTextVersion } = req.body;
-        if (!profileId) {
-            return res.status(400).json({ error: 'profileId is required' });
-        }
-        if (!videoUrl) {
-            return res.status(400).json({ error: 'videoUrl is required' });
+        const user = req.body?.user;
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const profileExists = await prisma.profile.findUnique({ where: { id: profileId } });
-        if (!profileExists) {
-            return res.status(404).json({ error: `Profile with ID '${profileId}' does not exist` });
+        const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
+        if (!profile) return res.status(404).json({ error: 'Profile not found' });
+
+        const videoId = req.params.id as string;
+        if (!videoId) return res.status(400).json({ error: 'Video ID is required' });
+
+        const existingVideo = await prisma.video.findUnique({ where: { id: videoId } });
+        if (!existingVideo) return res.status(404).json({ error: 'Video not found' });
+
+        // SECURITY CHECK: Ensure the video belongs to the authenticated user's profile
+        if (existingVideo.profileId !== profile.id) {
+            return res.status(403).json({ error: 'You do not have permission to delete this video' });
         }
 
-        const video = await prisma.video.create({
-            data: {
-                profileId,
-                type: 'LINK',
-                url: videoUrl,
-                consentDate: new Date(),
-                consentTextVersion: consentTextVersion || 'v1.0',
-                status: 'PENDING'
-            },
-        });
-
-        return res.status(201).json(stripPublicVideoStats(video));
-    } catch (error) {
-        return next(error);
-    }
-};
-
-export const deleteVideo = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.body;
-        if (!id) {
-            return res.status(400).json({ error: 'Video ID is required' });
-        }
         const video = await prisma.video.delete({
-            where: { id: id },
+            where: { id: videoId },
         });
 
+        // PHYSICAL DELETION (Right to be forgotten)
         if (video.type === 'UPLOAD') {
             if (video.url) {
                 const filePath = path.resolve(__dirname, '../../', video.url.replace(/^\//, ''));
@@ -106,23 +116,17 @@ export const deleteVideo = async (req: Request, res: Response, next: NextFunctio
             id: video.id
         });
     } catch (error) {
-    return next(error);
-}
+        return next(error);
+    }
 };
 
 export const getVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.body;
-        if (!id) {
-            return res.status(400).json({ error: 'Video ID is required' });
-        }
-        const video = await prisma.video.findUnique({
-            where: { id: id },
-        });
+        if (!id) return res.status(400).json({ error: 'Video ID is required' });
 
-        if (!video) {
-            return res.status(404).json({ error: 'Video not found' });
-        }
+        const video = await prisma.video.findUnique({ where: { id: id } });
+        if (!video) return res.status(404).json({ error: 'Video not found' });
 
         const user = req.body?.user;
         const userProfile = user ? await prisma.profile.findUnique({ where: { userId: user.id } }) : null;
@@ -133,64 +137,14 @@ export const getVideo = async (req: Request, res: Response, next: NextFunction) 
             return res.status(403).json({ error: 'This video is not available.' });
         }
 
-        // Strip stats for standard view (owner should use a different endpoint or logic)
-        return res.status(200).json(stripPublicVideoStats(video));
-    } catch (error) {
-        return next(error);
-    }
+        return res.status(200).json(video);
+    } catch (error) { return next(error); }
 };
 
-export const likeVideo = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.body;
-        if (!id) {
-            return res.status(400).json({ error: 'Video ID is required' });
-        }
-        const existingVideo = await prisma.video.findUnique({ where: { id: id } });
-        if (!existingVideo) return res.status(404).json({ error: 'Video not found' });
-        if (existingVideo.status !== 'APPROVED') return res.status(403).json({ error: 'Cannot interact with unapproved video' });
-
-        const video = await prisma.video.update({
-            where: { id: id },
-            data: { likes: { increment: 1 } },
-        });
-        return res.status(200).json(stripPublicVideoStats(video));
-    } catch (error) {
-        return next(error);
-    }
-};
-
-export const viewVideo = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.body;
-        if (!id) {
-            return res.status(400).json({ error: 'Video ID is required' });
-        }
-        const existingVideo = await prisma.video.findUnique({ where: { id: id } });
-        if (!existingVideo) return res.status(404).json({ error: 'Video not found' });
-        if (existingVideo.status !== 'APPROVED') return res.status(403).json({ error: 'Cannot interact with unapproved video' });
-
-        const video = await prisma.video.update({
-            where: { id: id },
-            data: { views: { increment: 1 } },
-        });
-        return res.status(200).json(stripPublicVideoStats(video));
-    } catch (error) {
-        return next(error);
-    }
-};
-
-/**
- * Controller: Get Video Feed with Server Pagination
- * @route GET /api/video/feed
- * @access Private
- */
 export const getVideoFeed = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = req.body?.user;
-        if (!user) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
+        if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
         const take = 20;
@@ -199,38 +153,25 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
         const eighteenYearsAgo = getEighteenYearsAgo();
 
         const whereClause: any = {
-            status: 'APPROVED'
+            status: 'APPROVED',
+            profile: {
+                visible: true,
+                user: { dateOfBirth: { not: null } }
+            }
         };
 
         if (user.role !== 'RECRUITER') {
-            whereClause.profile = {
-                user: {
-                    dateOfBirth: { lte: eighteenYearsAgo }
-                }
-            };
+            whereClause.profile.user.dateOfBirth = { lte: eighteenYearsAgo };
         }
 
         const videos = await prisma.video.findMany({
-            where: whereClause,
-            take,
-            skip,
-            orderBy: { createdAt: 'desc' },
+            where: whereClause, take, skip, orderBy: { createdAt: 'desc' },
         });
 
-        // Strip likes and views for public feed
-        const safeVideos = videos.map(stripPublicVideoStats);
-
-        return res.status(200).json(safeVideos);
-    } catch (error) {
-        return next(error);
-    }
+        return res.status(200).json(videos);
+    } catch (error) { return next(error); }
 };
 
-/**
- * Controller: Approve or Reject a Video (Admin Only)
- * @route PUT /api/video/approval
- * @access Private (Admin)
- */
 export const approveVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = req.body?.user;
@@ -239,18 +180,9 @@ export const approveVideo = async (req: Request, res: Response, next: NextFuncti
         }
 
         const { id, approved, reason } = req.body;
-
-        if (!id) {
-            return res.status(400).json({ error: 'Video ID is required' });
-        }
-
-        if (approved === undefined) {
-            return res.status(400).json({ error: 'approved boolean is required' });
-        }
-
-        if (approved === false && !reason) {
-            return res.status(400).json({ error: 'A rejection reason is required when rejecting a video.' });
-        }
+        if (!id) return res.status(400).json({ error: 'Video ID is required' });
+        if (approved === undefined) return res.status(400).json({ error: 'approved boolean is required' });
+        if (approved === false && !reason) return res.status(400).json({ error: 'A rejection reason is required when rejecting a video.' });
 
         const updatedVideo = await prisma.video.update({
             where: { id: id },
@@ -263,7 +195,5 @@ export const approveVideo = async (req: Request, res: Response, next: NextFuncti
         });
 
         return res.status(200).json(updatedVideo);
-    } catch (error) {
-        return next(error);
-    }
+    } catch (error) { return next(error); }
 };

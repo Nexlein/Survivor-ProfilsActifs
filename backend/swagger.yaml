@@ -70,6 +70,29 @@ paths:
                 dateOfBirth:
                   type: string
                   example: "1998-05-14"
+                targetSector:
+                  type: string
+                  example: Informatique
+                location:
+                  type: string
+                  example: Paris, France
+                skills:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 10
+                  example:
+                    - React
+                    - Node.js
+                companyName:
+                  type: string
+                  example: TechCorp
+                industry:
+                  type: string
+                  example: Logiciel
+                position:
+                  type: string
+                  example: CTO
       responses:
         "201":
           description: User created successfully
@@ -230,7 +253,34 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ProfileInput"
+              type: object
+              properties:
+                fullName:
+                  type: string
+                targetSector:
+                  type: string
+                location:
+                  type: string
+                bio:
+                  type: string
+                companyName:
+                  type: string
+                industry:
+                  type: string
+                position:
+                  type: string
+                skills:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 10
+                visible:
+                  type: boolean
+                  description: Toggles the public visibility of the profile (defaults to true)
+                dateOfBirth:
+                  type: string
+                  format: date-time
+                  description: Required to be >= 16 years old to activate profile visibility
       responses:
         "200":
           description: Profile updated successfully
@@ -283,6 +333,45 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /profile/avatar:
+    post:
+      summary: Upload / replace profile photo
+      description: Accepts a single image file (max 5 MB) and sets it as the current user's avatarUrl.
+      tags:
+        - Profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - avatar
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Avatar uploaded and profile updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "400":
+          description: No file provided or invalid file type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /profile/all:
     get:
       summary: Get All Profiles
@@ -310,8 +399,7 @@ paths:
       summary: Get Profile by User ID
       tags:
         - Profile
-      security:
-        - bearerAuth: []
+      security: []
       parameters:
         - name: id
           in: path
@@ -338,6 +426,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: "Accès interdit (Profil de mineur)"
   /questionnaire/questions:
     get:
       summary: Get Questionnaire Questions
@@ -608,84 +698,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /video/like:
-    post:
-      summary: Like a Video
-      tags:
-        - Video
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  example: 123e4567-e89b-12d3-a456-426614174000
-      responses:
-        "200":
-          description: Video liked successfully (likes count incremented)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Video"
-        "400":
-          description: Video ID is required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /video/view:
-    post:
-      summary: Register a Video View
-      tags:
-        - Video
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  example: 123e4567-e89b-12d3-a456-426614174000
-      responses:
-        "200":
-          description: Video view registered successfully (views count incremented)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Video"
-        "400":
-          description: Video ID is required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
   /compliance/data-export:
     get:
       summary: Personal Data Export (GDPR)
@@ -814,6 +826,60 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /profile/videos:
+    post:
+      summary: Upload or link a new video to the profile
+      tags:
+        - Profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - UPLOAD
+                    - LINK
+                videoUrl:
+                  type: string
+                  description: Required if type is LINK
+                subtitleUrl:
+                  type: string
+                  description: Optional, only used if type is LINK (ignored for UPLOAD — use the subtitle file field instead)
+                consentTextVersion:
+                  type: string
+                video:
+                  type: string
+                  format: binary
+                  description: Required if type is UPLOAD
+                subtitle:
+                  type: string
+                  format: binary
+                  description: Optional, only used if type is UPLOAD
+      responses:
+        "201":
+          description: Video created
+  /profile/videos/{id}:
+    delete:
+      summary: Delete a video physically and logically
+      tags:
+        - Profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Video deleted
 components:
   securitySchemes:
     bearerAuth:
@@ -843,6 +909,14 @@ components:
           type: string
           nullable: true
           example: Paris
+        avatarUrl:
+          type: string
+          nullable: true
+          example: /uploads/avatars/1725360000000-123456789.jpg
+        bio:
+          type: string
+          nullable: true
+          example: Développeuse passionnée par le web accessible.
         certificationScore:
           type: integer
           nullable: true

@@ -49,13 +49,21 @@ model User {
 }
 
 model Profile {
-  id     String @id @default(uuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  visible Boolean @default(true) // Legal: Hide profiles lacking age verification
+  id      String  @id @default(uuid())
+  userId  String  @unique
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   fullName     String
   targetSector String?
   location     String?
+  avatarUrl    String?
+  bio          String?
+
+  // Recruiter specific fields
+  companyName String?
+  industry    String?
+  position    String?
 
   // JEB Work Permit
   certificationScore Int?
@@ -80,17 +88,15 @@ model Video {
   status      VideoStatus @default(PENDING) // Legal: A priori moderation
   url         String
   subtitleUrl String? // Legal: RGAA accessibility
-  likes       Int       @default(0) // Product: Determines benefits (Hidden publicly)
-  views       Int       @default(0) // Hidden publicly
 
   // Legal: Consent tracking
   consentDate        DateTime?
   consentTextVersion String?
 
   // Moderation tracking
-  rejectionReason    String?
-  moderatedById      String?
-  moderatedAt        DateTime?
+  rejectionReason String?
+  moderatedById   String?
+  moderatedAt     DateTime?
 
   createdAt    DateTime      @default(now())
   interactions Interaction[]
@@ -103,9 +109,9 @@ model Skill {
 }
 
 model QuestionnaireSettings {
-  id              String   @id @default("global")
-  currentVersion  Int      @default(1)
-  updatedAt       DateTime @updatedAt
+  id             String   @id @default("global")
+  currentVersion Int      @default(1)
+  updatedAt      DateTime @updatedAt
 }
 
 model Question {
@@ -114,8 +120,8 @@ model Question {
   weighting Int      @default(1)
   options   Option[]
 
-  version   Int      @default(1)
-  isActive  Boolean  @default(true)
+  version  Int     @default(1)
+  isActive Boolean @default(true)
 }
 
 model Option {

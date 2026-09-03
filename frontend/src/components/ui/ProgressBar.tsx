@@ -8,7 +8,7 @@ export function ProgressBar({ current, total }: ProgressBarProps) {
 
   return (
     <div>
-      <div className="flex justify-between text-xs text-text-secondary mb-1.5">
+      <div className="flex justify-between text-xs font-heading text-text-secondary mb-1.5">
         <span>
           {current}/{total}
         </span>

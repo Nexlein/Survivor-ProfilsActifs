@@ -6,7 +6,7 @@ type SwitchProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
 
 export function Switch({ label, id, className = "", ...props }: SwitchProps) {
   return (
-    <label htmlFor={id} className="flex items-center gap-2 text-[13px] text-text cursor-pointer">
+    <label htmlFor={id} className="flex items-center gap-2 text-[13px] font-heading text-text cursor-pointer">
       {label}
       <span className="relative inline-block w-10 h-5.5">
         <input

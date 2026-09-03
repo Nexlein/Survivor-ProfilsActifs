@@ -50,7 +50,7 @@ Ce document répertorie l'ensemble des routes API du projet ProfilsActifs, avec 
 | `DELETE` | `/profile` | Privé | Suppression du profil de l'utilisateur connecté. | Fait |
 | `GET` | `/profile/me` | Privé | Consultation détaillée du profil de l'utilisateur actif. | Fait |
 | `GET` | `/profile/all` | Privé | Catalogue Recruteur : Liste complète filtrable. **Filtres stricts (RGPD) : `?skills`, `?targetSector`, `?location`. Aucun autre filtre autorisé.** | À Mettre à jour (Filtres manquants) |
-| `GET` | `/profile/user/:id` | Privé | Récupération du profil correspondant à l'ID utilisateur spécifié. | Fait |
+| `GET` | `/profile/user/:id` | Public | Récupération du profil correspondant à l'ID utilisateur spécifié. | Fait |
 
 ---
 
@@ -61,10 +61,10 @@ Ce document répertorie l'ensemble des routes API du projet ProfilsActifs, avec 
 | Méthode | Route | Accès | Description | Statut |
 | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/video/feed` | Public / Privé | Feed vidéo paginé (20 profils par page `?page=1&limit=20` max). | A faire |
-| `POST` | `/video/upload-file` | Privé (Candidat) | Upload vidéo CV + sous-titres (max 100Mo, enregistrement consentement RGPD). | A faire |
+| `POST` | `/profile/videos` | Privé (Candidat) | Upload vidéo CV ou Lien externe + sous-titres (max 100Mo, enregistrement consentement RGPD). | Fait |
 | `GET` | `/media/:id` | Public / Privé | Récupération des métadonnées d'une vidéo et streaming. | A faire |
 | `GET` | `/videos/:id/subtitles` | Public / Privé | Serveur du fichier de sous-titre (.vtt) pour le lecteur vidéo (Accessibilité RGAA). | A faire |
-| `DELETE` | `/videos/:id` | Privé (Propriétaire) | Révocation Consentement : **Suppression physique** (`fs.unlinkSync`) du disque et de la BDD. | A faire |
+| `DELETE` | `/profile/videos/:id` | Privé (Propriétaire) | Révocation Consentement : **Suppression physique** (`fs.unlinkSync`) du disque et de la BDD. | Fait |
 | `POST` | `/videos/:id/like` | Privé | Ajouter un "Like" sur une vidéo. | A faire |
 | `POST` | `/videos/:id/view` | Public / Privé | Enregistrer une vue sur une vidéo. | A faire |
 

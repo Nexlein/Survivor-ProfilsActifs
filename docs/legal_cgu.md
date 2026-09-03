@@ -9,6 +9,7 @@ ProfilsActifs est un service de mise en relation professionnelle par vidéo.
 Les données sont collectées conformément à notre Registre des Activités de Traitement :
 
 - Compte : Email, Date de Naissance (Vérification Mineurs).
+- Profil Professionnel : Secteur, Localisation, Compétences (pour les candidats) ; Entreprise, Poste, Secteur (pour les recruteurs).
 - Vidéo : Image, Voix, Sous-titres. Consentement explicite, spécifique et révocable.
 
 ## 3. Révocation et Suppression

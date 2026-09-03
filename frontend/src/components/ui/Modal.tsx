@@ -58,7 +58,7 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 flex items-center justify-center z-10"
+      className="fixed inset-0 bg-black/40 flex items-center justify-center z-10 p-4"
       onClick={handleOverlayClick}
     >
       <div
@@ -67,7 +67,7 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
         aria-modal="true"
         aria-labelledby="modal-title"
         onKeyDown={handleKeyDown}
-        className="bg-bg rounded-lg p-6 w-[360px] shadow-modal"
+        className="bg-bg rounded-lg p-6 w-[360px] max-w-full shadow-modal"
       >
         <h3 id="modal-title" className="mb-2.5">
           {title}

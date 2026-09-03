@@ -12,12 +12,14 @@ import { Tabs } from "@/components/ui/Tabs";
 import { ProfileCard, InfoCard } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Modal } from "@/components/ui/Modal";
+import { usePageTitle } from "@/lib/use-page-title";
 
 export default function DesignSystemPage() {
+  usePageTitle("Design System");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <main className="flex flex-col gap-12 p-12 max-w-3xl mx-auto">
+    <main className="flex flex-col gap-12 p-6 sm:p-12 max-w-3xl mx-auto">
       <h1>Design System</h1>
 
       <section className="flex flex-col gap-4">
