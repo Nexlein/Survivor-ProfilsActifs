@@ -11,9 +11,9 @@ profileRouter.put('/', authenticateToken, updateProfile);
 profileRouter.delete('/', authenticateToken, deleteProfile);
 profileRouter.get('/me', authenticateToken, getCurrentProfile);
 profileRouter.get('/all', authenticateToken, getAllProfiles);
+profileRouter.post('/avatar', authenticateToken, uploadAvatar.single('avatar'), uploadProfileAvatar);
 
 // Public route (optional auth handled in controller for age checks)
 profileRouter.get('/user/:id', getProfileByUserId);
-profileRouter.post('/avatar', uploadAvatar.single('avatar'), uploadProfileAvatar);
 
 export default profileRouter;

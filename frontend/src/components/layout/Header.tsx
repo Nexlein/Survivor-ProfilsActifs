@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { buttonClasses } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { AuthUser, clearToken, clearUser, useCurrentUser } from "@/lib/api";
+import { AuthUser, clearToken, clearUser, getMyProfile, resolveAvatarUrl, useCurrentUser } from "@/lib/api";
 
 type NavLink = { href: string; label: string };
 
@@ -40,9 +40,28 @@ function getNavLinks(user: AuthUser | null): NavLink[] {
 
 export function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const user = useCurrentUser();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    getMyProfile()
+      .then((p) => {
+        if (!cancelled) setAvatarUrl(resolveAvatarUrl(p?.avatarUrl) ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setAvatarUrl(null);
+      });
+    // Re-fetched on every navigation (not just once per session) so a photo
+    // changed on /profile/edit shows up as soon as you land back on any page.
+    return () => {
+      cancelled = true;
+    };
+  }, [user, pathname]);
 
   function handleLogout() {
     clearToken();
@@ -93,7 +112,8 @@ export function Header() {
                 aria-label="Mon compte"
                 aria-haspopup="true"
                 aria-expanded={isAccountMenuOpen}
-                className="w-[34px] h-[34px] rounded-full bg-primary block"
+                className="w-[34px] h-[34px] rounded-full bg-primary bg-cover bg-center block"
+                style={user && avatarUrl ? { backgroundImage: `url(${avatarUrl})` } : undefined}
               />
               {isAccountMenuOpen && (
                 <div className="absolute right-0 mt-2 w-44 bg-white border border-border rounded-md shadow-card py-1 z-10">
