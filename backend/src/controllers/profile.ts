@@ -38,7 +38,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const { fullName, targetSector, location, companyName, industry, position, skills } = req.body;
+        const { fullName, targetSector, location, companyName, industry, position, skills, visible, dateOfBirth } = req.body;
 
         if (skills && Array.isArray(skills) && skills.length > 10) {
             return res.status(400).json({ error: 'Maximum 10 skills allowed' });
@@ -137,13 +137,13 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
 
         const eighteenYearsAgo = getEighteenYearsAgo();
 
-        const whereClause: any = {};
+        const whereClause: any = {
+            visible: true,
+            user: { dateOfBirth: { not: null } }
+        };
 
-        // If the user is NOT a recruiter, strictly hide all minors (< 18)
         if (user.role !== 'RECRUITER') {
-            whereClause.user = {
-                dateOfBirth: { lte: eighteenYearsAgo }
-            };
+            whereClause.user.dateOfBirth = { lte: eighteenYearsAgo };
         }
 
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
@@ -215,7 +215,20 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
             }
         });
 
+
         if (!profile) return res.status(404).json({ error: 'Not found' });
+
+        const isOwner = currentUser && currentUser.id === profile.userId;
+
+        // RGPD: Missing Age or Explicitly Hidden (Ticket 16)
+        if (!isOwner) {
+            if (profile.visible === false) {
+                return res.status(403).json({ error: 'Access denied: Profile is hidden' });
+            }
+            if (profile.user.dateOfBirth === null) {
+                return res.status(403).json({ error: 'Access denied: Profile owner has not verified their age' });
+            }
+        }
 
         // RGPD MINORS CHECK
         if (profile.user.dateOfBirth) {
@@ -270,7 +283,7 @@ export const uploadProfileAvatar = async (req: Request, res: Response, next: Nex
         // a file we own on disk.
         if (existing?.avatarUrl?.startsWith('/uploads/avatars/')) {
             const oldPath = path.resolve(__dirname, '../..', existing.avatarUrl.replace(/^\//, ''));
-            fs.unlink(oldPath, () => {});
+            fs.unlink(oldPath, () => { });
         }
 
         return res.json(profile);
