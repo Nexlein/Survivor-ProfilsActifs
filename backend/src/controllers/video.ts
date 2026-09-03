@@ -1,4 +1,5 @@
 import { getEighteenYearsAgo } from '../utils/date';
+import { isValidVideoFile } from '../utils/videoMagicBytes';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma';
 import fs from 'fs';
@@ -39,6 +40,19 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
             if (!videoFile) {
                 return res.status(400).json({ error: 'No video file provided for UPLOAD type' });
             }
+
+            // Content-based check: the declared Content-Type (checked by multer's
+            // fileFilter) is caller-controlled and proves nothing about the
+            // actual bytes on disk. Reject on the real file content.
+            if (!isValidVideoFile(videoFile.path)) {
+                fs.unlink(videoFile.path, () => {});
+                if (subtitleFile) fs.unlink(subtitleFile.path, () => {});
+                return res.status(400).json({
+                    error: 'Invalid file content',
+                    message: 'The uploaded file is not a valid MP4, MOV or AVI video (content does not match its declared type).',
+                });
+            }
+
             finalUrl = `/uploads/videos/${videoFile.filename}`;
             subtitleUrl = subtitleFile ? `/uploads/videos/${subtitleFile.filename}` : null;
         } else if (type === 'LINK') {
