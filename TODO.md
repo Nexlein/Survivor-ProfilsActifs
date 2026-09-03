@@ -1,14 +1,14 @@
-- [ ] Pitch Deck 8 solides pour Benjamin
+- [x] Pitch Deck 8 solides pour Benjamin
 - [x] Modération à priori des contenus vidéos
 - [x] Retirer toutes les mentions de likes / compteurs d’engagement dans code etc
 - [x] Retrait compte -16ans côté serveur
-- [ ] Charte Graphique ?
-- [ ] Vérifier si DA correspond à demandé (polices - couleurs)
+- [x] Charte Graphique ?
+- [x] Vérifier si DA correspond à demandé (polices - couleurs)
 - [ ] Charte appliquée sur 4 écrans : accueil, inscription, fiche profil candidat, catalogue recruteur. Une capture de chacun.
 - [ ] Nom affiché ProfilsActifs partout - titre d'onglet, en-tête, pied de page, boutons, mails envoyés par le service, messages d'erreur, écran vide
 - [ ] Vidéo de -2mn enregistrement des fonctionnalités principales = démo vidéo de l’app
 - [ ] Listes des termes remplacés « tiktok » vocabulaire choisi
-- [ ] Phrase -20 mots Landing page
+- [x] Phrase -20 mots Landing page
 - [x] Spécification OpenAPI 3.0, avec Swagger UI accessible
 - [x] Schéma de base de données
 - [x] .env.example
