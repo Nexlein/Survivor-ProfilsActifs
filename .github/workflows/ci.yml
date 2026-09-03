@@ -27,7 +27,11 @@ jobs:
       # 3. Build Frontend
       - run: npm run build --workspace=frontend
 
-      # 4. Upload build artifacts
+      # 4. Debug: find Next.js build output
+      - name: Find Next.js build output
+        run: find . -name 'BUILD_ID' 2>/dev/null | head -10 && ls -la frontend/ 2>/dev/null || true
+
+      # 5. Upload build artifacts
       - name: Upload backend build
         uses: actions/upload-artifact@v4
         with:
