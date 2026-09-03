@@ -23,7 +23,8 @@ export const exportData = async (req: Request, res: Response, next: NextFunction
                         skills: true,
                         videos: true,
                         interactions: true,
-                        questionnaireState: true,
+                        questionnaireProgress: true,
+                        questionnaireResult: true,
                     },
                 },
                 interactions: true, // Recruiter interactions
