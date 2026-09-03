@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
 import { ProfileCard } from "@/components/ui/Card";
+import { useCurrentUser } from "@/lib/api";
 
 const STEPS = [
   {
@@ -31,6 +34,47 @@ const FEATURED_PROFILES = [
   { name: "Sonia Lefèvre", role: "Chef de projet", certified: false, avatarUrl: "https://randomuser.me/api/portraits/women/50.jpg" },
 ];
 
+function HeroActions() {
+  const user = useCurrentUser();
+
+  if (!user) {
+    return (
+      <>
+        <Link href="/register" className={buttonClasses("primary")}>
+          Créer mon profil
+        </Link>
+        <Link href="/profils" className={buttonClasses("secondary")}>
+          Parcourir les profils
+        </Link>
+      </>
+    );
+  }
+
+  if (user.role === "JOB_SEEKER") {
+    return (
+      <>
+        <Link href={`/profils/${user.id}`} className={buttonClasses("primary")}>
+          Voir mon profil
+        </Link>
+        <Link href="/profils" className={buttonClasses("secondary")}>
+          Parcourir les profils
+        </Link>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Link href={user.role === "ADMIN" ? "/dashboard/admin" : "/dashboard/recruiter"} className={buttonClasses("primary")}>
+        Tableau de bord
+      </Link>
+      <Link href="/profils" className={buttonClasses("secondary")}>
+        Parcourir les profils
+      </Link>
+    </>
+  );
+}
+
 export default function Home() {
   return (
     <main className="flex flex-col">
@@ -41,12 +85,7 @@ export default function Home() {
             ProfilsActifs relie candidats et recruteurs par la vidéo, avec certification officielle JEB.
           </p>
           <div className="flex gap-3 flex-wrap justify-center md:justify-start w-full md:w-auto">
-            <Link href="/register" className={buttonClasses("primary")}>
-              Créer mon profil
-            </Link>
-            <Link href="/profils" className={buttonClasses("secondary")}>
-              Parcourir les profils
-            </Link>
+            <HeroActions />
           </div>
         </div>
         <div className="flex-1 flex justify-center">
