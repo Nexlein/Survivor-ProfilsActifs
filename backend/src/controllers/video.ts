@@ -185,10 +185,16 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
 
         const eighteenYearsAgo = getEighteenYearsAgo();
 
-        const whereClause: any = { status: 'APPROVED' };
+        const whereClause: any = {
+            status: 'APPROVED',
+            profile: {
+                visible: true,
+                user: { dateOfBirth: { not: null } }
+            }
+        };
 
         if (user.role !== 'RECRUITER') {
-            whereClause.profile = { user: { dateOfBirth: { lte: eighteenYearsAgo } } };
+            whereClause.profile.user.dateOfBirth = { lte: eighteenYearsAgo };
         }
 
         const videos = await prisma.video.findMany({
