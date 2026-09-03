@@ -52,3 +52,35 @@ export const getCandidateProgression = async (req: Request, res: Response, next:
     }
 };
 
+/**
+ * Controller: Save the candidate progression
+ * @route POST /api/questionnaire/progression
+ * @access Private
+ */
+export const saveCandidateProgression = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.body?.user;
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const whereClause: any = {
+            profileId: user.profile.id
+        };
+        const progression = await prisma.questionnaireProgress.upsert({
+            where: whereClause,
+            update: {
+                ...req.body,
+                lastSavedAt: new Date(),
+            },
+            create: {
+                ...req.body,
+                profileId: user.profile.id,
+                lastSavedAt: new Date(),
+            },
+        });
+        return res.status(200).json(progression);
+    } catch (error) {
+        return next(error);
+    }
+};
