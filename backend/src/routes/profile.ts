@@ -4,14 +4,14 @@ import { authenticateToken } from '../middlewares/auth';
 
 export const profileRouter = Router();
 
-// Protect all profile routes with JWT authentication middleware
-profileRouter.use(authenticateToken);
+// Protect specific profile routes with JWT authentication middleware
+profileRouter.get('/', authenticateToken, getProfile);
+profileRouter.put('/', authenticateToken, updateProfile);
+profileRouter.delete('/', authenticateToken, deleteProfile);
+profileRouter.get('/me', authenticateToken, getCurrentProfile);
+profileRouter.get('/all', authenticateToken, getAllProfiles);
 
-profileRouter.get('/', getProfile);
-profileRouter.put('/', updateProfile);
-profileRouter.delete('/', deleteProfile);
-profileRouter.get('/me', getCurrentProfile);
-profileRouter.get('/all', getAllProfiles);
+// Public route (optional auth handled in controller for age checks)
 profileRouter.get('/user/:id', getProfileByUserId);
 
 export default profileRouter;

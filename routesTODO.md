@@ -50,7 +50,7 @@ Ce document répertorie l'ensemble des routes API du projet ProfilsActifs, avec 
 | `DELETE` | `/profile` | Privé | Suppression du profil de l'utilisateur connecté. | Fait |
 | `GET` | `/profile/me` | Privé | Consultation détaillée du profil de l'utilisateur actif. | Fait |
 | `GET` | `/profile/all` | Privé | Catalogue Recruteur : Liste complète filtrable. **Filtres stricts (RGPD) : `?skills`, `?targetSector`, `?location`. Aucun autre filtre autorisé.** | À Mettre à jour (Filtres manquants) |
-| `GET` | `/profile/user/:id` | Privé | Récupération du profil correspondant à l'ID utilisateur spécifié. | Fait |
+| `GET` | `/profile/user/:id` | Public | Récupération du profil correspondant à l'ID utilisateur spécifié. | Fait |
 
 ---
 
