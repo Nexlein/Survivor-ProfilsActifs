@@ -1,10 +1,12 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { login, register, setToken, translateApiError } from "@/lib/api";
+import { Checkbox } from "@/components/ui/Checkbox";
+import { login, register, setToken, setUser, translateApiError } from "@/lib/api";
+import { usePageTitle } from "@/lib/use-page-title";
 
 const STEP_LABELS = ["Compte", "Identité", "Compétences", "Consentement"];
 const SECTORS = ["Informatique", "Logistique", "Commerce"];
@@ -18,6 +20,7 @@ function isAtLeast16(dateOfBirth: string): boolean {
 }
 
 export default function CandidateRegisterPage() {
+  usePageTitle("Inscription candidat");
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +41,16 @@ export default function CandidateRegisterPage() {
 
   const [consent1, setConsent1] = useState(false);
   const [consent2, setConsent2] = useState(false);
+
+  const stepHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  // Déplace le focus clavier sur le titre de chaque étape lors d'un
+  // changement d'étape : sans ça, le focus reste "perdu" (sur le bouton
+  // précédent, démonté par le rendu conditionnel), ce qui viole RGAA 2.1
+  // (perte de focus) pour les utilisateurs clavier/lecteur d'écran.
+  useEffect(() => {
+    stepHeadingRef.current?.focus();
+  }, [step]);
 
   function goNext() {
     setError(null);
@@ -99,8 +112,9 @@ export default function CandidateRegisterPage() {
         role: "JOB_SEEKER",
         dateOfBirth: dateOfBirth || undefined,
       });
-      const { token } = await login(email, password);
+      const { token, user } = await login(email, password);
       setToken(token);
+      setUser(user);
       router.push("/");
     } catch (err) {
       setError(translateApiError(err));
@@ -114,8 +128,10 @@ export default function CandidateRegisterPage() {
       <form onSubmit={handleSubmit} className="w-full max-w-md">
         <div className="mb-7">
           <div className="flex justify-between text-xs text-text-secondary mb-1.5">
-            {STEP_LABELS.map((label) => (
-              <span key={label}>{label}</span>
+            {STEP_LABELS.map((label, index) => (
+              <span key={label} aria-current={step === index + 1 ? "step" : undefined}>
+                {label}
+              </span>
             ))}
           </div>
           <div className="h-1 bg-border rounded-full">
@@ -128,7 +144,7 @@ export default function CandidateRegisterPage() {
 
         {step === 1 && (
           <div className="flex flex-col gap-4">
-            <h2>Créer un compte</h2>
+            <h2 ref={stepHeadingRef} tabIndex={-1}>Créer un compte</h2>
             <Input
               id="email"
               type="email"
@@ -165,7 +181,7 @@ export default function CandidateRegisterPage() {
               Les personnes de moins de 16 ans ne peuvent pas s&apos;inscrire. Les 16-18 ans relèvent
               d&apos;un régime spécifique.
             </p>
-            {error && <p className="text-error text-sm">{error}</p>}
+            {error && <p role="alert" className="text-error text-sm">{error}</p>}
             <Button type="button" variant="primary" onClick={goNext} className="self-start">
               Suivant →
             </Button>
@@ -174,7 +190,7 @@ export default function CandidateRegisterPage() {
 
         {step === 2 && (
           <div className="flex flex-col gap-4">
-            <h2>Votre identité</h2>
+            <h2 ref={stepHeadingRef} tabIndex={-1}>Votre identité</h2>
             <Input
               id="first-name"
               label="Prénom"
@@ -214,7 +230,7 @@ export default function CandidateRegisterPage() {
               onChange={(e) => setLocation(e.target.value)}
               required
             />
-            {error && <p className="text-error text-sm">{error}</p>}
+            {error && <p role="alert" className="text-error text-sm">{error}</p>}
             <div className="flex gap-3">
               <Button type="button" variant="secondary" onClick={goPrev}>
                 ← Retour
@@ -228,7 +244,7 @@ export default function CandidateRegisterPage() {
 
         {step === 3 && (
           <div className="flex flex-col gap-4">
-            <h2>Vos compétences</h2>
+            <h2 ref={stepHeadingRef} tabIndex={-1}>Vos compétences</h2>
             <input
               placeholder="Rechercher une compétence…"
               value={skillInput}
@@ -259,7 +275,7 @@ export default function CandidateRegisterPage() {
               ))}
             </div>
             <p className="text-text-secondary text-xs">Maximum 10 compétences.</p>
-            {error && <p className="text-error text-sm">{error}</p>}
+            {error && <p role="alert" className="text-error text-sm">{error}</p>}
             <div className="flex gap-3">
               <Button type="button" variant="secondary" onClick={goPrev}>
                 ← Retour
@@ -273,36 +289,36 @@ export default function CandidateRegisterPage() {
 
         {step === 4 && (
           <div className="flex flex-col gap-4">
-            <h2>Vos données et vos droits</h2>
+            <h2 ref={stepHeadingRef} tabIndex={-1}>Vos données et vos droits</h2>
             <div className="bg-bg-secondary rounded-lg p-4 text-sm text-text">
               En publiant une vidéo sur ProfilsActifs, vous consentez à ce que votre image et votre
               voix soient visibles publiquement. Ce consentement est révocable à tout moment depuis
               votre profil. La révocation entraîne la suppression définitive du fichier vidéo.
             </div>
-            <label className="flex gap-2 items-start text-[13px]">
-              <input
-                type="checkbox"
-                checked={consent1}
-                onChange={(e) => setConsent1(e.target.checked)}
-                className="mt-0.5 accent-primary"
-              />
-              <span>
-                J&apos;ai lu et j&apos;accepte les <a href="#">Conditions Générales d&apos;Utilisation</a>.
-              </span>
-            </label>
-            <label className="flex gap-2 items-start text-[13px]">
-              <input
-                type="checkbox"
-                checked={consent2}
-                onChange={(e) => setConsent2(e.target.checked)}
-                className="mt-0.5 accent-primary"
-              />
-              <span>
-                J&apos;ai compris que la révocation de mon consentement vidéo entraîne la suppression
-                définitive de mes vidéos.
-              </span>
-            </label>
-            {error && <p className="text-error text-sm">{error}</p>}
+            <Checkbox
+              id="consent-cgu"
+              wrapperClassName="items-start"
+              className="mt-0.5"
+              checked={consent1}
+              onChange={(e) => setConsent1(e.target.checked)}
+              label={
+                <span>
+                  J&apos;ai lu et j&apos;accepte les{" "}
+                  <a href="/cgu" target="_blank" rel="noopener noreferrer">
+                    Conditions Générales d&apos;Utilisation
+                  </a>.
+                </span>
+              }
+            />
+            <Checkbox
+              id="consent-video"
+              wrapperClassName="items-start"
+              className="mt-0.5"
+              checked={consent2}
+              onChange={(e) => setConsent2(e.target.checked)}
+              label="J'ai compris que la révocation de mon consentement vidéo entraîne la suppression définitive de mes vidéos."
+            />
+            {error && <p role="alert" className="text-error text-sm">{error}</p>}
             <div className="flex gap-3 items-center">
               <Button type="button" variant="secondary" onClick={goPrev}>
                 ← Retour

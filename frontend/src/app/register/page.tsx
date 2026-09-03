@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { buttonClasses } from "@/components/ui/Button";
+
+export const metadata: Metadata = { title: "Rejoindre ProfilsActifs" };
 
 export default function RegisterRolePage() {
   return (
@@ -20,10 +23,8 @@ export default function RegisterRolePage() {
             Créez votre profil, publiez votre vidéo de présentation et obtenez votre certification
             officielle JEB.
           </p>
-          <Link href="/register/candidate" className="block">
-            <Button variant="primary" className="w-full">
-              Je suis demandeur d&apos;emploi
-            </Button>
+          <Link href="/register/candidate" className={buttonClasses("primary", "md", "w-full")}>
+            Je suis demandeur d&apos;emploi
           </Link>
         </div>
 
@@ -34,10 +35,8 @@ export default function RegisterRolePage() {
             Accédez au catalogue des profils certifiés, filtrez par compétences et contactez les
             candidats.
           </p>
-          <Link href="/register/recruiter" className="block">
-            <Button variant="secondary" className="w-full">
-              Je suis recruteur
-            </Button>
+          <Link href="/register/recruiter" className={buttonClasses("secondary", "md", "w-full")}>
+            Je suis recruteur
           </Link>
         </div>
       </div>

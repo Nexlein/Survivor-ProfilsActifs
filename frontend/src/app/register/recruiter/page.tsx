@@ -4,9 +4,11 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { login, register, setToken, translateApiError } from "@/lib/api";
+import { login, register, setToken, setUser, translateApiError } from "@/lib/api";
+import { usePageTitle } from "@/lib/use-page-title";
 
 export default function RecruiterRegisterPage() {
+  usePageTitle("Inscription recruteur");
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,8 +33,9 @@ export default function RecruiterRegisterPage() {
     setIsSubmitting(true);
     try {
       await register({ email, password, fullName, role: "RECRUITER" });
-      const { token } = await login(email, password);
+      const { token, user } = await login(email, password);
       setToken(token);
+      setUser(user);
       router.push("/");
     } catch (err) {
       setError(translateApiError(err));
@@ -99,7 +102,7 @@ export default function RecruiterRegisterPage() {
           required
         />
 
-        {error && <p className="text-error text-sm">{error}</p>}
+        {error && <p role="alert" className="text-error text-sm">{error}</p>}
 
         <Button type="submit" variant="primary" disabled={isSubmitting} className="w-full">
           {isSubmitting ? "Création..." : "Créer mon compte"}

@@ -5,9 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { login, setToken, translateApiError } from "@/lib/api";
+import { login, setToken, setUser, translateApiError } from "@/lib/api";
+import { usePageTitle } from "@/lib/use-page-title";
 
 export default function LoginPage() {
+  usePageTitle("Connexion");
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,8 +23,9 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const { token } = await login(email, password);
+      const { token, user } = await login(email, password);
       setToken(token);
+      setUser(user);
       router.push("/");
     } catch (err) {
       setError(translateApiError(err));
@@ -32,7 +35,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex flex-1 min-h-screen">
+    <main className="flex flex-1">
       <div className="hidden md:flex flex-[0_0_45%] bg-primary flex-col items-center justify-center p-10 text-center gap-4">
         <div className="w-14 h-14 border border-white text-white font-bold font-heading flex items-center justify-center">
           JEB
@@ -81,10 +84,10 @@ export default function LoginPage() {
           </div>
 
           <div className="text-right text-sm">
-            <a href="#">Mot de passe oublié ?</a>
+            <Link href="/forgot-password">Mot de passe oublié ?</Link>
           </div>
 
-          {error && <p className="text-error text-sm">{error}</p>}
+          {error && <p role="alert" className="text-error text-sm">{error}</p>}
 
           <Button type="submit" variant="primary" disabled={isSubmitting} className="w-full">
             {isSubmitting ? "Connexion..." : "Se connecter"}
