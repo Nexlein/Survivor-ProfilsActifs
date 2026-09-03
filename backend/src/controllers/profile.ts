@@ -133,13 +133,22 @@ export const getCurrentProfile = async (req: Request, res: Response, next: NextF
 /**
  * Controller: Get all profiles
  * @route Get /api/profiles/all
- * @access Private
+ * @access Public — the candidate catalog is browsable without an account;
+ * only profiles of minors are restricted to authenticated recruiters
+ * (docs/mails/mesures_conservatoires.md).
  */
 export const getAllProfiles = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body?.user;
-        if (!user) {
-            return res.status(401).json({ error: 'Unauthorized' });
+        // Optional Auth Extraction — same pattern as getProfileByUserId.
+        let user: any = null;
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if (token) {
+            try {
+                user = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret') as any;
+            } catch (err) {
+                // Invalid token -> treat as unauthenticated
+            }
         }
 
         const eighteenYearsAgo = getEighteenYearsAgo();
@@ -149,7 +158,7 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
             user: { dateOfBirth: { not: null } }
         };
 
-        if (user.role !== 'RECRUITER') {
+        if (!user || user.role !== 'RECRUITER') {
             whereClause.user.dateOfBirth = { lte: eighteenYearsAgo };
         }
 

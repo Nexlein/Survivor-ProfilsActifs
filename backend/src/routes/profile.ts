@@ -11,14 +11,15 @@ profileRouter.get('/', authenticateToken, getProfile);
 profileRouter.put('/', authenticateToken, updateProfile);
 profileRouter.delete('/', authenticateToken, deleteProfile);
 profileRouter.get('/me', authenticateToken, getCurrentProfile);
-profileRouter.get('/all', authenticateToken, getAllProfiles);
 profileRouter.post('/avatar', authenticateToken, uploadAvatar.single('avatar'), uploadProfileAvatar);
 
 // Unified Video Routes (Ticket #83)
 profileRouter.post('/videos', authenticateToken, upload.fields([{ name: 'video', maxCount: 1 }, { name: 'subtitle', maxCount: 1 }]), createProfileVideo);
 profileRouter.delete('/videos/:id', authenticateToken, deleteProfileVideo);
 
-// Public route (optional auth handled in controller for age checks)
+// Public routes — browsable without an account; optional auth is handled
+// inside the controllers themselves (minors are only shown to recruiters).
+profileRouter.get('/all', getAllProfiles);
 profileRouter.get('/user/:id', getProfileByUserId);
 
 export default profileRouter;
