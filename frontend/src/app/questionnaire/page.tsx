@@ -72,10 +72,6 @@ export default function QuestionnairePage() {
     const nextAnswers = { ...answers, [questionId]: optionId };
     setAnswers(nextAnswers);
     persist(nextAnswers);
-
-    if (currentIndex + 1 < questions.length) {
-      setCurrentIndex((i) => i + 1);
-    }
   }
 
   async function handleSubmit() {
