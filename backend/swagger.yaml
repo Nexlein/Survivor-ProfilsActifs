@@ -168,9 +168,7 @@ paths:
                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
       responses:
         "200":
-          description:
-            Token refreshed successfully, returns new JWT token and user
-            info
+          description: Token refreshed successfully, returns new JWT token and user info
           content:
             application/json:
               schema:
@@ -336,6 +334,97 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "404":
           description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /questionnaire/questions:
+    get:
+      summary: Get Questionnaire Questions
+      tags:
+        - Questionnaire
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Questionnaire questions with options.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuestionnaireQuestion"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /questionnaire/progression:
+    get:
+      summary: Get Candidate Questionnaire Progression
+      tags:
+        - Questionnaire
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current questionnaire progression for the authenticated profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionnaireProgress"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      summary: Save Candidate Questionnaire Progression
+      tags:
+        - Questionnaire
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionnaireProgressInput"
+      responses:
+        "200":
+          description: Questionnaire progression saved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionnaireProgress"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /questionnaire/submit:
+    post:
+      summary: Submit Questionnaire
+      tags:
+        - Questionnaire
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Questionnaire submitted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Questionnaire submitted successfully
+        "401":
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -600,9 +689,7 @@ paths:
   /compliance/data-export:
     get:
       summary: Personal Data Export (GDPR)
-      description:
-        Right of access to data. Returns all personal data associated with
-        the account.
+      description: Right of access to data. Returns all personal data associated with the account.
       tags:
         - Compliance
       security:
@@ -619,9 +706,7 @@ paths:
   /compliance/account:
     delete:
       summary: Right to be Forgotten (GDPR)
-      description:
-        Full and permanent account deletion, including physical files (.mp4,
-        .vtt).
+      description: Full and permanent account deletion, including physical files (.mp4, .vtt).
       tags:
         - Compliance
       security:
@@ -791,6 +876,69 @@ components:
         hasWorkPermit:
           type: boolean
           example: true
+    QuestionnaireQuestion:
+      type: object
+      properties:
+        id:
+          type: string
+          example: q-001
+        text:
+          type: string
+          example: Votre réveil ne sonne pas un matin de semaine, vous vous réveillez 30 minutes en retard. Que faites-vous ?
+        weighting:
+          type: integer
+          example: 1
+        version:
+          type: integer
+          example: 1
+        isActive:
+          type: boolean
+          example: true
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionnaireOption"
+    QuestionnaireOption:
+      type: object
+      properties:
+        id:
+          type: string
+          example: opt-001-1
+        text:
+          type: string
+          example: Je préviens immédiatement mon responsable, je m'excuse et j'arrive au plus vite.
+        points:
+          type: integer
+          example: 10
+    QuestionnaireProgress:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        profileId:
+          type: string
+          format: uuid
+        questionnaireVersion:
+          type: integer
+          example: 1
+        answers:
+          type: object
+          additionalProperties:
+            type: string
+        lastSavedAt:
+          type: string
+          format: date-time
+    QuestionnaireProgressInput:
+      type: object
+      properties:
+        questionnaireVersion:
+          type: integer
+          example: 1
+        answers:
+          type: object
+          additionalProperties:
+            type: string
     Video:
       type: object
       properties:
