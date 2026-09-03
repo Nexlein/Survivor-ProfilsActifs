@@ -290,6 +290,57 @@ export function getAllProfiles() {
   return request<Profile[]>("/profile/all");
 }
 
+export type QuestionOption = {
+  id: string;
+  questionId: string;
+  text: string;
+  points: number;
+};
+
+export type Question = {
+  id: string;
+  text: string;
+  weighting: number;
+  options: QuestionOption[];
+};
+
+export type QuestionnaireProgress = {
+  id: string;
+  profileId: string;
+  questionnaireVersion: number;
+  answers: Record<string, string>;
+  lastSavedAt: string;
+} | null;
+
+export type QuestionnaireResult = {
+  message: string;
+  totalScore: number;
+  hasWorkPermit: boolean;
+  completedAt: string;
+};
+
+export function getQuestionnaireQuestions() {
+  return request<Question[]>("/questionnaire/questions");
+}
+
+export function getQuestionnaireProgress() {
+  return request<QuestionnaireProgress>("/questionnaire/progression");
+}
+
+export function saveQuestionnaireProgress(answers: Record<string, string>) {
+  return request<QuestionnaireProgress>("/questionnaire/progression", {
+    method: "POST",
+    body: JSON.stringify({ answers }),
+  });
+}
+
+export function submitQuestionnaire(answers: Record<string, string>) {
+  return request<QuestionnaireResult>("/questionnaire/submit", {
+    method: "POST",
+    body: JSON.stringify({ answers }),
+  });
+}
+
 const ERROR_TRANSLATIONS: Record<string, string> = {
   "Invalid credentials": "Adresse e-mail ou mot de passe incorrect.",
   "Email and password are required": "L'adresse e-mail et le mot de passe sont requis.",
