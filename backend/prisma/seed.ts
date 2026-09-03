@@ -59,12 +59,12 @@ async function main() {
 
   console.log('Creating 25+ Candidates...');
   // We need exactly 25 candidates to test pagination (20 per page).
-  
+
   for (let i = 1; i <= 25; i++) {
     const firstName = getRandom(FIRST_NAMES);
     const lastName = getRandom(LAST_NAMES);
     const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@example.com`;
-    
+
     // RGPD scenarios:
     // 20 Adults (>= 18)
     // 3 Minors (16-18) - hidden from public, visible to recruiters
