@@ -11,16 +11,22 @@ type Tab = {
 type TabsProps = {
   tabs: Tab[];
   defaultTabId?: string;
+  onChange?: (tabId: string) => void;
 };
 
-export function Tabs({ tabs, defaultTabId }: TabsProps) {
+export function Tabs({ tabs, defaultTabId, onChange }: TabsProps) {
   const [activeId, setActiveId] = useState(defaultTabId ?? tabs[0]?.id);
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  function selectTab(id: string) {
+    setActiveId(id);
+    onChange?.(id);
+  }
 
   function focusTab(index: number) {
     const tab = tabs[index];
     if (!tab) return;
-    setActiveId(tab.id);
+    selectTab(tab.id);
     tabRefs.current[tab.id]?.focus();
   }
 
@@ -58,7 +64,7 @@ export function Tabs({ tabs, defaultTabId }: TabsProps) {
               aria-selected={isActive}
               aria-controls={`tabpanel-${tab.id}`}
               tabIndex={isActive ? 0 : -1}
-              onClick={() => setActiveId(tab.id)}
+              onClick={() => selectTab(tab.id)}
               onKeyDown={(event) => handleKeyDown(event, index)}
               className={`px-4 py-2.5 border-b-2 font-bold text-sm font-heading ${
                 isActive ? "border-primary text-primary" : "border-transparent text-text-secondary"

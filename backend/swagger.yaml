@@ -617,6 +617,9 @@ paths:
                 videoUrl:
                   type: string
                   description: Required if type is LINK
+                subtitleUrl:
+                  type: string
+                  description: Optional, only used if type is LINK (ignored for UPLOAD — use the subtitle file field instead)
                 consentTextVersion:
                   type: string
                 video:
@@ -626,6 +629,7 @@ paths:
                 subtitle:
                   type: string
                   format: binary
+                  description: Optional, only used if type is UPLOAD
       responses:
         "201":
           description: Video created

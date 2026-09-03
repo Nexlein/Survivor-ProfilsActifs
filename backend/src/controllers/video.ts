@@ -11,7 +11,12 @@ import path from 'path';
  */
 export const createProfileVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body?.user;
+        // req.body.user (set by authenticateToken) doesn't survive here: multer
+        // parses the multipart body *after* auth runs and replaces req.body
+        // wholesale. req.user is set independently by the same middleware and
+        // isn't affected, so read from there instead (same fix as the avatar
+        // upload route).
+        const user = (req as any).user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
@@ -21,7 +26,7 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
             return res.status(404).json({ error: 'Profile not found' });
         }
 
-        const { type, videoUrl, consentTextVersion } = req.body;
+        const { type, videoUrl, consentTextVersion, subtitleUrl: linkSubtitleUrl } = req.body;
 
         let finalUrl = '';
         let subtitleUrl: string | null = null;
@@ -41,6 +46,7 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
                 return res.status(400).json({ error: 'videoUrl is required for LINK type' });
             }
             finalUrl = videoUrl;
+            subtitleUrl = linkSubtitleUrl || null;
         } else {
             return res.status(400).json({ error: 'type must be LINK or UPLOAD' });
         }

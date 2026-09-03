@@ -124,15 +124,12 @@ export function resolveAvatarUrl(avatarUrl: string | null | undefined): string |
   return avatarUrl.startsWith("/") ? `${API_URL}${avatarUrl}` : avatarUrl;
 }
 
-export async function uploadAvatar(file: File): Promise<Profile> {
+// No Content-Type header here on purpose — the browser sets the
+// multipart/form-data boundary itself, which JSON.stringify-based request()
+// above doesn't support.
+async function requestForm<T>(path: string, body: FormData): Promise<T> {
   const token = getToken();
-  const body = new FormData();
-  body.append("avatar", file);
-
-  // No Content-Type header here on purpose — the browser sets the
-  // multipart/form-data boundary itself, which JSON.stringify-based
-  // request() above doesn't support.
-  const res = await fetch(`${API_URL}/profile/avatar`, {
+  const res = await fetch(`${API_URL}${path}`, {
     method: "POST",
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
     body,
@@ -142,7 +139,13 @@ export async function uploadAvatar(file: File): Promise<Profile> {
   if (!res.ok) {
     throw new ApiError(res.status, data.error ?? "Une erreur est survenue");
   }
-  return data as Profile;
+  return data as T;
+}
+
+export async function uploadAvatar(file: File): Promise<Profile> {
+  const body = new FormData();
+  body.append("avatar", file);
+  return requestForm<Profile>("/profile/avatar", body);
 }
 
 export function login(email: string, password: string) {
@@ -186,6 +189,19 @@ export function register(payload: RegisterPayload) {
   });
 }
 
+export type Video = {
+  id: string;
+  profileId: string;
+  type: "LINK" | "UPLOAD";
+  url: string;
+  subtitleUrl: string | null;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  rejectionReason?: string | null;
+  consentDate: string | null;
+  consentTextVersion: string | null;
+  createdAt: string;
+};
+
 export type Profile = {
   id: string;
   userId: string;
@@ -200,7 +216,7 @@ export type Profile = {
   certificationScore: number | null;
   hasWorkPermit: boolean;
   skills?: { id: string; name: string }[];
-  videos?: { id: string; url: string; type: string }[];
+  videos?: Video[];
   createdAt: string;
   updatedAt: string;
 };
@@ -229,6 +245,41 @@ export function updateProfile(payload: UpdateProfilePayload) {
     method: "PUT",
     body: JSON.stringify(payload),
   });
+}
+
+export function createVideoLink(payload: { videoUrl: string; subtitleUrl?: string; consentTextVersion: string }) {
+  const body = new FormData();
+  body.append("type", "LINK");
+  body.append("videoUrl", payload.videoUrl);
+  if (payload.subtitleUrl) body.append("subtitleUrl", payload.subtitleUrl);
+  body.append("consentTextVersion", payload.consentTextVersion);
+  return requestForm<Video>("/profile/videos", body);
+}
+
+export function createVideoUpload(payload: { video: File; subtitle?: File; consentTextVersion: string }) {
+  const body = new FormData();
+  body.append("type", "UPLOAD");
+  body.append("video", payload.video);
+  if (payload.subtitle) body.append("subtitle", payload.subtitle);
+  body.append("consentTextVersion", payload.consentTextVersion);
+  return requestForm<Video>("/profile/videos", body);
+}
+
+export function deleteVideo(id: string) {
+  return request<{ message: string; id: string }>(`/profile/videos/${id}`, { method: "DELETE" });
+}
+
+// /media/:id (and /:id/subtitle) require an Authorization header, so a plain
+// <video src="..."> can't hit them directly — fetch the bytes ourselves and
+// hand the <video>/<track> element a local blob: URL instead.
+export async function fetchMediaBlobUrl(path: string): Promise<string> {
+  const token = getToken();
+  const res = await fetch(`${API_URL}${path}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+  if (!res.ok) throw new ApiError(res.status, "Impossible de charger le média.");
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
 }
 
 export function deleteAccount() {
