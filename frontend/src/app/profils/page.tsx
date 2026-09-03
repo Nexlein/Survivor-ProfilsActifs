@@ -22,6 +22,7 @@ export default function ProfileCatalogPage() {
 
   const [search, setSearch] = useState("");
   const [sector, setSector] = useState("");
+  const [skill, setSkill] = useState("");
   const [location, setLocation] = useState("");
   const [certifiedOnly, setCertifiedOnly] = useState(false);
   const [page, setPage] = useState(1);
@@ -37,16 +38,23 @@ export default function ProfileCatalogPage() {
     return Array.from(new Set(profiles.map((p) => p.targetSector).filter(Boolean))) as string[];
   }, [profiles]);
 
+  const skills = useMemo(() => {
+    if (!profiles) return [];
+    const names = profiles.flatMap((p) => p.skills?.map((s) => s.name) ?? []);
+    return Array.from(new Set(names)).sort();
+  }, [profiles]);
+
   const filtered = useMemo(() => {
     if (!profiles) return [];
     return profiles.filter((p) => {
       if (search && !p.fullName.toLowerCase().includes(search.toLowerCase())) return false;
       if (sector && p.targetSector !== sector) return false;
+      if (skill && !p.skills?.some((s) => s.name === skill)) return false;
       if (location && !p.location?.toLowerCase().includes(location.toLowerCase())) return false;
       if (certifiedOnly && !p.hasWorkPermit) return false;
       return true;
     });
-  }, [profiles, search, sector, location, certifiedOnly]);
+  }, [profiles, search, sector, skill, location, certifiedOnly]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -55,6 +63,7 @@ export default function ProfileCatalogPage() {
   function resetFilters() {
     setSearch("");
     setSector("");
+    setSkill("");
     setLocation("");
     setCertifiedOnly(false);
     setPage(1);
@@ -96,6 +105,25 @@ export default function ProfileCatalogPage() {
             </option>
           ))}
         </select>
+        <label htmlFor="filter-skill" className="block text-xs font-bold text-text-secondary mb-2">
+          COMPÉTENCE
+        </label>
+        <select
+          id="filter-skill"
+          value={skill}
+          onChange={(e) => {
+            setSkill(e.target.value);
+            setPage(1);
+          }}
+          className="w-full border border-border rounded-md px-3 py-2 text-[13px] mb-3.5"
+        >
+          <option value="">Toutes compétences</option>
+          {skills.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
         <label htmlFor="filter-location" className="block text-xs font-bold text-text-secondary mb-2">
           LOCALISATION
         </label>
@@ -122,10 +150,6 @@ export default function ProfileCatalogPage() {
         <button type="button" onClick={resetFilters} className="text-[13px]">
           Réinitialiser
         </button>
-        <p className="text-xs text-text-secondary mt-4">
-          Filtre compétences non disponible pour l&apos;instant — l&apos;API ne renvoie pas encore les
-          compétences dans la liste des profils.
-        </p>
       </aside>
 
       <section className="flex-1 min-w-0">
