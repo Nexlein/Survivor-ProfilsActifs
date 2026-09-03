@@ -130,6 +130,14 @@ export type RegisterPayload = {
   fullName: string;
   role: "JOB_SEEKER" | "RECRUITER";
   dateOfBirth?: string;
+  // JOB_SEEKER
+  targetSector?: string;
+  location?: string;
+  skills?: string[];
+  // RECRUITER
+  companyName?: string;
+  industry?: string;
+  position?: string;
 };
 
 export type RegisterResponse = {

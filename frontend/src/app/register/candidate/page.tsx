@@ -111,6 +111,9 @@ export default function CandidateRegisterPage() {
         fullName: `${firstName} ${lastName}`.trim(),
         role: "JOB_SEEKER",
         dateOfBirth: dateOfBirth || undefined,
+        targetSector: sector,
+        location,
+        skills,
       });
       const { token, user } = await login(email, password);
       setToken(token);
