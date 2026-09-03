@@ -253,7 +253,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ProfileInput"
+              type: object
+              properties:
+                fullName:
+                  type: string
+                targetSector:
+                  type: string
+                location:
+                  type: string
+                companyName:
+                  type: string
+                industry:
+                  type: string
+                position:
+                  type: string
+                skills:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 10
       responses:
         "200":
           description: Profile updated successfully
@@ -372,8 +390,7 @@ paths:
       summary: Get Profile by User ID
       tags:
         - Profile
-      security:
-        - bearerAuth: []
+      security: []
       parameters:
         - name: id
           in: path
@@ -400,6 +417,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: "Acc\xE8s interdit (Profil de mineur)"
   /video/upload-file:
     post:
       summary: Upload Video File
