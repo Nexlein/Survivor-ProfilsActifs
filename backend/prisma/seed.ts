@@ -80,7 +80,7 @@ async function main() {
 
   console.log('Creating profiles and videos...');
 
-  await prisma.profile.create({
+  const profile1 = await prisma.profile.create({
     data: {
       userId: jobSeeker1.id,
       fullName: 'Jean Dupont',
@@ -107,7 +107,7 @@ async function main() {
     },
   });
 
-  await prisma.profile.create({
+  const profile2 = await prisma.profile.create({
     data: {
       userId: jobSeeker2.id,
       fullName: 'Marie Curie',
@@ -164,7 +164,7 @@ async function main() {
 
   await prisma.questionnaireProgress.create({
     data: {
-      profileId: jobSeeker1.id,
+      profileId: profile1.id,
       questionnaireVersion: 1,
       answers: {
         [firstQuestion.id]: firstQuestion.options[1].id,
@@ -179,7 +179,7 @@ async function main() {
 
   await prisma.questionnaireResult.create({
     data: {
-      profileId: jobSeeker2.id,
+      profileId: profile2.id,
       totalScore,
       hasPermisDeTravailler: true,
     },
