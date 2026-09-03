@@ -24,7 +24,8 @@ export default function EditProfilePage() {
   usePageTitle("Modifier mon profil");
   const router = useRouter();
   const currentUser = useCurrentUser();
-  const isEditableRole = !currentUser || currentUser.role === "JOB_SEEKER";
+  const isEditableRole = !currentUser || currentUser.role === "JOB_SEEKER" || currentUser.role === "RECRUITER";
+  const isRecruiter = currentUser?.role === "RECRUITER";
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(isEditableRole);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -32,6 +33,9 @@ export default function EditProfilePage() {
   const [fullName, setFullName] = useState("");
   const [sector, setSector] = useState("");
   const [location, setLocation] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [position, setPosition] = useState("");
 
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,6 +79,10 @@ export default function EditProfilePage() {
         setSector(p.targetSector ?? "");
         setLocation(p.location ?? "");
         setSkills((p.skills ?? []).map((s) => s.name));
+        setBio(p.bio ?? "");
+        setCompanyName(p.companyName ?? "");
+        setIndustry(p.industry ?? "");
+        setPosition(p.position ?? "");
         const resolvedAvatar = resolveAvatarUrl(p.avatarUrl);
         if (resolvedAvatar) setPhotoPreview(resolvedAvatar);
       })
@@ -92,7 +100,14 @@ export default function EditProfilePage() {
       if (photoFile) {
         await uploadAvatar(photoFile);
       }
-      await updateProfile({ fullName, targetSector: sector, location });
+      await updateProfile({
+        fullName,
+        targetSector: sector,
+        location,
+        bio,
+        skills,
+        ...(isRecruiter ? { companyName, industry, position } : {}),
+      });
       router.push(`/profils/${profile.userId}`);
     } catch (err) {
       setError(translateApiError(err));
@@ -118,8 +133,7 @@ export default function EditProfilePage() {
   if (!isEditableRole) {
     return (
       <main className="p-12 text-center text-error">
-        Cette page est réservée aux profils candidats. Les comptes recruteur n&apos;ont pas encore de
-        profil éditable.
+        Cette page est réservée aux profils candidats et recruteurs.
       </main>
     );
   }
@@ -166,45 +180,66 @@ export default function EditProfilePage() {
           onChange={(e) => setFullName(e.target.value)}
           required
         />
-        <Input id="sector" label="Secteur" value={sector} onChange={(e) => setSector(e.target.value)} />
-        <Input
-          id="location"
-          label="Localisation"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
+        {isRecruiter ? (
+          <>
+            <Input
+              id="company-name"
+              label="Nom de l'entreprise"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+            />
+            <Input
+              id="industry"
+              label="Secteur d'activité"
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+            />
+            <Input
+              id="position"
+              label="Poste occupé"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+            />
+          </>
+        ) : (
+          <>
+            <Input id="sector" label="Secteur" value={sector} onChange={(e) => setSector(e.target.value)} />
+            <Input
+              id="location"
+              label="Localisation"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
 
-        <div>
-          <label htmlFor="skill-input" className="block text-[13px] font-semibold text-text font-heading mb-1.5">
-            Compétences
-          </label>
-          <input
-            id="skill-input"
-            placeholder="Ajouter une compétence…"
-            value={skillInput}
-            onChange={(e) => setSkillInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                addSkill();
-              }
-            }}
-            className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
-          />
-          {skills.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2.5">
-              {skills.map((skill) => (
-                <Chip key={skill} onRemove={() => setSkills((s) => s.filter((x) => x !== skill))}>
-                  {skill}
-                </Chip>
-              ))}
+            <div>
+              <label htmlFor="skill-input" className="block text-[13px] font-semibold text-text font-heading mb-1.5">
+                Compétences
+              </label>
+              <input
+                id="skill-input"
+                placeholder="Ajouter une compétence…"
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addSkill();
+                  }
+                }}
+                className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
+              />
+              {skills.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2.5">
+                  {skills.map((skill) => (
+                    <Chip key={skill} onRemove={() => setSkills((s) => s.filter((x) => x !== skill))}>
+                      {skill}
+                    </Chip>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-          <p className="text-text-secondary text-xs mt-1.5">
-            Modification des compétences pas encore connectée au serveur — l&apos;API ne permet pas
-            encore de les mettre à jour depuis cette page.
-          </p>
-        </div>
+          </>
+        )}
 
         <div>
           <label htmlFor="bio" className="block text-[13px] font-semibold text-text font-heading mb-1.5">
@@ -218,10 +253,6 @@ export default function EditProfilePage() {
             onChange={(e) => setBio(e.target.value)}
             className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
           />
-          <p className="text-text-secondary text-xs mt-1.5">
-            Section pas encore connectée au serveur — ce champ n&apos;existe pas encore dans la base de
-            données.
-          </p>
         </div>
 
         {error && <p role="alert" className="text-error text-sm">{error}</p>}

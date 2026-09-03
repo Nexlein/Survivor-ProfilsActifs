@@ -261,6 +261,8 @@ paths:
                   type: string
                 location:
                   type: string
+                bio:
+                  type: string
                 companyName:
                   type: string
                 industry:
@@ -837,6 +839,10 @@ components:
           type: string
           nullable: true
           example: /uploads/avatars/1725360000000-123456789.jpg
+        bio:
+          type: string
+          nullable: true
+          example: Développeuse passionnée par le web accessible.
         certificationScore:
           type: integer
           nullable: true

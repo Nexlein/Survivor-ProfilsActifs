@@ -57,6 +57,7 @@ model Profile {
   targetSector String?
   location     String?
   avatarUrl    String?
+  bio          String?
 
   // Recruiter specific fields
   companyName  String?
