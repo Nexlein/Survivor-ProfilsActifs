@@ -57,6 +57,12 @@ model Profile {
   targetSector String?
   location     String?
 
+  // Recruiter specific fields
+  companyName  String?
+  industry     String?
+  position     String?
+
+
   // JEB Work Permit
   certificationScore Int?
   hasWorkPermit      Boolean @default(false)

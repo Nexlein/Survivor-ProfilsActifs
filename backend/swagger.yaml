@@ -70,6 +70,29 @@ paths:
                 dateOfBirth:
                   type: string
                   example: "1998-05-14"
+                targetSector:
+                  type: string
+                  example: Informatique
+                location:
+                  type: string
+                  example: Paris, France
+                skills:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 10
+                  example:
+                    - React
+                    - Node.js
+                companyName:
+                  type: string
+                  example: TechCorp
+                industry:
+                  type: string
+                  example: Logiciel
+                position:
+                  type: string
+                  example: CTO
       responses:
         "201":
           description: User created successfully
