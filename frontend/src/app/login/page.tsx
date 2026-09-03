@@ -83,10 +83,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="text-right text-sm">
-            <Link href="/forgot-password">Mot de passe oublié ?</Link>
-          </div>
-
           {error && <p role="alert" className="text-error text-sm">{error}</p>}
 
           <Button type="submit" variant="primary" disabled={isSubmitting} className="w-full">
