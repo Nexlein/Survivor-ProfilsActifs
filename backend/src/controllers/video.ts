@@ -147,8 +147,8 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
         if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
-        const take = 20;
-        const skip = (page - 1) * take;
+        const pageSize = 20;
+        const skip = (page - 1) * pageSize;
 
         const eighteenYearsAgo = getEighteenYearsAgo();
 
@@ -164,11 +164,14 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
             whereClause.profile.user.dateOfBirth = { lte: eighteenYearsAgo };
         }
 
-        const videos = await prisma.video.findMany({
-            where: whereClause, take, skip, orderBy: { createdAt: 'desc' },
-        });
+        const [videos, total] = await Promise.all([
+            prisma.video.findMany({
+                where: whereClause, take: pageSize, skip, orderBy: { createdAt: 'desc' },
+            }),
+            prisma.video.count({ where: whereClause }),
+        ]);
 
-        return res.status(200).json(videos);
+        return res.status(200).json({ videos, total, page, pageSize });
     } catch (error) { return next(error); }
 };
 

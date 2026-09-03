@@ -286,8 +286,18 @@ export function deleteAccount() {
   return request<Profile>("/profile", { method: "DELETE" });
 }
 
-export function getAllProfiles() {
-  return request<Profile[]>("/profile/all");
+export type ProfilePage = {
+  profiles: Profile[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
+// Server-side pagination is mandatory here (20/page, per Thomas Vignal's
+// spec) — fetches one page at a time rather than accumulating every page
+// into memory client-side.
+export function getAllProfiles(page = 1) {
+  return request<ProfilePage>(`/profile/all?page=${page}`);
 }
 
 export type QuestionOption = {

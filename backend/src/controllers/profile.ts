@@ -163,29 +163,34 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
         }
 
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
-        const take = 20;
-        const skip = (page - 1) * take;
+        const pageSize = 20;
+        const skip = (page - 1) * pageSize;
 
-        const profiles = await prisma.profile.findMany({
-            where: whereClause,
-            take,
-            skip,
-            include: {
-                skills: true,
-                videos: {
-                    where: { status: 'APPROVED' }, // Only show approved videos
-                    select: {
-                        id: true,
-                        type: true,
-                        url: true,
-                        subtitleUrl: true,
-                        createdAt: true,
+        const [profiles, total] = await Promise.all([
+            prisma.profile.findMany({
+                where: whereClause,
+                take: pageSize,
+                skip,
+                include: {
+                    skills: true,
+                    videos: {
+                        where: { status: 'APPROVED' }, // Only show approved videos
+                        select: {
+                            id: true,
+                            type: true,
+                            url: true,
+                            subtitleUrl: true,
+                            createdAt: true,
+                        }
                     }
                 }
-            }
-        });
+            }),
+            prisma.profile.count({ where: whereClause }),
+        ]);
 
-        return res.json(profiles);
+        // A page past the end isn't an error — findMany/count already return
+        // an empty result set cleanly, no bounds-check needed to avoid a crash.
+        return res.json({ profiles, total, page, pageSize });
     } catch (error) {
         return next(error);
     }
