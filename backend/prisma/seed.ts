@@ -1,5 +1,21 @@
 import { prisma } from '../src/prisma.js';
 import bcrypt from 'bcrypt';
+import fs from 'fs';
+import path from 'path';
+
+type QuestionSeedOption = {
+  id: string;
+  text: string;
+  points: number;
+};
+
+type QuestionSeed = {
+  id: string;
+  category: string;
+  text: string;
+  weighting: number;
+  options: QuestionSeedOption[];
+};
 
 const FIRST_NAMES = ['Jean', 'Marie', 'Luc', 'Sophie', 'Thomas', 'Emma', 'Nicolas', 'Julie', 'Pierre', 'Alice', 'Antoine', 'Camille', 'Julien', 'Chloe', 'Maxime', 'Sarah', 'Alexandre', 'Laura', 'Guillaume', 'Marion'];
 const LAST_NAMES = ['Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand', 'Leroy', 'Moreau', 'Simon', 'Laurent', 'Lefebvre', 'Michel', 'Garcia', 'David', 'Bertrand', 'Roux', 'Vincent', 'Fournier'];
@@ -11,12 +27,16 @@ const getRandom = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)]
 async function main() {
   console.log('Starting database seeding...');
 
+  const questionsSeedPath = path.resolve(__dirname, 'questions_seed.json');
+  const questionnaireSeeds = JSON.parse(fs.readFileSync(questionsSeedPath, 'utf8')) as QuestionSeed[];
+
   console.log('Cleaning existing data...');
   await prisma.interaction.deleteMany();
   await prisma.loginLog.deleteMany();
   await prisma.option.deleteMany();
   await prisma.question.deleteMany();
   await prisma.questionnaireProgress.deleteMany();
+  await prisma.questionnaireResult.deleteMany();
   await prisma.video.deleteMany();
   await prisma.skill.deleteMany();
   await prisma.profile.deleteMany();
@@ -59,6 +79,8 @@ async function main() {
 
   console.log('Creating 25+ Candidates...');
   // We need exactly 25 candidates to test pagination (20 per page).
+  let firstProfileId: string | null = null;
+  let secondProfileId: string | null = null;
 
   for (let i = 1; i <= 25; i++) {
     const firstName = getRandom(FIRST_NAMES);
@@ -101,7 +123,7 @@ async function main() {
     // Random 2 to 4 skills
     const userSkills = [...skills].sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 3) + 2);
 
-    await prisma.profile.create({
+    const profile = await prisma.profile.create({
       data: {
         userId: user.id,
         fullName: `${firstName} ${lastName}`,
@@ -127,32 +149,66 @@ async function main() {
         },
       },
     });
+    if (!firstProfileId) {
+      firstProfileId = profile.id;
+    } else if (!secondProfileId) {
+      secondProfileId = profile.id;
+    }
   }
 
   console.log('Creating questionnaire...');
 
-  const qs = [
-    { text: "Quelle est la principale qualité d'un bon leader ?", weighting: 2, opts: ["L'autorité", "L'écoute", "La vitesse"] },
-    { text: "Que faire en cas de conflit dans une équipe ?", weighting: 3, opts: ["Ignorer", "Prendre parti", "Organiser une médiation"] },
-    { text: "Comment gérez-vous le stress ?", weighting: 2, opts: ["Je panique", "Je m'isole", "Je planifie et priorise"] },
-    { text: "Quel est le but d'un stand-up meeting ?", weighting: 1, opts: ["Se plaindre", "Faire un long bilan", "Aligner l'équipe rapidement"] },
-    { text: "Comment réagissez-vous face à l'échec ?", weighting: 3, opts: ["C'est la fin", "J'accuse les autres", "J'en tire une leçon"] }
-  ];
-
-  for (const q of qs) {
+  for (const questionSeed of questionnaireSeeds) {
     await prisma.question.create({
       data: {
-        text: q.text,
-        weighting: q.weighting,
-        options: {
-          create: q.opts.map((opt, idx) => ({
-            text: opt,
-            isCorrect: idx === 2 // Making the 3rd option correct for all of them just for seeding
-          }))
-        }
-      }
+        id: questionSeed.id,
+        text: questionSeed.text,
+        weighting: questionSeed.weighting,
+      },
     });
+
+    for (const optionSeed of questionSeed.options) {
+      await prisma.option.create({
+        data: {
+          id: optionSeed.id,
+          questionId: questionSeed.id,
+          text: optionSeed.text,
+          points: optionSeed.points,
+        },
+      });
+    }
   }
+
+  const firstQuestion = questionnaireSeeds[0];
+  if (!firstQuestion) {
+    throw new Error('No questionnaire seeds found');
+  }
+  if (!firstProfileId || !secondProfileId) {
+    throw new Error('Not enough seeded profiles for questionnaire fixtures');
+  }
+
+  await prisma.questionnaireProgress.create({
+    data: {
+      profileId: firstProfileId,
+      questionnaireVersion: 1,
+      answers: {
+        [firstQuestion.id]: firstQuestion.options[1].id,
+      },
+    },
+  });
+
+  const totalScore = questionnaireSeeds.reduce((score, question) => {
+    const bestOption = question.options.reduce((best, option) => (option.points > best.points ? option : best));
+    return score + bestOption.points;
+  }, 0);
+
+  await prisma.questionnaireResult.create({
+    data: {
+      profileId: secondProfileId,
+      totalScore,
+      hasPermisDeTravailler: true,
+    },
+  });
 
   console.log('Seeding finished successfully! 25+ Candidates created.');
 }

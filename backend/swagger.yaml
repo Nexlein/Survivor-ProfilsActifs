@@ -427,7 +427,238 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "403":
-          description: "Acc\xE8s interdit (Profil de mineur)"
+          description: "Accès interdit (Profil de mineur)"
+  /questionnaire/questions:
+    get:
+      summary: Get Questionnaire Questions
+      tags:
+        - Questionnaire
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Questionnaire questions with options.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuestionnaireQuestion"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /questionnaire/progression:
+    get:
+      summary: Get Candidate Questionnaire Progression
+      tags:
+        - Questionnaire
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current questionnaire progression for the authenticated profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionnaireProgress"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      summary: Save Candidate Questionnaire Progression
+      tags:
+        - Questionnaire
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionnaireProgressInput"
+      responses:
+        "200":
+          description: Questionnaire progression saved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionnaireProgress"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /questionnaire/submit:
+    post:
+      summary: Submit Questionnaire
+      tags:
+        - Questionnaire
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Questionnaire submitted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Questionnaire submitted successfully
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/upload-file:
+    post:
+      summary: Upload Video File
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - video
+                - profileId
+              properties:
+                video:
+                  type: string
+                  format: binary
+                  description: The video file to upload
+                profileId:
+                  type: string
+                  format: uuid
+                  example: 123e4567-e89b-12d3-a456-426614174000
+                consentTextVersion:
+                  type: string
+                  example: v1.0
+      responses:
+        "201":
+          description: Video uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "400":
+          description: Bad request (missing file or profileId)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/upload-link:
+    post:
+      summary: Upload Video Link
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - videoUrl
+                - profileId
+              properties:
+                videoUrl:
+                  type: string
+                  example: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+                profileId:
+                  type: string
+                  format: uuid
+                  example: 123e4567-e89b-12d3-a456-426614174000
+                consentTextVersion:
+                  type: string
+                  example: v1.0
+      responses:
+        "201":
+          description: Video link created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /video/delete:
+    delete:
+      summary: Delete Video Profile
+      tags:
+        - Video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        "200":
+          description: Video deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Video deleted successfully
+                  id:
+                    type: string
+                    format: uuid
+                    example: 123e4567-e89b-12d3-a456-426614174000
+        "400":
+          description: Video ID is required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /video/get:
     get:
       summary: Get Video Profile
@@ -719,6 +950,69 @@ components:
         hasWorkPermit:
           type: boolean
           example: true
+    QuestionnaireQuestion:
+      type: object
+      properties:
+        id:
+          type: string
+          example: q-001
+        text:
+          type: string
+          example: Votre réveil ne sonne pas un matin de semaine, vous vous réveillez 30 minutes en retard. Que faites-vous ?
+        weighting:
+          type: integer
+          example: 1
+        version:
+          type: integer
+          example: 1
+        isActive:
+          type: boolean
+          example: true
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionnaireOption"
+    QuestionnaireOption:
+      type: object
+      properties:
+        id:
+          type: string
+          example: opt-001-1
+        text:
+          type: string
+          example: Je préviens immédiatement mon responsable, je m'excuse et j'arrive au plus vite.
+        points:
+          type: integer
+          example: 10
+    QuestionnaireProgress:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        profileId:
+          type: string
+          format: uuid
+        questionnaireVersion:
+          type: integer
+          example: 1
+        answers:
+          type: object
+          additionalProperties:
+            type: string
+        lastSavedAt:
+          type: string
+          format: date-time
+    QuestionnaireProgressInput:
+      type: object
+      properties:
+        questionnaireVersion:
+          type: integer
+          example: 1
+        answers:
+          type: object
+          additionalProperties:
+            type: string
     Video:
       type: object
       properties:

@@ -1,0 +1,2802 @@
+[
+  {
+    "id": "q-001",
+    "category": "Ponctualité & Présence",
+    "text": "Votre réveil ne sonne pas un matin de semaine, vous vous réveillez 30 minutes en retard. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-001-1",
+        "text": "Je préviens immédiatement mon responsable, je m'excuse et j'arrive au plus vite.",
+        "points": 10
+      },
+      {
+        "id": "opt-001-2",
+        "text": "Je pars immédiatement et j'explique mon retard à mon arrivée.",
+        "points": 7
+      },
+      {
+        "id": "opt-001-3",
+        "text": "Je préviens un collègue par SMS pour qu'il couvre mon absence.",
+        "points": 3
+      },
+      {
+        "id": "opt-001-4",
+        "text": "Je recouche, la journée est gâchée.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-002",
+    "category": "Ponctualité & Présence",
+    "text": "La prise de poste est prévue à 08h00. À quelle heure arrivez-vous idéalement ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-002-1",
+        "text": "À 07h45 - 07h50, pour être opérationnel dès 08h00.",
+        "points": 10
+      },
+      {
+        "id": "opt-002-2",
+        "text": "À 07h58, juste à l'heure.",
+        "points": 8
+      },
+      {
+        "id": "opt-002-3",
+        "text": "À 08h05, quelques minutes de tolérance sont normales.",
+        "points": 2
+      },
+      {
+        "id": "opt-002-4",
+        "text": "L'important c'est de faire ses heures, peu importe l'heure d'arrivée.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-003",
+    "category": "Ponctualité & Présence",
+    "text": "Un problème de transport majeur bloque votre trajet habituel. Quelle est votre réaction ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-003-1",
+        "text": "Anticiper en vérifiant les infos trafic et trouver un itinéraire Bis immédiatement.",
+        "points": 10
+      },
+      {
+        "id": "opt-003-2",
+        "text": "Prévenir la hiérarchie du retard probable et chercher une solution alternative.",
+        "points": 8
+      },
+      {
+        "id": "opt-003-3",
+        "text": "Attendre sur place que le trafic reprenne en prévenant mon manager.",
+        "points": 5
+      },
+      {
+        "id": "opt-003-4",
+        "text": "Rentrer chez moi et poser une journée de congé.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-004",
+    "category": "Ponctualité & Présence",
+    "text": "Comment considérez-vous les pauses café/cigarette durant la journée de travail ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-004-1",
+        "text": "Un moment court d'échange professionnel dans le respect des horaires fixés.",
+        "points": 10
+      },
+      {
+        "id": "opt-004-2",
+        "text": "Un droit strict auquel je ne renonce jamais, peu importe la charge de travail.",
+        "points": 5
+      },
+      {
+        "id": "opt-004-3",
+        "text": "Un moyen d'étendre progressivement ma pause repas.",
+        "points": 2
+      },
+      {
+        "id": "opt-004-4",
+        "text": "Une opportunité de discuter pendant 30 minutes à chaque heure.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-005",
+    "category": "Ponctualité & Présence",
+    "text": "Votre entreprise vous propose de faire des heures supplémentaires payées un vendredi soir pour boucler un dossier urgent. Que répondez-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-005-1",
+        "text": "J'accepte volontiers pour soutenir l'équipe et finaliser le projet.",
+        "points": 10
+      },
+      {
+        "id": "opt-005-2",
+        "text": "J'accepte si je n'ai pas d'impératif familial majeur ce soir-là.",
+        "points": 8
+      },
+      {
+        "id": "opt-005-3",
+        "text": "Je refuse, le vendredi soir appartient à ma vie personnelle.",
+        "points": 2
+      },
+      {
+        "id": "opt-005-4",
+        "text": "Je ne réponds pas et je pars à l'heure habituelle.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-006",
+    "category": "Ponctualité & Présence",
+    "text": "En cas de maladie légère (ex: petit rhume), quelle est votre attitude ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-006-1",
+        "text": "Je viens travailler en prenant des précautions sanitaires (masque, hygiène).",
+        "points": 10
+      },
+      {
+        "id": "opt-006-2",
+        "text": "Je préviens mon employeur et je sollicite du télétravail ou un arrêt officiel si incapacité.",
+        "points": 8
+      },
+      {
+        "id": "opt-006-3",
+        "text": "Je reste chez moi sans prévenir le premier jour pour me reposer.",
+        "points": 2
+      },
+      {
+        "id": "opt-006-4",
+        "text": "Je demande systématiquement une semaine d'arrêt.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-007",
+    "category": "Ponctualité & Présence",
+    "text": "On vous demande de participer à une réunion à 17h30 qui risque de dépasser de 15 minutes votre horaire théorique. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-007-1",
+        "text": "J'y participe avec attention et professionnalisme jusqu'au bout.",
+        "points": 10
+      },
+      {
+        "id": "opt-007-2",
+        "text": "J'y assiste en prévenant que je devrai partir à l'heure exacte si j'ai un impératif.",
+        "points": 7
+      },
+      {
+        "id": "opt-007-3",
+        "text": "Je refuse d'y assister car elle commence trop tard.",
+        "points": 2
+      },
+      {
+        "id": "opt-007-4",
+        "text": "Je quitte la réunion au milieu sans rien dire dès que l'heure sonne.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-008",
+    "category": "Ponctualité & Présence",
+    "text": "Pour vous, être assidu au travail signifie :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-008-1",
+        "text": "Être présent à son poste régulièrement, fiable et disponible chaque jour prévu.",
+        "points": 10
+      },
+      {
+        "id": "opt-008-2",
+        "text": "Faire le strict minimum d'heures prévues au contrat.",
+        "points": 6
+      },
+      {
+        "id": "opt-008-3",
+        "text": "Venir quand on se sent en forme.",
+        "points": 2
+      },
+      {
+        "id": "opt-008-4",
+        "text": "Avoir un taux d'absence inférieur à 30%.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-009",
+    "category": "Ponctualité & Présence",
+    "text": "Un rendez-vous personnel important tombe pendant vos heures de travail. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-009-1",
+        "text": "Je le planifie hors temps de travail ou je demande une autorisation préalable de rattrapage d'heures.",
+        "points": 10
+      },
+      {
+        "id": "opt-009-2",
+        "text": "Je préviens mon responsable 48h à l'avance pour poser un congé/RTT.",
+        "points": 8
+      },
+      {
+        "id": "opt-009-3",
+        "text": "Je m'absente 1h sans rien dire en espérant que personne ne le remarque.",
+        "points": 1
+      },
+      {
+        "id": "opt-009-4",
+        "text": "Je ne viens pas travailler toute la journée.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-010",
+    "category": "Ponctualité & Présence",
+    "text": "Comment préparez-vous votre journée de travail la veille ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-010-1",
+        "text": "En préparant mes affaires et en consultant mon planning/objectifs du lendemain.",
+        "points": 10
+      },
+      {
+        "id": "opt-010-2",
+        "text": "En dormant suffisamment pour être en forme.",
+        "points": 8
+      },
+      {
+        "id": "opt-010-3",
+        "text": "Je ne prépare rien, je gère au feeling le matin.",
+        "points": 4
+      },
+      {
+        "id": "opt-010-4",
+        "text": "Je ne pense jamais au travail en dehors du travail.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-011",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "Votre responsable vous attribue soudainement une tâche qui ne figure pas dans votre fiche de poste. Quelle est votre réaction ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-011-1",
+        "text": "J'accepte avec curiosité, c'est une occasion d'apprendre de nouvelles compétences.",
+        "points": 10
+      },
+      {
+        "id": "opt-011-2",
+        "text": "J'accepte volontiers si cela rend service à l'entreprise.",
+        "points": 8
+      },
+      {
+        "id": "opt-011-3",
+        "text": "J'émet des réserves mais je l'exécute quand même.",
+        "points": 4
+      },
+      {
+        "id": "opt-011-4",
+        "text": "Je refuse catégoriquement : ce n'est pas écrit dans mon contrat.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-012",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "L'entreprise adopte un nouveau logiciel informatique pour remplacer l'ancien. Comment réagissez-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-012-1",
+        "text": "Je me forme activement et je cherche à en maîtriser rapidement les fonctionnalités.",
+        "points": 10
+      },
+      {
+        "id": "opt-012-2",
+        "text": "J'assiste aux formations et j'adapte mes habitudes progressivement.",
+        "points": 8
+      },
+      {
+        "id": "opt-012-3",
+        "text": "Je râle un peu car l'ancien marchait très bien, mais je m'y mets.",
+        "points": 4
+      },
+      {
+        "id": "opt-012-4",
+        "text": "Je continue d'utiliser l'ancien outil en cachette.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-013",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "En cours de journée, les priorités changent totalement suite à une urgence client. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-013-1",
+        "text": "Je réorganise immédiatement mon planning pour répondre à l'urgence.",
+        "points": 10
+      },
+      {
+        "id": "opt-013-2",
+        "text": "Je demande des précisions sur ce qui doit être mis en pause pour traiter l'urgence.",
+        "points": 8
+      },
+      {
+        "id": "opt-013-3",
+        "text": "Je termine d'abord ce que j'avais commencé avant d'aborder l'urgence.",
+        "points": 4
+      },
+      {
+        "id": "opt-013-4",
+        "text": "Je panique face au changement et je bloque.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-014",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "On vous demande de travailler temporairement sur un autre site géographique de l'entreprise. Votre réponse :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-014-1",
+        "text": "J'accepte la mission, cela diversifie mon expérience.",
+        "points": 10
+      },
+      {
+        "id": "opt-014-2",
+        "text": "J'étudie la faisabilité logistique et j'accepte si les transports le permettent.",
+        "points": 8
+      },
+      {
+        "id": "opt-014-3",
+        "text": "Reticent, j'exige une compensation financière avant toute décision.",
+        "points": 3
+      },
+      {
+        "id": "opt-014-4",
+        "text": "Je refuse tout déplacement hors de mon lieu habituel.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-015",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "Votre manager modifie votre méthode de travail habituelle. Quelle est votre attitude ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-015-1",
+        "text": "J'applique la nouvelle méthode avec bienveillance et j'en évalue l'efficacité.",
+        "points": 10
+      },
+      {
+        "id": "opt-015-2",
+        "text": "J'essaie de comprendre la logique derrière cette modification.",
+        "points": 8
+      },
+      {
+        "id": "opt-015-3",
+        "text": "J'exécute à contrecœur en répétant que c'était mieux avant.",
+        "points": 2
+      },
+      {
+        "id": "opt-015-4",
+        "text": "Je continue à faire comme avant dès que le manager a le dos tourné.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-016",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "Vous devez collaborer avec un nouveau collègue dont la personnalité est très différente de la vôtre. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-016-1",
+        "text": "Je cherche à le connaître et je m'adapte pour créer une bonne synergie.",
+        "points": 10
+      },
+      {
+        "id": "opt-016-2",
+        "text": "Je reste courtois et professionnel axé sur les objectifs communs.",
+        "points": 8
+      },
+      {
+        "id": "opt-016-3",
+        "text": "Je limite les échanges au strict minimum nécessaire.",
+        "points": 4
+      },
+      {
+        "id": "opt-016-4",
+        "text": "Je demande à changer d'équipe.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-017",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "Si une consigne donnée par votre supérieur manque de clarté, que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-017-1",
+        "text": "Je demande des clarifications précises avant de commencer la tâche.",
+        "points": 10
+      },
+      {
+        "id": "opt-017-2",
+        "text": "Je reformule la consigne pour valider ma compréhension.",
+        "points": 9
+      },
+      {
+        "id": "opt-017-3",
+        "text": "Je fais selon mon interprétation sans vérifier.",
+        "points": 3
+      },
+      {
+        "id": "opt-017-4",
+        "text": "Je n'ose rien demander et je ne fais rien.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-018",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "Comment réagissez-vous face à une restructuration globale de votre service ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-018-1",
+        "text": "Je reste positif, j'essaie d'y voir des opportunités d'évolution.",
+        "points": 10
+      },
+      {
+        "id": "opt-018-2",
+        "text": "Je me concentre sur mon travail quotidien tout en observant les évolutions.",
+        "points": 7
+      },
+      {
+        "id": "opt-018-3",
+        "text": "J'exprime publiquement mes inquiétudes et mon mécontentement.",
+        "points": 2
+      },
+      {
+        "id": "opt-018-4",
+        "text": "Je cherche immédiatement du travail ailleurs.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-019",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "On vous demande d'effectuer une tâche répétitive pendant plusieurs semaines. Quel est votre état d'esprit ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-019-1",
+        "text": "Je cherche des astuces pour être plus efficace et rigoureux dans cette tâche.",
+        "points": 10
+      },
+      {
+        "id": "opt-019-2",
+        "text": "Je l'exécute sérieusement en gardant ma concentration.",
+        "points": 8
+      },
+      {
+        "id": "opt-019-3",
+        "text": "Je m'ennuie rapidement et la qualité de mon travail baisse.",
+        "points": 3
+      },
+      {
+        "id": "opt-019-4",
+        "text": "Je bâcle le travail pour finir plus vite.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-020",
+    "category": "Adaptabilité & Flexibilité",
+    "text": "Que représente pour vous la polyvalence au travail ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-020-1",
+        "text": "Une grande force permettant d'être utile dans diverses situations.",
+        "points": 10
+      },
+      {
+        "id": "opt-020-2",
+        "text": "Une compétence intéressante à développer au fil du temps.",
+        "points": 8
+      },
+      {
+        "id": "opt-020-3",
+        "text": "Une contrainte imposée par les entreprises qui manquent d'effectif.",
+        "points": 3
+      },
+      {
+        "id": "opt-020-4",
+        "text": "Une exploitation du salarié qui doit tout faire.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-021",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Un collègue de votre équipe rencontre des difficultés pour terminer son travail dans les temps. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-021-1",
+        "text": "Je lui propose spontanément mon aide si mes propres tâches sont avancées.",
+        "points": 10
+      },
+      {
+        "id": "opt-021-2",
+        "text": "Je demande à mon manager si je peux lui prêter main forte.",
+        "points": 8
+      },
+      {
+        "id": "opt-021-3",
+        "text": "Je le laisse gérer, chacun est responsable de ses tâches.",
+        "points": 3
+      },
+      {
+        "id": "opt-021-4",
+        "text": "Je me moque de sa lenteur avec d'autres collègues.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-022",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Un conflit éclate entre deux membres de votre équipe. Quelle est votre posture ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-022-1",
+        "text": "Je cherche à apaiser les tensions et encourager un dialogue constructif.",
+        "points": 10
+      },
+      {
+        "id": "opt-022-2",
+        "text": "Je reste neutre et me concentre sur mon travail.",
+        "points": 7
+      },
+      {
+        "id": "opt-022-3",
+        "text": "Prendre partie pour mon ami dans l'équipe.",
+        "points": 2
+      },
+      {
+        "id": "opt-022-4",
+        "text": "Alimenter la dispute en répétant les ragots.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-023",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Lors d'un travail de groupe, une décision prise collectivement ne correspond pas à votre idée initiale. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-023-1",
+        "text": "J'accepte la décision de la majorité et je m'investis pleinement dans sa réussite.",
+        "points": 10
+      },
+      {
+        "id": "opt-023-2",
+        "text": "Je soutiens le projet tout en gardant mes réserves en tête.",
+        "points": 7
+      },
+      {
+        "id": "opt-023-3",
+        "text": "J'exécute ma partie sans enthousiasme.",
+        "points": 3
+      },
+      {
+        "id": "opt-023-4",
+        "text": "Je sabote subtilement l'idée retenue pour prouver que j'avais raison.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-024",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Pour vous, la critique constructive d'un collègue sur votre travail est :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-024-1",
+        "text": "Une opportunité précieuse d'amélioration continue.",
+        "points": 10
+      },
+      {
+        "id": "opt-024-2",
+        "text": "Un avis utile que je prends le temps d'analyser.",
+        "points": 8
+      },
+      {
+        "id": "opt-024-3",
+        "text": "Une remarque désagréable que j'évite d'écouter.",
+        "points": 2
+      },
+      {
+        "id": "opt-024-4",
+        "text": "Une attaque personnelle inacceptable.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-025",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Comment contribuez-vous à la bonne ambiance au sein de l'entreprise ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-025-1",
+        "text": "En apportant de la gentillesse, du respect et une attitude positive au quotidien.",
+        "points": 10
+      },
+      {
+        "id": "opt-025-2",
+        "text": "En étant poli, souriant et professionnel.",
+        "points": 8
+      },
+      {
+        "id": "opt-025-3",
+        "text": "En restant dans mon coin sans déranger personne.",
+        "points": 4
+      },
+      {
+        "id": "opt-025-4",
+        "text": "En organisant des pauses de 45 minutes pour discuter.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-026",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Comment partagez-vous vos connaissances avec un nouveau venu dans l'équipe ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-026-1",
+        "text": "Je le guide patiemment, partage mes astuces et réponds à ses questions.",
+        "points": 10
+      },
+      {
+        "id": "opt-026-2",
+        "text": "Je lui montre l'essentiel pour qu'il soit autonome rapidement.",
+        "points": 8
+      },
+      {
+        "id": "opt-026-3",
+        "text": "Je le laisse consulter la documentation sans trop m'investir.",
+        "points": 3
+      },
+      {
+        "id": "opt-026-4",
+        "text": "Je refuse de former un potentiel concurrent.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-027",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Lorsqu'une réussite collective est fêtée dans l'entreprise, vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-027-1",
+        "text": "Félicitez l'ensemble de l'équipe et appréciez le succès partagé.",
+        "points": 10
+      },
+      {
+        "id": "opt-027-2",
+        "text": "Participez discrètement mais joyeusement.",
+        "points": 7
+      },
+      {
+        "id": "opt-027-3",
+        "text": "Rappelez à tout le monde que c'est surtout grâce à vous.",
+        "points": 2
+      },
+      {
+        "id": "opt-027-4",
+        "text": "Reste indifférent car cela ne change rien à votre paie.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-028",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Si vous faites une erreur qui affecte le travail de l'équipe, que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-028-1",
+        "text": "J'assume immédiatement la responsabilité, m'excuse et propose une solution.",
+        "points": 10
+      },
+      {
+        "id": "opt-028-2",
+        "text": "J'informe mon responsable pour rectifier le tir au plus vite.",
+        "points": 8
+      },
+      {
+        "id": "opt-028-3",
+        "text": "J'attends que quelqu'un la remarque avant d'en parler.",
+        "points": 2
+      },
+      {
+        "id": "opt-028-4",
+        "text": "Je rejette la faute sur un collègue ou sur l'outil.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-029",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Comment réagissez-vous face à un client ou un collègue énervé ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-029-1",
+        "text": "Je reste calme, à l'écoute active et je cherche à désamorcer le problème.",
+        "points": 10
+      },
+      {
+        "id": "opt-029-2",
+        "text": "Je garde mon sang-froid et je fais appel à un responsable si besoin.",
+        "points": 8
+      },
+      {
+        "id": "opt-029-3",
+        "text": "Je hausse le ton pour me faire respecter.",
+        "points": 2
+      },
+      {
+        "id": "opt-029-4",
+        "text": "Je lui tourne le dos et je m'en vais.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-030",
+    "category": "Travail en équipe & Relationnel",
+    "text": "Le travail d'équipe implique selon vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-030-1",
+        "text": "La mutualisation des forces, l'entraide et une communication fluide.",
+        "points": 10
+      },
+      {
+        "id": "opt-030-2",
+        "text": "Une répartition claire des rôles où chacun fait sa part.",
+        "points": 8
+      },
+      {
+        "id": "opt-030-3",
+        "text": "Travailler côte à côte sans forcément interagir.",
+        "points": 3
+      },
+      {
+        "id": "opt-030-4",
+        "text": "Laisser les éléments forts faire le gros du travail.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-031",
+    "category": "Motivation & Ambition",
+    "text": "Qu'est-ce qui vous motive le plus dans le monde du travail ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-031-1",
+        "text": "Le sentiment d'accomplissement, l'apprentissage et le service rendu.",
+        "points": 10
+      },
+      {
+        "id": "opt-031-2",
+        "text": "Le développement de mes compétences et la progression professionnelle.",
+        "points": 8
+      },
+      {
+        "id": "opt-031-3",
+        "text": "L'obtention d'un salaire à la fin du mois.",
+        "points": 5
+      },
+      {
+        "id": "opt-031-4",
+        "text": "L'obligation sociale d'avoir un statut.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-032",
+    "category": "Motivation & Ambition",
+    "text": "Où vous voyez-vous dans 3 ans professionnellement ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-032-1",
+        "text": "Monté en compétences, occupant des responsabilités accrues dans mon domaine.",
+        "points": 10
+      },
+      {
+        "id": "opt-032-2",
+        "text": "Stabilisé dans un emploi durable où je m'épanouis.",
+        "points": 8
+      },
+      {
+        "id": "opt-032-3",
+        "text": "Au même poste sans aucun changement.",
+        "points": 4
+      },
+      {
+        "id": "opt-032-4",
+        "text": "Je ne me projette jamais à plus d'une semaine.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-033",
+    "category": "Motivation & Ambition",
+    "text": "Face à un projet complexe qui demande beaucoup d'effort, vous vous dites :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-033-1",
+        "text": "C'est un formidable défi à relever pour prouver ma valeur !",
+        "points": 10
+      },
+      {
+        "id": "opt-033-2",
+        "text": "Je vais procéder étape par étape avec méthode pour y arriver.",
+        "points": 8
+      },
+      {
+        "id": "opt-033-3",
+        "text": "J'espère que ce ne sera pas trop fatigant.",
+        "points": 3
+      },
+      {
+        "id": "opt-033-4",
+        "text": "Je vais essayer de refiler le bébé à quelqu'un d'autre.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-034",
+    "category": "Motivation & Ambition",
+    "text": "Quelle est votre attitude face à la formation continue et l'apprentissage ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-034-1",
+        "text": "Enthousiaste ! C'est indispensable pour évoluer tout au long de sa carrière.",
+        "points": 10
+      },
+      {
+        "id": "opt-034-2",
+        "text": "Favorable, il est important d'actualiser ses connaissances.",
+        "points": 8
+      },
+      {
+        "id": "opt-034-3",
+        "text": "Passif : si mon entreprise m'y oblige, j'irai.",
+        "points": 3
+      },
+      {
+        "id": "opt-034-4",
+        "text": "Hostile : j'ai fini mes études, je ne veux plus apprendre.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-035",
+    "category": "Motivation & Ambition",
+    "text": "Que faites-vous pour maintenir votre motivation lors des périodes de faible activité ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-035-1",
+        "text": "Je prends des initiatives, je nettoie mon poste ou j'aide mes collègues.",
+        "points": 10
+      },
+      {
+        "id": "opt-035-2",
+        "text": "J'en profite pour réorganiser mon travail et me former en autonomie.",
+        "points": 8
+      },
+      {
+        "id": "opt-035-3",
+        "text": "Je consulte mon téléphone en attendant les prochaines directives.",
+        "points": 2
+      },
+      {
+        "id": "opt-035-4",
+        "text": "Je fais semblant de travailler dur.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-036",
+    "category": "Motivation & Ambition",
+    "text": "Si votre entreprise vous propose une promotion interne avec plus de responsabilités, vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-036-1",
+        "text": "Saisissez l'opportunité avec fierté et motivation.",
+        "points": 10
+      },
+      {
+        "id": "opt-036-2",
+        "text": "Évaluez les compétences requises et acceptez le défi.",
+        "points": 8
+      },
+      {
+        "id": "opt-036-3",
+        "text": "Hésitez longuement par peur de sortir de votre zone de confort.",
+        "points": 4
+      },
+      {
+        "id": "opt-036-4",
+        "text": "Refusez immédiatement car la responsabilité crée du stress.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-037",
+    "category": "Motivation & Ambition",
+    "text": "Votre philosophie par rapport à l'effort est :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-037-1",
+        "text": "Le travail rigoureux et persévérant finit toujours par porter ses fruits.",
+        "points": 10
+      },
+      {
+        "id": "opt-037-2",
+        "text": "Il faut donner le meilleur de soi-même dans ce que l'on entreprend.",
+        "points": 8
+      },
+      {
+        "id": "opt-037-3",
+        "text": "Travailler intelligemment pour en faire le moins possible.",
+        "points": 2
+      },
+      {
+        "id": "opt-037-4",
+        "text": "L'effort est inutile, seul le piston compte.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-038",
+    "category": "Motivation & Ambition",
+    "text": "Comment définissez-vous la réussite professionnelle ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-038-1",
+        "text": "Trouver un équilibre entre épanouissement personnel, utilité et performance.",
+        "points": 10
+      },
+      {
+        "id": "opt-038-2",
+        "text": "Atteindre ses objectifs et bénéficier de la reconnaissance de ses pairs.",
+        "points": 8
+      },
+      {
+        "id": "opt-038-3",
+        "text": "Gagner beaucoup d'argent avec le minimum d'effort.",
+        "points": 2
+      },
+      {
+        "id": "opt-038-4",
+        "text": "Avoir le titre de directeur.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-039",
+    "category": "Motivation & Ambition",
+    "text": "Si un projet sur lequel vous vous êtes investi échoue, comment réagissez-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-039-1",
+        "text": "J'analyse les causes de l'échec pour en tirer des leçons positives.",
+        "points": 10
+      },
+      {
+        "id": "opt-039-2",
+        "text": "Je suis déçu mais je rebondis rapidement vers un nouvel objectif.",
+        "points": 8
+      },
+      {
+        "id": "opt-039-3",
+        "text": "Je perds toute motivation pendant plusieurs semaines.",
+        "points": 2
+      },
+      {
+        "id": "opt-039-4",
+        "text": "Je cherche des coupables autour de moi.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-040",
+    "category": "Motivation & Ambition",
+    "text": "Postuler à des offres d'emploi ou enregistrer votre vidéo de présentation JibJob représente pour vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-040-1",
+        "text": "Une opportunité formidable d'exprimer mon potentiel et mon dynamisme !",
+        "points": 10
+      },
+      {
+        "id": "opt-040-2",
+        "text": "Une démarche sérieuse et nécessaire pour retrouver un emploi adapté.",
+        "points": 8
+      },
+      {
+        "id": "opt-040-3",
+        "text": "Une corvée administrative obligatoire.",
+        "points": 2
+      },
+      {
+        "id": "opt-040-4",
+        "text": "Un gaspillage de temps.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-041",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "Vous constatez qu'une règle de sécurité n'est pas pratique pour travailler vite. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-041-1",
+        "text": "Je respecte scrupuleusement la règle : la sécurité passe avant la vitesse.",
+        "points": 10
+      },
+      {
+        "id": "opt-041-2",
+        "text": "Je signale la difficulté au responsable sécurité pour étudier une alternative.",
+        "points": 8
+      },
+      {
+        "id": "opt-041-3",
+        "text": "Je passe outre la règle uniquement quand je suis très en retard.",
+        "points": 2
+      },
+      {
+        "id": "opt-041-4",
+        "text": "J'ignore totalement les consignes de sécurité si elles m'embêtent.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-042",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "Votre manager vous demande d'exécuter une tâche d'une façon spécifique. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-042-1",
+        "text": "J'applique la consigne à la lettre en respectant le cadrage fourni.",
+        "points": 10
+      },
+      {
+        "id": "opt-042-2",
+        "text": "J'applique la consigne et propose des améliorations plus tard si pertinent.",
+        "points": 8
+      },
+      {
+        "id": "opt-042-3",
+        "text": "Je fais à ma façon sans tenir compte de la consigne.",
+        "points": 2
+      },
+      {
+        "id": "opt-042-4",
+        "text": "Je conteste ouvertement l'autorité du manager devant l'équipe.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-043",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "Que pensez-vous du règlement intérieur d'une entreprise ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-043-1",
+        "text": "C'est le cadre indispensable garantissant le bon fonctionnement et le respect de tous.",
+        "points": 10
+      },
+      {
+        "id": "opt-043-2",
+        "text": "C'est une nécessité administrative qu'il convient d'appliquer.",
+        "points": 8
+      },
+      {
+        "id": "opt-043-3",
+        "text": "Une liste de contraintes exagérées qu'on peut contourner discrètement.",
+        "points": 2
+      },
+      {
+        "id": "opt-043-4",
+        "text": "Un outil de domination qu'il faut combattre.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-044",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "Si vous observez un dysfonctionnement matériel important dans l'entreprise, vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-044-1",
+        "text": "Alertez immédiatement les services concernés ou votre supérieur.",
+        "points": 10
+      },
+      {
+        "id": "opt-044-2",
+        "text": "Notez le problème et le remontez à la fin de votre service.",
+        "points": 7
+      },
+      {
+        "id": "opt-044-3",
+        "text": "Laissez le problème au suivant sans rien dire.",
+        "points": 2
+      },
+      {
+        "id": "opt-044-4",
+        "text": "Profitez de la panne pour ne rien faire.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-045",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "Votre responsable hiérarchique émet une remarque négative injustifiée selon vous. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-045-1",
+        "text": "Je sollicite un entretien individuel au calme pour échanger avec respect.",
+        "points": 10
+      },
+      {
+        "id": "opt-045-2",
+        "text": "J'écoute la remarque et je montre mes résultats factuels pour clarifier.",
+        "points": 8
+      },
+      {
+        "id": "opt-045-3",
+        "text": "Je m'énerve immédiatement et je hausse le ton.",
+        "points": 1
+      },
+      {
+        "id": "opt-045-4",
+        "text": "Je lance une rumeur sur le responsable en réaction.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-046",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "L'utilisation du téléphone portable personnel sur le lieu de travail doit être :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-046-1",
+        "text": "Strictement restreinte aux urgences absolues et lors des pauses.",
+        "points": 10
+      },
+      {
+        "id": "opt-046-2",
+        "text": "Modérée et sans gêner l'activité professionnelle.",
+        "points": 7
+      },
+      {
+        "id": "opt-046-3",
+        "text": "Autorisée en permanence pour consulter ses réseaux sociaux.",
+        "points": 1
+      },
+      {
+        "id": "opt-046-4",
+        "text": "Le centre principal de votre attention durant votre poste.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-047",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "L'entreprise impose une tenue vestimentaire spécifique (dress-code ou EPI). Votre réaction :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-047-1",
+        "text": "Je la porte avec fierté et respect des normes fixées.",
+        "points": 10
+      },
+      {
+        "id": "opt-047-2",
+        "text": "Je m'y conforme sans difficulté.",
+        "points": 8
+      },
+      {
+        "id": "opt-047-3",
+        "text": "Je personnalise ma tenue au mépris des règles établies.",
+        "points": 2
+      },
+      {
+        "id": "opt-047-4",
+        "text": "Je refuse de porter la tenue requise.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-048",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "Si votre supérieur est plus jeune ou moins expérimenté que vous sur certains sujets :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-048-1",
+        "text": "Je respecte sa fonction et je mets mes compétences à disposition de l'équipe.",
+        "points": 10
+      },
+      {
+        "id": "opt-048-2",
+        "text": "Je travaille de manière professionnelle en lui apportant mon soutien si besoin.",
+        "points": 8
+      },
+      {
+        "id": "opt-048-3",
+        "text": "Je remets en cause son autorité dès que possible.",
+        "points": 2
+      },
+      {
+        "id": "opt-048-4",
+        "text": "Je refuse de recevoir des ordres de sa part.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-049",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "Confidentialité des données de l'entreprise : quelle est votre approche ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-049-1",
+        "text": "Secret absolu ! Aucune donnée professionnelle ne sort du cadre de l'entreprise.",
+        "points": 10
+      },
+      {
+        "id": "opt-049-2",
+        "text": "Prudence stricte sur l'utilisation des documents et informations sensibles.",
+        "points": 8
+      },
+      {
+        "id": "opt-049-3",
+        "text": "J'en parle occasionnellement à mes proches.",
+        "points": 3
+      },
+      {
+        "id": "opt-049-4",
+        "text": "Je publie des informations internes sur mes réseaux sociaux.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-050",
+    "category": "Respect de la hiérarchie & Règles",
+    "text": "Pour vous, le rôle d'un manager est de :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-050-1",
+        "text": "Guider, coordonner, fédérer et faire grandir ses collaborateurs.",
+        "points": 10
+      },
+      {
+        "id": "opt-050-2",
+        "text": "Donner des directives claires et contrôler le travail effectué.",
+        "points": 8
+      },
+      {
+        "id": "opt-050-3",
+        "text": "Surveiller et punir les erreurs des salariés.",
+        "points": 2
+      },
+      {
+        "id": "opt-050-4",
+        "text": "Ne rien faire et récolter le travail des autres.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-051",
+    "category": "Gestion du stress & Résilience",
+    "text": "Sous forte pression commerciale ou opérationnelle, votre premier réflexe est de :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-051-1",
+        "text": "Garder mon calme, prioriser les urgences et exécuter méthodiquement.",
+        "points": 10
+      },
+      {
+        "id": "opt-051-2",
+        "text": "Prendre une grande inspiration et me concentrer sur une tâche à la fois.",
+        "points": 8
+      },
+      {
+        "id": "opt-051-3",
+        "text": "Manifester mon agacement auprès de mes collègues.",
+        "points": 3
+      },
+      {
+        "id": "opt-051-4",
+        "text": "Abandonner et laisser tomber mon travail.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-052",
+    "category": "Gestion du stress & Résilience",
+    "text": "Un client très mécontent vous agresse verbalement. Comment réagissez-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-052-1",
+        "text": "Je reste d'un calme olympien, je fais preuve d'impartialité et d'empathie.",
+        "points": 10
+      },
+      {
+        "id": "opt-052-2",
+        "text": "Je l'écoute poliment et je lui propose une solution concrète ou un responsable.",
+        "points": 8
+      },
+      {
+        "id": "opt-052-3",
+        "text": "Je lui réponds sur le même ton agressif.",
+        "points": 1
+      },
+      {
+        "id": "opt-052-4",
+        "text": "Je lui raccroche au nez ou lui tourne le dos.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-053",
+    "category": "Gestion du stress & Résilience",
+    "text": "Vous faites face à une surcharge de travail imprévue. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-053-1",
+        "text": "J'évalue la charge, priorise et alerte mon responsable pour trouver une solution.",
+        "points": 10
+      },
+      {
+        "id": "opt-053-2",
+        "text": "Je redouble d'effort en restant concentré sur la qualité.",
+        "points": 8
+      },
+      {
+        "id": "opt-053-3",
+        "text": "Je me plains auprès de tout le monde sans avancer.",
+        "points": 2
+      },
+      {
+        "id": "opt-053-4",
+        "text": "Je stoppe tout travail par dépit.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-054",
+    "category": "Gestion du stress & Résilience",
+    "text": "Comment gérez-vous la fatigue mentale en fin de semaine ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-054-1",
+        "text": "En conservant une hygiène de vie saine et en restant professionnel jusqu'à la fin.",
+        "points": 10
+      },
+      {
+        "id": "opt-054-2",
+        "text": "En organisant mes tâches de façon plus légères mais efficaces.",
+        "points": 8
+      },
+      {
+        "id": "opt-054-3",
+        "text": "En bâclant mes dernières tâches pour partir plus vite.",
+        "points": 2
+      },
+      {
+        "id": "opt-054-4",
+        "text": "En me faisant porter pâle le vendredi après-midi.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-055",
+    "category": "Gestion du stress & Résilience",
+    "text": "En cas de période de changement incertain au sein de l'entreprise, vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-055-1",
+        "text": "Conservez votre sérénité et vous adaptez progressivement aux évolutions.",
+        "points": 10
+      },
+      {
+        "id": "opt-055-2",
+        "text": "Cherchez les informations officielles pour comprendre le cap.",
+        "points": 8
+      },
+      {
+        "id": "opt-055-3",
+        "text": "Alimentez l'inquiétude collective et les rumeurs.",
+        "points": 2
+      },
+      {
+        "id": "opt-055-4",
+        "text": "Stoppez vos efforts en attendant de voir ce qui se passe.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-056",
+    "category": "Gestion du stress & Résilience",
+    "text": "Quand vous commettez une erreur importante :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-056-1",
+        "text": "J'analyse mes erreurs sans me dévaloriser et j'apprends pour ne plus la refaire.",
+        "points": 10
+      },
+      {
+        "id": "opt-056-2",
+        "text": "Je me corrige rapidement et je présente mes excuses aux personnes impactées.",
+        "points": 8
+      },
+      {
+        "id": "opt-056-3",
+        "text": "Je me sens dévasté et je perds tous mes moyens.",
+        "points": 3
+      },
+      {
+        "id": "opt-056-4",
+        "text": "Je nie catégoriquement en disant que ce n'est pas de ma faute.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-057",
+    "category": "Gestion du stress & Résilience",
+    "text": "Pour vous, le stress au travail est :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-057-1",
+        "text": "Un signal à gérer calmement par l'organisation et la communication.",
+        "points": 10
+      },
+      {
+        "id": "opt-057-2",
+        "text": "Une réaction normale qu'il faut canaliser vers l'action.",
+        "points": 8
+      },
+      {
+        "id": "opt-057-3",
+        "text": "Une fatalité insupportable qui gâche ma vie.",
+        "points": 2
+      },
+      {
+        "id": "opt-057-4",
+        "text": "Une excuse parfaite pour rater ses objectifs.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-058",
+    "category": "Gestion du stress & Résilience",
+    "text": "On vous demande d'effectuer une présentation devant 50 personnes. Quelle est votre réaction ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-058-1",
+        "text": "Je prépare minutieusement mon sujet pour être prêt et à l'aise.",
+        "points": 10
+      },
+      {
+        "id": "opt-058-2",
+        "text": "Je gère mon trac et je me lance en restant naturel.",
+        "points": 8
+      },
+      {
+        "id": "opt-058-3",
+        "text": "J'essaie de me faire remplacer par quelqu'un d'autre.",
+        "points": 3
+      },
+      {
+        "id": "opt-058-4",
+        "text": "Je simule un malaise pour ne pas y aller.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-059",
+    "category": "Gestion du stress & Résilience",
+    "text": "Un imprévu technique annule deux heures de votre travail non sauvegardé. Vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-059-1",
+        "text": "Respirez un coup, gardez votre calme et recommencez en intégrant des améliorations.",
+        "points": 10
+      },
+      {
+        "id": "opt-059-2",
+        "text": "Refaites le travail immédiatement en pestant contre le système.",
+        "points": 7
+      },
+      {
+        "id": "opt-059-3",
+        "text": "Piquez une colère et tapez sur votre bureau.",
+        "points": 1
+      },
+      {
+        "id": "opt-059-4",
+        "text": "Quittez le travail pour la journée.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-060",
+    "category": "Gestion du stress & Résilience",
+    "text": "Face aux impondérables du quotidien, votre principale qualité est :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-060-1",
+        "text": "La résilience et la capacité d'adaptation rapide.",
+        "points": 10
+      },
+      {
+        "id": "opt-060-2",
+        "text": "La patience et la persévérance.",
+        "points": 8
+      },
+      {
+        "id": "opt-060-3",
+        "text": "La dépendance aux consignes des autres.",
+        "points": 3
+      },
+      {
+        "id": "opt-060-4",
+        "text": "La capacité à abandonner sans culpabilité.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-061",
+    "category": "Autonomie & Initiative",
+    "text": "Lorsque vous avez terminé toutes vos tâches attribuées pour la journée :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-061-1",
+        "text": "Je demande à mon responsable s'il y a d'autres missions ou j'aide mes collègues.",
+        "points": 10
+      },
+      {
+        "id": "opt-061-2",
+        "text": "Je prends l'initiative de ranger, organiser mon poste ou faire de la veille.",
+        "points": 8
+      },
+      {
+        "id": "opt-061-3",
+        "text": "J'attends passivement qu'on me donne un nouvel ordre.",
+        "points": 4
+      },
+      {
+        "id": "opt-061-4",
+        "text": "Je fais semblant d'être débordé pour qu'on me laisse tranquille.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-062",
+    "category": "Autonomie & Initiative",
+    "text": "Vous détectez un moyen de simplifier une procédure dans votre poste. Que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-062-1",
+        "text": "Je formalise mon idée et la propose à mon supérieur pour validation.",
+        "points": 10
+      },
+      {
+        "id": "opt-062-2",
+        "text": "J'en discute avec mon équipe pour avoir leur avis avant d'en parler au manager.",
+        "points": 8
+      },
+      {
+        "id": "opt-062-3",
+        "text": "Je garde l'idée pour moi de peur qu'on me demande de la mettre en œuvre.",
+        "points": 3
+      },
+      {
+        "id": "opt-062-4",
+        "text": "J'applique la modification dans mon coin sans en informer personne.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-063",
+    "category": "Autonomie & Initiative",
+    "text": "Face à une petite difficulté technique du quotidien (ex: imprimante bloquée) :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-063-1",
+        "text": "J'essaie de résoudre le problème de manière autonome avant d'appeler l'assistance.",
+        "points": 10
+      },
+      {
+        "id": "opt-063-2",
+        "text": "Je consulte la notice ou demande gentiment à un collègue aguerri.",
+        "points": 8
+      },
+      {
+        "id": "opt-063-3",
+        "text": "J'appelle immédiatement les services techniques sans avoir vérifié les bases.",
+        "points": 3
+      },
+      {
+        "id": "opt-063-4",
+        "text": "Je laisse le matériel bloqué pour le collègue suivant.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-064",
+    "category": "Autonomie & Initiative",
+    "text": "Pour vous, travailler en autonomie signifie :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-064-1",
+        "text": "Savoir s'organiser seul tout en rendant compte régulièrement de son avancement.",
+        "points": 10
+      },
+      {
+        "id": "opt-064-2",
+        "text": "Réaliser ses objectifs sans avoir besoin d'être supervisé à chaque minute.",
+        "points": 8
+      },
+      {
+        "id": "opt-064-3",
+        "text": "Faire ce qu'on veut, quand on veut, sans rendre de compte à personne.",
+        "points": 1
+      },
+      {
+        "id": "opt-064-4",
+        "text": "Ne jamais demander d'aide même quand on est complètement bloqué.",
+        "points": 2
+      }
+    ]
+  },
+  {
+    "id": "q-065",
+    "category": "Autonomie & Initiative",
+    "text": "Si aucun manager n'est présent sur le site pendant une journée :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-065-1",
+        "text": "Je poursuis mes activités avec la même rigueur et le même professionnalisme.",
+        "points": 10
+      },
+      {
+        "id": "opt-065-2",
+        "text": "J'exécute le planning prévu sans dévier.",
+        "points": 8
+      },
+      {
+        "id": "opt-065-3",
+        "text": "Je relâche mon attention et je travaille à mon rythme très ralenti.",
+        "points": 2
+      },
+      {
+        "id": "opt-065-4",
+        "text": "Je ne fais rien du tout.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-066",
+    "category": "Autonomie & Initiative",
+    "text": "Comment organisez-vous votre To-Do List quotidienne ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-066-1",
+        "text": "Je hiérarchise selon l'urgence et l'importance dès le début de ma journée.",
+        "points": 10
+      },
+      {
+        "id": "opt-066-2",
+        "text": "Je liste mes tâches et je les traite dans l'ordre d'arrivée.",
+        "points": 7
+      },
+      {
+        "id": "opt-066-3",
+        "text": "Je fais d'abord les tâches les plus faciles et plaisantes.",
+        "points": 4
+      },
+      {
+        "id": "opt-066-4",
+        "text": "Je n'organise rien, je traite ce qui me tombe sous la main.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-067",
+    "category": "Autonomie & Initiative",
+    "text": "On vous confie un projet en autonomie totale sur 1 mois. Comment procédez-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-067-1",
+        "text": "Je découpe le projet en étapes clés avec des points de contrôle réguliers.",
+        "points": 10
+      },
+      {
+        "id": "opt-067-2",
+        "text": "Je fixe mes objectifs hebdomadaires et je m'y tiens.",
+        "points": 8
+      },
+      {
+        "id": "opt-067-3",
+        "text": "Je fais tout au dernier moment lors des trois derniers jours.",
+        "points": 2
+      },
+      {
+        "id": "opt-067-4",
+        "text": "J'oublie le projet jusqu'à ce qu'on me relance.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-068",
+    "category": "Autonomie & Initiative",
+    "text": "Pour prendre une initiative professionnelle réussie, il faut :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-068-1",
+        "text": "Évaluer les risques, vérifier l'alignement avec les objectifs et informer sa hiérarchie.",
+        "points": 10
+      },
+      {
+        "id": "opt-068-2",
+        "text": "S'assurer que cela apporte de la valeur ajoutée à l'entreprise.",
+        "points": 8
+      },
+      {
+        "id": "opt-068-3",
+        "text": "Agir d'abord et demander pardon ensuite.",
+        "points": 3
+      },
+      {
+        "id": "opt-068-4",
+        "text": "Attendre que l'ordre vienne d'en haut pour ne prendre aucun risque.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-069",
+    "category": "Autonomie & Initiative",
+    "text": "Comment réagissez-vous si vous vous retrouvez sans consignes précises ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-069-1",
+        "text": "Je vais voir mon responsable pour clarifier la feuille de route.",
+        "points": 10
+      },
+      {
+        "id": "opt-069-2",
+        "text": "Je commence à travailler sur les sujets évidents en attendant les consignes.",
+        "points": 8
+      },
+      {
+        "id": "opt-069-3",
+        "text": "J'attends dans mon bureau sans rien faire.",
+        "points": 2
+      },
+      {
+        "id": "opt-069-4",
+        "text": "Je quitte mon poste de travail.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-070",
+    "category": "Autonomie & Initiative",
+    "text": "L'autodiscipline personnelle dans le travail est pour vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-070-1",
+        "text": "La capacité indispensable à maintenir un haut niveau d'exigence envers soi-même.",
+        "points": 10
+      },
+      {
+        "id": "opt-070-2",
+        "text": "Un outil clé pour atteindre ses objectifs personnels et d'équipe.",
+        "points": 8
+      },
+      {
+        "id": "opt-070-3",
+        "text": "Une contrainte pénible.",
+        "points": 2
+      },
+      {
+        "id": "opt-070-4",
+        "text": "Un concept théorique inutile.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-071",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Avant de rendre un document ou de valider un travail, que faites-vous ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-071-1",
+        "text": "Je relis attentivement et contrôle méticuleusement l'absence d'erreurs.",
+        "points": 10
+      },
+      {
+        "id": "opt-071-2",
+        "text": "Je vérifie les points principaux pour m'assurer de la conformité.",
+        "points": 8
+      },
+      {
+        "id": "opt-071-3",
+        "text": "Je l'envoie directement sans relecture.",
+        "points": 2
+      },
+      {
+        "id": "opt-071-4",
+        "text": "Je demande à un collègue de faire ma vérification à ma place.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-072",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Le souci du détail dans votre travail est :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-072-1",
+        "text": "Une marque de respect pour le client et le signe d'un grand professionnalisme.",
+        "points": 10
+      },
+      {
+        "id": "opt-072-2",
+        "text": "Une recherche constante de qualité dans les tâches réalisées.",
+        "points": 8
+      },
+      {
+        "id": "opt-072-3",
+        "text": "Une perte de temps perfectionniste.",
+        "points": 2
+      },
+      {
+        "id": "opt-072-4",
+        "text": "Quelque chose de secondaire, le travail fini vite compte seul.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-073",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Si vous découvrez une erreur dans un dossier validé il y a une semaine :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-073-1",
+        "text": "Je préviens mon responsable et j'apporte la correction immédiatement.",
+        "points": 10
+      },
+      {
+        "id": "opt-073-2",
+        "text": "Je corrige l'erreur discrètement si c'est encore possible.",
+        "points": 7
+      },
+      {
+        "id": "opt-073-3",
+        "text": "Je ne dis rien en espérant que personne ne s'en rende compte.",
+        "points": 2
+      },
+      {
+        "id": "opt-073-4",
+        "text": "Je détruis le dossier pour effacer les traces.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-074",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Comment traitez-vous les outils et matériels confiés par votre entreprise ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-074-1",
+        "text": "Avec le plus grand soin, comme s'il s'agissait de mes propres affaires.",
+        "points": 10
+      },
+      {
+        "id": "opt-074-2",
+        "text": "De manière raisonnable et conformément aux consignes d'utilisation.",
+        "points": 8
+      },
+      {
+        "id": "opt-074-3",
+        "text": "Sans y prêter une attention particulière.",
+        "points": 3
+      },
+      {
+        "id": "opt-074-4",
+        "text": "De façon négligente, c'est l'entreprise qui paie.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-075",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Le respect des procédures qualité est pour vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-075-1",
+        "text": "Indispensable pour garantir la satisfaction client et la sécurité.",
+        "points": 10
+      },
+      {
+        "id": "opt-075-2",
+        "text": "Une norme à suivre scrupuleusement au quotidien.",
+        "points": 8
+      },
+      {
+        "id": "opt-075-3",
+        "text": "Un frein à la rapidité d'exécution.",
+        "points": 3
+      },
+      {
+        "id": "opt-075-4",
+        "text": "Une perte de temps inutile créée par la direction.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-076",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Comment gérez-vous la propreté et l'organisation de votre espace de travail ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-076-1",
+        "text": "Mon poste est toujours propre, rangé et opérationnel.",
+        "points": 10
+      },
+      {
+        "id": "opt-076-2",
+        "text": "Je range mon poste à la fin de chaque journée de travail.",
+        "points": 8
+      },
+      {
+        "id": "opt-076-3",
+        "text": "Mon bureau est un désordre créatif mais je m'y retrouve.",
+        "points": 4
+      },
+      {
+        "id": "opt-076-4",
+        "text": "Je laisse mes déchets et tasses traîner sur mon poste.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-077",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Si vous devez transmettre un relais d'information à l'équipe suivante :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-077-1",
+        "text": "Je rédige une transmission claire, précise et complète par écrit et oral.",
+        "points": 10
+      },
+      {
+        "id": "opt-077-2",
+        "text": "Je fais un résumé verbal des événements marquants.",
+        "points": 8
+      },
+      {
+        "id": "opt-077-3",
+        "text": "Je donne juste les grandes lignes sans entrer dans les détails.",
+        "points": 4
+      },
+      {
+        "id": "opt-077-4",
+        "text": "Je pars sans rien transmettre.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-078",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Face à une consigne demandant un travail 'soigné', vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-078-1",
+        "text": "Mettez un point d'honneur à livrer un résultat irréprochable.",
+        "points": 10
+      },
+      {
+        "id": "opt-078-2",
+        "text": "Faites de votre mieux pour respecter les standards exigés.",
+        "points": 8
+      },
+      {
+        "id": "opt-078-3",
+        "text": "Faites le minimum requis pour que ça passe.",
+        "points": 3
+      },
+      {
+        "id": "opt-078-4",
+        "text": "Ne changez rien à votre manière habituelle de travailler vite.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-079",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Pour vous, 'rendre un travail dans les délais' signifie :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-079-1",
+        "text": "Livrer un travail complet et vérifié à l'échéance convenue ou avant.",
+        "points": 10
+      },
+      {
+        "id": "opt-079-2",
+        "text": "Rendre le travail le jour dit, même s'il reste de légères finitions.",
+        "points": 7
+      },
+      {
+        "id": "opt-079-3",
+        "text": "Dépasser régulièrement les délais de quelques jours.",
+        "points": 2
+      },
+      {
+        "id": "opt-079-4",
+        "text": "Les délais sont des indications indicatives sans importance.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-080",
+    "category": "Rigueur & Qualité du travail",
+    "text": "Que signifie pour vous la notion de conscience professionnelle ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-080-1",
+        "text": "L'implication sincère, le devoir d'exemplarité et la fierté du travail bien fait.",
+        "points": 10
+      },
+      {
+        "id": "opt-080-2",
+        "text": "Le respect de ses engagements envers son employeur.",
+        "points": 8
+      },
+      {
+        "id": "opt-080-3",
+        "text": "Faire son travail uniquement quand le patron regarde.",
+        "points": 2
+      },
+      {
+        "id": "opt-080-4",
+        "text": "Un mot dépassé qui n'a plus de sens.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-081",
+    "category": "Communication & Posture professionnelle",
+    "text": "Comment vous exprimez-vous au téléphone avec un prospect ou un partenaire ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-081-1",
+        "text": "Avec politesse, clarté, un ton chaleureux et une posture professionnelle.",
+        "points": 10
+      },
+      {
+        "id": "opt-081-2",
+        "text": "De manière courtoise et professionnelle.",
+        "points": 8
+      },
+      {
+        "id": "opt-081-3",
+        "text": "De façon trop familière en tutoyant rapidement.",
+        "points": 2
+      },
+      {
+        "id": "opt-081-4",
+        "text": "De manière sèche et distante.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-082",
+    "category": "Communication & Posture professionnelle",
+    "text": "Dans un e-mail professionnel, quelle est votre règle d'or ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-082-1",
+        "text": "Formule de politesse, clarté, orthographe irréprochable et ton adapté.",
+        "points": 10
+      },
+      {
+        "id": "opt-082-2",
+        "text": "Un message synthétique et poli sans fautes majeures.",
+        "points": 8
+      },
+      {
+        "id": "opt-082-3",
+        "text": "Écrire en style SMS pour aller plus vite.",
+        "points": 1
+      },
+      {
+        "id": "opt-082-4",
+        "text": "Ne jamais saluer et exiger des réponses immédiates.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-083",
+    "category": "Communication & Posture professionnelle",
+    "text": "Comment abordez-vous la tenue de votre vidéo de présentation JibJob ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-083-1",
+        "text": "Soignée, professionnelle, dynamique et adaptée au secteur visé.",
+        "points": 10
+      },
+      {
+        "id": "opt-083-2",
+        "text": "Propre, correcte et souriante.",
+        "points": 8
+      },
+      {
+        "id": "opt-083-3",
+        "text": "En tenue de nuit ou débraillée.",
+        "points": 1
+      },
+      {
+        "id": "opt-083-4",
+        "text": "Sans prêter attention à mon apparence ni à l'arrière-plan.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-084",
+    "category": "Communication & Posture professionnelle",
+    "text": "La ponctualité dans la communication (répondre aux appels/mails) est :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-084-1",
+        "text": "Un gage d'efficacité et un signe de respect envers son interlocuteur.",
+        "points": 10
+      },
+      {
+        "id": "opt-084-2",
+        "text": "Une bonne pratique à traiter dans les 24h à 48h.",
+        "points": 8
+      },
+      {
+        "id": "opt-084-3",
+        "text": "Quelque chose que je traite quand j'ai le temps.",
+        "points": 3
+      },
+      {
+        "id": "opt-084-4",
+        "text": "Inutile, je ne réponds jamais aux sollicitations.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-085",
+    "category": "Communication & Posture professionnelle",
+    "text": "Si vous devez formuler une critique à un collègue, vous le faites :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-085-1",
+        "text": "En privé, de manière bienveillante, constructive et factuelle.",
+        "points": 10
+      },
+      {
+        "id": "opt-085-2",
+        "text": "Pendant un temps d'échange individuel.",
+        "points": 8
+      },
+      {
+        "id": "opt-085-3",
+        "text": "Devant tout le monde lors de la pause déjeuner.",
+        "points": 2
+      },
+      {
+        "id": "opt-085-4",
+        "text": "Par un message agressif sur la boucle de groupe.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-086",
+    "category": "Communication & Posture professionnelle",
+    "text": "Votre maîtrise de la langue française écrite et orale est pour vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-086-1",
+        "text": "Un atout fondamental que je cherche à entretenir et perfectionner.",
+        "points": 10
+      },
+      {
+        "id": "opt-086-2",
+        "text": "Suffisante pour communiquer efficacement au travail.",
+        "points": 8
+      },
+      {
+        "id": "opt-086-3",
+        "text": "Secondaire, les gens me comprennent de toute façon.",
+        "points": 3
+      },
+      {
+        "id": "opt-086-4",
+        "text": "Sans aucun rapport avec l'aptitude au travail.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-087",
+    "category": "Communication & Posture professionnelle",
+    "text": "Comment gérez-vous la prise de parole en réunion de service ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-087-1",
+        "text": "J'écoute activement et n'interviens que pour apporter une valeur ajoutée.",
+        "points": 10
+      },
+      {
+        "id": "opt-087-2",
+        "text": "Je participe quand on me sollicite ou si j'ai une question pertinente.",
+        "points": 8
+      },
+      {
+        "id": "opt-087-3",
+        "text": "Je coupe la parole aux autres pour imposer mon point de vue.",
+        "points": 2
+      },
+      {
+        "id": "opt-087-4",
+        "text": "Je reste totalement muet en fixant le plafond.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "id": "q-088",
+    "category": "Communication & Posture professionnelle",
+    "text": "L'écoute active consiste à :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-088-1",
+        "text": "Écouter attentivement sans interrompre pour comprendre pleinement le besoin.",
+        "points": 10
+      },
+      {
+        "id": "opt-088-2",
+        "text": "Prendre des notes et reformuler pour valider la compréhension.",
+        "points": 8
+      },
+      {
+        "id": "opt-088-3",
+        "text": "Préparer sa réponse pendant que l'autre parle.",
+        "points": 3
+      },
+      {
+        "id": "opt-088-4",
+        "text": "Faire semblant d'écouter tout en pensant à autre chose.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-089",
+    "category": "Communication & Posture professionnelle",
+    "text": "Face aux réseaux sociaux professionnels (ex: JibJob, LinkedIn), quelle est votre stratégie ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-089-1",
+        "text": "Valoriser mes compétences, garder un réseau actif et une e-réputation impeccable.",
+        "points": 10
+      },
+      {
+        "id": "opt-089-2",
+        "text": "Maintenir un profil à jour avec des informations exactes.",
+        "points": 8
+      },
+      {
+        "id": "opt-089-3",
+        "text": "Publier des contenus personnels ou polémiques.",
+        "points": 2
+      },
+      {
+        "id": "opt-089-4",
+        "text": "Utiliser un faux nom pour poster des commentaires négatifs.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-090",
+    "category": "Communication & Posture professionnelle",
+    "text": "La discrétion professionnelle concernant les affaires internes de l'entreprise est :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-090-1",
+        "text": "Une règle d'éthique absolue à maintenir en toutes circonstances.",
+        "points": 10
+      },
+      {
+        "id": "opt-090-2",
+        "text": "Un devoir fondamental de tout salarié.",
+        "points": 8
+      },
+      {
+        "id": "opt-090-3",
+        "text": "Quelque chose qu'on peut oublier autour d'un verre entre amis.",
+        "points": 2
+      },
+      {
+        "id": "opt-090-4",
+        "text": "Une contrainte ridicule.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-091",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "Selon la vision du Ministère du Job et Bonheur, que représente le 'Permis de Travailler' ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-091-1",
+        "text": "La preuve ultime de mon engagement, de ma motivation et de mes aptitudes !",
+        "points": 10
+      },
+      {
+        "id": "opt-091-2",
+        "text": "Un badge valorisant qui démontre mon sérieux aux recruteurs.",
+        "points": 8
+      },
+      {
+        "id": "opt-091-3",
+        "text": "Un simple examen de plus imposé par l'administration.",
+        "points": 3
+      },
+      {
+        "id": "opt-091-4",
+        "text": "Un gadget sans valeur.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-092",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "Sur JibJob, l'obtention de LIKES sur vos vidéos de présentation doit résulter de :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-092-1",
+        "text": "Mon authenticité, mon dynamisme et la qualité de mon profil !",
+        "points": 10
+      },
+      {
+        "id": "opt-092-2",
+        "text": "La clarté de mon discours et ma présentation professionnelle.",
+        "points": 8
+      },
+      {
+        "id": "opt-092-3",
+        "text": "La supplication auprès de mes proches pour qu'ils cliquent.",
+        "points": 2
+      },
+      {
+        "id": "opt-092-4",
+        "text": "L'achat de faux comptes pour tricher.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-093",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "Quelle est votre attitude face aux opportunités d'emploi proposées par JibJob ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-093-1",
+        "text": "Proactive ! Je consulte le feed, j'interagis et je réponds très rapidement.",
+        "points": 10
+      },
+      {
+        "id": "opt-093-2",
+        "text": "Régulière : je me connecte chaque jour pour suivre mes interactions.",
+        "points": 8
+      },
+      {
+        "id": "opt-093-3",
+        "text": "Passive : j'attends que les recruteurs viennent vers moi sans rien faire.",
+        "points": 3
+      },
+      {
+        "id": "opt-093-4",
+        "text": "Indifférente.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-094",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "Pour vous, le travail contribue au Bonheur (valeur JEB) car :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-094-1",
+        "text": "Il apporte un sentiment d'utilité sociale, de création et de lien humain !",
+        "points": 10
+      },
+      {
+        "id": "opt-094-2",
+        "text": "Il permet d'acquérir de l'autonomie financière et de s'épanouir.",
+        "points": 8
+      },
+      {
+        "id": "opt-094-3",
+        "text": "Il sert uniquement à payer ses factures.",
+        "points": 4
+      },
+      {
+        "id": "opt-094-4",
+        "text": "Le travail et le bonheur sont deux notions totalement incompatibles.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-095",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "Comment réagissez-vous si votre profil JibJob ne reçoit pas de likes les premiers jours ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-095-1",
+        "text": "Je retravaille ma vidéo, j'améliore mon texte et je fais preuve de persévérance !",
+        "points": 10
+      },
+      {
+        "id": "opt-095-2",
+        "text": "Je demande des conseils à mon entourage pour améliorer ma prestation.",
+        "points": 8
+      },
+      {
+        "id": "opt-095-3",
+        "text": "Je me plains auprès de l'administration du ministère.",
+        "points": 2
+      },
+      {
+        "id": "opt-095-4",
+        "text": "J'abandonne immédiatement et je supprime mon compte.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-096",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "L'assiduité à remplir le questionnaire complet de 100 questions montre selon vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-096-1",
+        "text": "Ma détermination sans faille et ma persévérance à toute épreuve !",
+        "points": 10
+      },
+      {
+        "id": "opt-096-2",
+        "text": "Mon respect des règles et mon sérieux dans les démarches.",
+        "points": 8
+      },
+      {
+        "id": "opt-096-3",
+        "text": "Une capacité à perdre mon temps.",
+        "points": 2
+      },
+      {
+        "id": "opt-096-4",
+        "text": "Que je n'avais rien d'autre à faire.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-097",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "Si un recruteur Premium vous contacte suite à votre Permis de Travailler JEB, vous :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-097-1",
+        "text": "Répondez dans la journée avec enthousiasme et professionnalisme.",
+        "points": 10
+      },
+      {
+        "id": "opt-097-2",
+        "text": "Planifiez un entretien rapidement en vous préparant bien.",
+        "points": 8
+      },
+      {
+        "id": "opt-097-3",
+        "text": "Lui répondez une semaine plus tard.",
+        "points": 2
+      },
+      {
+        "id": "opt-097-4",
+        "text": "Ne répondez pas car vous avez changé d'avis.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-098",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "Votre vision de l'effort individuel au service du collectif est :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-098-1",
+        "text": "Chaque citoyen actif contribue à la force et au bonheur de la société tout entière !",
+        "points": 10
+      },
+      {
+        "id": "opt-098-2",
+        "text": "Travailler ensemble permet d'aller plus loin et plus fort.",
+        "points": 8
+      },
+      {
+        "id": "opt-098-3",
+        "text": "Chacun pour soi et le marché du travail sera bien gardé.",
+        "points": 2
+      },
+      {
+        "id": "opt-098-4",
+        "text": "L'effort individuel ne sert à rien.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-099",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "Face au changement des codes du recrutement (vidéo court format), vous êtes :",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-099-1",
+        "text": "Enthousiaste ! C'est une chance formidable d'exprimer sa vraie personnalité !",
+        "points": 10
+      },
+      {
+        "id": "opt-099-2",
+        "text": "Curieux et prêt à jouer le jeu de cette innovation.",
+        "points": 8
+      },
+      {
+        "id": "opt-099-3",
+        "text": "Sceptique mais obligé de s'y plier.",
+        "points": 3
+      },
+      {
+        "id": "opt-099-4",
+        "text": "Totalement réfractaire aux nouvelles technologies.",
+        "points": 0
+      }
+    ]
+  },
+  {
+    "id": "q-100",
+    "category": "Valeurs du Travail & Culture JEB",
+    "text": "Pour finir, quel est votre engagement principal en tant que candidat sur JibJob ?",
+    "weighting": 1,
+    "options": [
+      {
+        "id": "opt-100-1",
+        "text": "Donner le meilleur de moi-même, faire preuve d'éthique et viser l'excellence !",
+        "points": 10
+      },
+      {
+        "id": "opt-100-2",
+        "text": "Être honnête, motivé et ponctuel dans toutes mes démarches.",
+        "points": 8
+      },
+      {
+        "id": "opt-100-3",
+        "text": "Faire le strict minimum pour conserver mes droits.",
+        "points": 1
+      },
+      {
+        "id": "opt-100-4",
+        "text": "Aucun engagement particulier.",
+        "points": 0
+      }
+    ]
+  }
+]

@@ -72,7 +72,8 @@ model Profile {
   skills             Skill[]
   videos             Video[]
   interactions       Interaction[]          @relation("ProfileInteractions")
-  questionnaireState QuestionnaireProgress?
+  questionnaireProgress QuestionnaireProgress?
+  questionnaireResult   QuestionnaireResult?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -128,7 +129,7 @@ model Option {
   questionId String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   text       String
-  isCorrect  Boolean  @default(false)
+  points     Int      @default(0)
 }
 
 model Interaction {
@@ -162,5 +163,15 @@ model QuestionnaireProgress {
   questionnaireVersion Int @default(1)
 
   answers     Json
-  lastSavedAt DateTime @updatedAt
+  lastSavedAt DateTime @default(now()) @updatedAt
+}
+
+model QuestionnaireResult {
+  id        String  @id @default(uuid())
+  profileId String  @unique
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  totalScore            Int
+  hasPermisDeTravailler Boolean
+  completedAt           DateTime @default(now())
 }
