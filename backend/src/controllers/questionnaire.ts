@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma';
-import fs from 'fs';
+
+// 70% of the 1000 max points across the 100 seeded questions.
+const CERTIFICATION_THRESHOLD = 700;
 
 /**
  * Controller: Get the list of questions
@@ -14,6 +16,7 @@ export const getAllQuestion = async (req: Request, res: Response, next: NextFunc
             return res.status(401).json({ error: 'Unauthorized' });
         }
         const questions = await prisma.question.findMany({
+            where: { isActive: true },
             include: {
                 options: true,
             },
@@ -39,12 +42,15 @@ export const getCandidateProgression = async (req: Request, res: Response, next:
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const whereClause: any = {
-            profileId: user.profile.id
-        };
-        const progression = await prisma.questionnaireProgress.findFirst({
-            where: whereClause,
-            orderBy: { lastSavedAt: 'desc' },
+        // The JWT only carries { id, role } — the profile isn't attached to
+        // req.body.user by the auth middleware, so it has to be looked up here.
+        const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
+        if (!profile) {
+            return res.status(404).json({ error: 'Profile not found' });
+        }
+
+        const progression = await prisma.questionnaireProgress.findUnique({
+            where: { profileId: profile.id },
         });
         return res.status(200).json(progression);
     } catch (error) {
@@ -64,19 +70,26 @@ export const saveCandidateProgression = async (req: Request, res: Response, next
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const whereClause: any = {
-            profileId: user.profile.id
-        };
+        const { answers, questionnaireVersion } = req.body;
+        if (!answers || typeof answers !== 'object') {
+            return res.status(400).json({ error: 'Invalid answers format' });
+        }
+
+        const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
+        if (!profile) {
+            return res.status(404).json({ error: 'Profile not found' });
+        }
+
         const progression = await prisma.questionnaireProgress.upsert({
-            where: whereClause,
+            where: { profileId: profile.id },
             update: {
-                ...req.body,
-                lastSavedAt: new Date(),
+                answers,
+                ...(questionnaireVersion !== undefined ? { questionnaireVersion } : {}),
             },
             create: {
-                ...req.body,
-                profileId: user.profile.id,
-                lastSavedAt: new Date(),
+                profileId: profile.id,
+                answers,
+                ...(questionnaireVersion !== undefined ? { questionnaireVersion } : {}),
             },
         });
         return res.status(200).json(progression);
@@ -85,17 +98,26 @@ export const saveCandidateProgression = async (req: Request, res: Response, next
     }
 };
 
+/**
+ * Controller: Submit the questionnaire for final scoring
+ * @route POST /api/questionnaire/submit
+ * @access Private
+ */
 export const submitQuestionnaire = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = (req as any).user;
-        if (!user || !user.profile) {
+        const user = req.body?.user;
+        if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
         const { answers } = req.body;
-
         if (!answers || typeof answers !== 'object') {
             return res.status(400).json({ error: 'Invalid answers format' });
+        }
+
+        const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
+        if (!profile) {
+            return res.status(404).json({ error: 'Profile not found' });
         }
 
         const selectedOptionIds = Object.values(answers) as string[];
@@ -112,27 +134,34 @@ export const submitQuestionnaire = async (req: Request, res: Response, next: Nex
         });
 
         const totalScore = selectedOptions.reduce((sum, opt) => sum + opt.points, 0);
-        // const hasCertification = totalScore >= THRESHOLD_VALUE;
+        const hasCertification = totalScore >= CERTIFICATION_THRESHOLD;
 
         await prisma.profile.update({
             where: {
-                id: user.profile.id,
+                id: profile.id,
             },
             data: {
                 certificationScore: totalScore,
-                // hasWorkPermit: hasCertification,
+                hasWorkPermit: hasCertification,
             },
+        });
+
+        await prisma.questionnaireResult.upsert({
+            where: { profileId: profile.id },
+            update: { totalScore, hasPermisDeTravailler: hasCertification, completedAt: new Date() },
+            create: { profileId: profile.id, totalScore, hasPermisDeTravailler: hasCertification },
         });
 
         await prisma.questionnaireProgress.deleteMany({
             where: {
-                profileId: user.profile.id,
+                profileId: profile.id,
             },
         });
 
         return res.status(200).json({
             message: 'Questionnaire submitted successfully',
             totalScore,
+            hasWorkPermit: hasCertification,
             completedAt: new Date(),
         });
     } catch (error) {

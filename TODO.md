@@ -1,23 +1,23 @@
-- [x] Pitch Deck 8 solides pour Benjamin
-- [x] Modération à priori des contenus vidéos
-- [x] Retirer toutes les mentions de likes / compteurs d’engagement dans code etc
-- [x] Retrait compte -16ans côté serveur
-- [x] Charte Graphique ?
-- [x] Vérifier si DA correspond à demandé (polices - couleurs)
-- [ ] Charte appliquée sur 4 écrans : accueil, inscription, fiche profil candidat, catalogue recruteur. Une capture de chacun.
-- [ ] Nom affiché ProfilsActifs partout - titre d'onglet, en-tête, pied de page, boutons, mails envoyés par le service, messages d'erreur, écran vide
+- [x] Pitch Deck 8 solides pour Benjamin - blc
+- [x] Modération à priori des contenus vidéos 
+- [x] Retirer toutes les mentions de likes / compteurs d’engagement dans code etc - à dire dans mail 
+- [x] Retrait compte -16ans côté serveur - à dire dans mail 
+- [x] Charte Graphique ? - tjr pas recue 
+- [ ] Vérifier si DA correspond à demandé (polices - couleurs)
+- [ ] Charte appliquée sur 4 écrans : accueil, inscription, fiche profil candidat, catalogue recruteur. Une capture de chacun. 
+- [x] Nom affiché ProfilsActifs partout - titre d'onglet, en-tête, pied de page, boutons, mails envoyés par le service, messages d'erreur, écran vide
 - [ ] Vidéo de -2mn enregistrement des fonctionnalités principales = démo vidéo de l’app
-- [ ] Listes des termes remplacés « tiktok » vocabulaire choisi
-- [x] Phrase -20 mots Landing page
-- [x] Spécification OpenAPI 3.0, avec Swagger UI accessible
-- [x] Schéma de base de données
-- [x] .env.example
-- [x] Endpoint /health
-- [x] Note de Déploiement d’une page  - pas d’hébergement entièrement en local etc
-- [x] Démo de la feature vidéo ( -100mo / refusé si pas bon format / upload interrompu )
-- [x] 20 profils par page - pagination côté serveur
-- [ ] Pas d’autoplay simultané
-- [ ] Sauvergarde progression questionnaire ( survivre a redémarrage navigateur / pas de stockage local sur le navigateur )
+- [x] Listes des termes remplacés « tiktok » vocabulaire choisi - a envoyer
+- [x] Phrase -20 mots Landing page - a envoyer
+- [x] Spécification OpenAPI 3.0, avec Swagger UI accessible - a envoyer
+- [x] Schéma de base de données  - a envoyer
+- [x] .env.example  - a envoyer
+- [x] Endpoint /health - a envoyer
+- [x] Note de Déploiement d’une page  - pas d’hébergement entièrement en local etc - a envoyer
+- [x] Démo de la feature vidéo ( -100mo / refusé si pas bon format / upload interrompu ) - a envoyer
+- [x] 20 profils par page - pagination côté serveur - a envoyer
+- [x] Pas d’autoplay simultané - a envoyer
+- [] Sauvergarde progression questionnaire ( survivre a redémarrage navigateur / pas de stockage local sur le navigateur ) - a envoyer 
 - [ ] Tests de charge documentés (pour plus tard)
 - [x] Consentement données vidéos écrit, spécifique et révocable enregistré (révocation = suppression du fichier) - à démontrer
 - [x] critères de filtrage effectivement exposés par votre interface et par votre API - à justifier un par un

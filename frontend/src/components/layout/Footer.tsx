@@ -16,9 +16,13 @@ export function Footer() {
         </div>
         <strong className="font-heading">ProfilsActifs — Ministère du Job et Bonheur</strong>
       </div>
-      <div className="flex gap-4 flex-wrap text-[13px] text-[#aab0c0]">
+      <div className="flex gap-4 flex-wrap text-[13px]">
         {LEGAL_LINKS.map((link) => (
-          <Link key={link.href} href={link.href}>
+          <Link
+            key={link.href}
+            href={link.href}
+            className="text-[#aab0c0] hover:text-white"
+          >
             {link.label}
           </Link>
         ))}

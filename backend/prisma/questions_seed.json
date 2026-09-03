@@ -1094,7 +1094,7 @@
   {
     "id": "q-040",
     "category": "Motivation & Ambition",
-    "text": "Postuler à des offres d'emploi ou enregistrer votre vidéo de présentation JibJob représente pour vous :",
+    "text": "Postuler à des offres d'emploi ou enregistrer votre vidéo de présentation ProfilsActifs représente pour vous :",
     "weighting": 1,
     "options": [
       {
@@ -2298,7 +2298,7 @@
   {
     "id": "q-083",
     "category": "Communication & Posture professionnelle",
-    "text": "Comment abordez-vous la tenue de votre vidéo de présentation JibJob ?",
+    "text": "Comment abordez-vous la tenue de votre vidéo de présentation ProfilsActifs ?",
     "weighting": 1,
     "options": [
       {
@@ -2466,7 +2466,7 @@
   {
     "id": "q-089",
     "category": "Communication & Posture professionnelle",
-    "text": "Face aux réseaux sociaux professionnels (ex: JibJob, LinkedIn), quelle est votre stratégie ?",
+    "text": "Face aux réseaux sociaux professionnels (ex: ProfilsActifs, LinkedIn), quelle est votre stratégie ?",
     "weighting": 1,
     "options": [
       {
@@ -2550,7 +2550,7 @@
   {
     "id": "q-092",
     "category": "Valeurs du Travail & Culture JEB",
-    "text": "Sur JibJob, l'obtention de LIKES sur vos vidéos de présentation doit résulter de :",
+    "text": "Sur ProfilsActifs, une vidéo de présentation qui se démarque auprès des recruteurs doit résulter de :",
     "weighting": 1,
     "options": [
       {
@@ -2578,7 +2578,7 @@
   {
     "id": "q-093",
     "category": "Valeurs du Travail & Culture JEB",
-    "text": "Quelle est votre attitude face aux opportunités d'emploi proposées par JibJob ?",
+    "text": "Quelle est votre attitude face aux opportunités d'emploi proposées par ProfilsActifs ?",
     "weighting": 1,
     "options": [
       {
@@ -2634,7 +2634,7 @@
   {
     "id": "q-095",
     "category": "Valeurs du Travail & Culture JEB",
-    "text": "Comment réagissez-vous si votre profil JibJob ne reçoit pas de likes les premiers jours ?",
+    "text": "Comment réagissez-vous si votre profil ProfilsActifs suscite peu d'intérêt les premiers jours ?",
     "weighting": 1,
     "options": [
       {
@@ -2774,7 +2774,7 @@
   {
     "id": "q-100",
     "category": "Valeurs du Travail & Culture JEB",
-    "text": "Pour finir, quel est votre engagement principal en tant que candidat sur JibJob ?",
+    "text": "Pour finir, quel est votre engagement principal en tant que candidat sur ProfilsActifs ?",
     "weighting": 1,
     "options": [
       {

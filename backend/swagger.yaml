@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: ProfilsActifs API
-  description: TikTok for the unemployed - Core API Documentation
+  description: ProfilsActifs - Core API Documentation
   version: 1.0.0
 servers:
   - url: http://localhost:3000
@@ -374,26 +374,39 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
   /profile/all:
     get:
-      summary: Get All Profiles
+      summary: Get All Profiles (candidate catalog)
+      description: Public — browsable without an account. Server-side paginated, 20 per page. Minors are only included when the caller is authenticated as a RECRUITER; a page past the end returns an empty `profiles` array rather than an error.
       tags:
         - Profile
-      security:
-        - bearerAuth: []
+      security: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
       responses:
         "200":
-          description: List of all user profiles
+          description: Paginated list of profiles
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Profile"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                type: object
+                properties:
+                  profiles:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Profile"
+                  total:
+                    type: integer
+                    example: 23
+                  page:
+                    type: integer
+                    example: 1
+                  pageSize:
+                    type: integer
+                    example: 20
   /profile/user/{id}:
     get:
       summary: Get Profile by User ID
@@ -784,9 +797,18 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Video"
+                type: object
+                properties:
+                  videos:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Video"
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  pageSize:
+                    type: integer
   /video/approval:
     put:
       summary: Approve or reject a video (ADMIN only)
