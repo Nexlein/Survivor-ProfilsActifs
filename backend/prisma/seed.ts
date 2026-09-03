@@ -1,9 +1,28 @@
 import { prisma } from '../src/prisma.js';
 import bcrypt from 'bcrypt';
+import fs from 'fs';
+import path from 'path';
+
+type QuestionSeedOption = {
+  id: string;
+  text: string;
+  points: number;
+};
+
+type QuestionSeed = {
+  id: string;
+  category: string;
+  text: string;
+  weighting: number;
+  options: QuestionSeedOption[];
+};
 
 
 async function main() {
   console.log('Starting database seeding...');
+
+  const questionsSeedPath = path.resolve(__dirname, 'questions_seed.json');
+  const questionnaireSeeds = JSON.parse(fs.readFileSync(questionsSeedPath, 'utf8')) as QuestionSeed[];
 
   console.log('Cleaning existing data...');
   await prisma.interaction.deleteMany();
@@ -11,6 +30,7 @@ async function main() {
   await prisma.option.deleteMany();
   await prisma.question.deleteMany();
   await prisma.questionnaireProgress.deleteMany();
+  await prisma.questionnaireResult.deleteMany();
   await prisma.video.deleteMany();
   await prisma.skill.deleteMany();
   await prisma.profile.deleteMany();
@@ -116,31 +136,52 @@ async function main() {
 
   console.log('Creating questionnaire...');
 
-  const q1 = await prisma.question.create({
+  for (const questionSeed of questionnaireSeeds) {
+    await prisma.question.create({
+      data: {
+        id: questionSeed.id,
+        text: questionSeed.text,
+        weighting: questionSeed.weighting,
+      },
+    });
+
+    for (const optionSeed of questionSeed.options) {
+      await prisma.option.create({
+        data: {
+          id: optionSeed.id,
+          questionId: questionSeed.id,
+          text: optionSeed.text,
+          points: optionSeed.points,
+        },
+      });
+    }
+  }
+
+  const firstQuestion = questionnaireSeeds[0];
+  if (!firstQuestion) {
+    throw new Error('No questionnaire seeds found');
+  }
+
+  await prisma.questionnaireProgress.create({
     data: {
-      text: "Quelle est la principale qualité d'un bon leader ?",
-      weighting: 2,
-      options: {
-        create: [
-          { text: "L'autorité", isCorrect: false },
-          { text: "L'écoute", isCorrect: true },
-          { text: "La vitesse", isCorrect: false },
-        ],
+      profileId: jobSeeker1.id,
+      questionnaireVersion: 1,
+      answers: {
+        [firstQuestion.id]: firstQuestion.options[1].id,
       },
     },
   });
 
-  const q2 = await prisma.question.create({
+  const totalScore = questionnaireSeeds.reduce((score, question) => {
+    const bestOption = question.options.reduce((best, option) => (option.points > best.points ? option : best));
+    return score + bestOption.points;
+  }, 0);
+
+  await prisma.questionnaireResult.create({
     data: {
-      text: "Que faire en cas de conflit dans une équipe ?",
-      weighting: 3,
-      options: {
-        create: [
-          { text: "Ignorer le problème", isCorrect: false },
-          { text: "Prendre parti immédiatement", isCorrect: false },
-          { text: "Organiser une médiation", isCorrect: true },
-        ],
-      },
+      profileId: jobSeeker2.id,
+      totalScore,
+      hasPermisDeTravailler: true,
     },
   });
 
