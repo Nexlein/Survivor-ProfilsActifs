@@ -1,6 +1,12 @@
 import { prisma } from '../src/prisma.js';
 import bcrypt from 'bcrypt';
 
+const FIRST_NAMES = ['Jean', 'Marie', 'Luc', 'Sophie', 'Thomas', 'Emma', 'Nicolas', 'Julie', 'Pierre', 'Alice', 'Antoine', 'Camille', 'Julien', 'Chloe', 'Maxime', 'Sarah', 'Alexandre', 'Laura', 'Guillaume', 'Marion'];
+const LAST_NAMES = ['Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand', 'Leroy', 'Moreau', 'Simon', 'Laurent', 'Lefebvre', 'Michel', 'Garcia', 'David', 'Bertrand', 'Roux', 'Vincent', 'Fournier'];
+const SECTORS = ['Web Development', 'Data Science', 'Marketing', 'Finance', 'Healthcare', 'Sales', 'Design', 'Engineering', 'Human Resources', 'Education'];
+const LOCATIONS = ['Paris, France', 'Lyon, France', 'Marseille, France', 'Bordeaux, France', 'Lille, France', 'Toulouse, France', 'Nantes, France', 'Strasbourg, France', 'Rennes, France', 'Montpellier, France'];
+
+const getRandom = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
 
 async function main() {
   console.log('Starting database seeding...');
@@ -18,7 +24,7 @@ async function main() {
 
   const passwordHash = await bcrypt.hash('password123', 12);
 
-  console.log('Creating users...');
+  console.log('Creating Admin & Recruiters...');
   const admin = await prisma.user.create({
     data: {
       email: 'admin@job-et-bonheur.fr',
@@ -27,7 +33,7 @@ async function main() {
     },
   });
 
-  const recruiter = await prisma.user.create({
+  const recruiter1 = await prisma.user.create({
     data: {
       email: 'recruiter@techcorp.fr',
       passwordHash,
@@ -35,118 +41,122 @@ async function main() {
     },
   });
 
-  const jobSeeker1 = await prisma.user.create({
+  const recruiter2 = await prisma.user.create({
     data: {
-      email: 'jean.dupont@example.com',
+      email: 'recrutement@startup-nation.fr',
       passwordHash,
-      role: 'JOB_SEEKER',
-      dateOfBirth: new Date('1995-05-15'), // Adult
-    },
-  });
-
-  const jobSeeker2 = await prisma.user.create({
-    data: {
-      email: 'marie.curie@example.com',
-      passwordHash,
-      role: 'JOB_SEEKER',
-      dateOfBirth: new Date('1990-11-07'), // Adult
+      role: 'RECRUITER',
     },
   });
 
   console.log('Creating skills...');
-  const skillReact = await prisma.skill.create({ data: { name: 'React' } });
-  const skillNode = await prisma.skill.create({ data: { name: 'Node.js' } });
-  const skillManagement = await prisma.skill.create({ data: { name: 'Management' } });
+  const skillNames = ['React', 'Node.js', 'Management', 'Python', 'SEO', 'Figma', 'Docker', 'AWS', 'Communication', 'Agile'];
+  const skills = [];
+  for (const name of skillNames) {
+    const s = await prisma.skill.create({ data: { name } });
+    skills.push(s);
+  }
 
-  console.log('Creating profiles and videos...');
+  console.log('Creating 25+ Candidates...');
+  // We need exactly 25 candidates to test pagination (20 per page).
+  
+  for (let i = 1; i <= 25; i++) {
+    const firstName = getRandom(FIRST_NAMES);
+    const lastName = getRandom(LAST_NAMES);
+    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@example.com`;
+    
+    // RGPD scenarios:
+    // 20 Adults (>= 18)
+    // 3 Minors (16-18) - hidden from public, visible to recruiters
+    // 2 Ghosts (No age / visible=false) - completely hidden
+    let dob: Date | null = new Date(`1990-01-01`); // Default adult
+    let isVisible = true;
+    let status: 'APPROVED' | 'PENDING' | 'REJECTED' = 'APPROVED';
 
-  await prisma.profile.create({
-    data: {
-      userId: jobSeeker1.id,
-      fullName: 'Jean Dupont',
-      targetSector: 'Web Development',
-      location: 'Paris, France',
-      avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-      hasWorkPermit: true,
-      skills: {
-        connect: [{ id: skillReact.id }, { id: skillNode.id }],
-      },
-      videos: {
-        create: [
-          {
-            type: 'LINK',
-            url: 'https://example.com/videos/jean-intro.mp4',
-            subtitleUrl: 'https://example.com/videos/jean-intro.vtt',
-            likes: 15,
-            views: 120,
-            consentDate: new Date(),
-            consentTextVersion: 'v1.0 - 2026-09-01',
-            status: 'APPROVED',
-          },
-        ],
-      },
-    },
-  });
+    if (i > 20 && i <= 23) {
+      // Minor (17 years old)
+      const minorDate = new Date();
+      minorDate.setFullYear(minorDate.getFullYear() - 17);
+      dob = minorDate;
+    } else if (i > 23) {
+      // Ghost (No age, explicitly hidden)
+      dob = null;
+      isVisible = false;
+      status = 'PENDING';
+    }
 
-  await prisma.profile.create({
-    data: {
-      userId: jobSeeker2.id,
-      fullName: 'Marie Curie',
-      targetSector: 'Research & Development',
-      location: 'Lyon, France',
-      avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
-      hasWorkPermit: true,
-      skills: {
-        connect: [{ id: skillManagement.id }],
+    // Randomize some statuses for adults
+    if (i % 5 === 0 && i <= 20) status = 'PENDING';
+    if (i % 7 === 0 && i <= 20) status = 'REJECTED';
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        passwordHash,
+        role: 'JOB_SEEKER',
+        dateOfBirth: dob,
       },
-      videos: {
-        create: [
-          {
-            type: 'UPLOAD',
-            url: '/uploads/marie-curie-pitch.mp4',
-            subtitleUrl: '/uploads/marie-curie-pitch.vtt',
-            likes: 42,
-            views: 350,
-            consentDate: new Date(),
-            consentTextVersion: 'v1.0 - 2026-09-01',
-            status: 'APPROVED',
-          },
-        ],
+    });
+
+    // Random 2 to 4 skills
+    const userSkills = [...skills].sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 3) + 2);
+
+    await prisma.profile.create({
+      data: {
+        userId: user.id,
+        fullName: `${firstName} ${lastName}`,
+        targetSector: getRandom(SECTORS),
+        location: getRandom(LOCATIONS),
+        avatarUrl: `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'women' : 'men'}/${i % 50}.jpg`,
+        hasWorkPermit: true,
+        visible: isVisible,
+        skills: {
+          connect: userSkills.map(s => ({ id: s.id })),
+        },
+        videos: {
+          create: [
+            {
+              type: 'LINK',
+              url: 'https://www.w3schools.com/html/mov_bbb.mp4', // Safe sample video
+              subtitleUrl: null,
+              likes: Math.floor(Math.random() * 50),
+              views: Math.floor(Math.random() * 500),
+              consentDate: new Date(),
+              consentTextVersion: 'v1.0 - 2026-09-01',
+              status: status,
+            },
+          ],
+        },
       },
-    },
-  });
+    });
+  }
 
   console.log('Creating questionnaire...');
 
-  const q1 = await prisma.question.create({
-    data: {
-      text: "Quelle est la principale qualité d'un bon leader ?",
-      weighting: 2,
-      options: {
-        create: [
-          { text: "L'autorité", isCorrect: false },
-          { text: "L'écoute", isCorrect: true },
-          { text: "La vitesse", isCorrect: false },
-        ],
-      },
-    },
-  });
+  const qs = [
+    { text: "Quelle est la principale qualité d'un bon leader ?", weighting: 2, opts: ["L'autorité", "L'écoute", "La vitesse"] },
+    { text: "Que faire en cas de conflit dans une équipe ?", weighting: 3, opts: ["Ignorer", "Prendre parti", "Organiser une médiation"] },
+    { text: "Comment gérez-vous le stress ?", weighting: 2, opts: ["Je panique", "Je m'isole", "Je planifie et priorise"] },
+    { text: "Quel est le but d'un stand-up meeting ?", weighting: 1, opts: ["Se plaindre", "Faire un long bilan", "Aligner l'équipe rapidement"] },
+    { text: "Comment réagissez-vous face à l'échec ?", weighting: 3, opts: ["C'est la fin", "J'accuse les autres", "J'en tire une leçon"] }
+  ];
 
-  const q2 = await prisma.question.create({
-    data: {
-      text: "Que faire en cas de conflit dans une équipe ?",
-      weighting: 3,
-      options: {
-        create: [
-          { text: "Ignorer le problème", isCorrect: false },
-          { text: "Prendre parti immédiatement", isCorrect: false },
-          { text: "Organiser une médiation", isCorrect: true },
-        ],
-      },
-    },
-  });
+  for (const q of qs) {
+    await prisma.question.create({
+      data: {
+        text: q.text,
+        weighting: q.weighting,
+        options: {
+          create: q.opts.map((opt, idx) => ({
+            text: opt,
+            isCorrect: idx === 2 // Making the 3rd option correct for all of them just for seeding
+          }))
+        }
+      }
+    });
+  }
 
-  console.log('Seeding finished successfully!');
+  console.log('Seeding finished successfully! 25+ Candidates created.');
 }
 
 main()
