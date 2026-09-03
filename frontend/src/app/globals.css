@@ -64,13 +64,20 @@ h3 {
   box-sizing: border-box;
 }
 
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-}
+/* @layer base (not left unlayered) so Tailwind text-color utility classes on
+   <a> tags (e.g. buttonClasses(), the footer's lighter link color) can still
+   override this default — unlayered CSS always beats Tailwind's layered
+   utilities regardless of selector specificity, silently breaking any such
+   override otherwise. */
+@layer base {
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
 
-a:hover {
-  color: var(--color-action);
+  a:hover {
+    color: var(--color-action);
+  }
 }
 
 /* Anneau à deux tons : le liseré blanc reste visible sur fond foncé (ex.

@@ -5,7 +5,7 @@
 - [x] Charte Graphique ? - tjr pas recue 
 - [ ] Vérifier si DA correspond à demandé (polices - couleurs)
 - [ ] Charte appliquée sur 4 écrans : accueil, inscription, fiche profil candidat, catalogue recruteur. Une capture de chacun. 
-- [ ] Nom affiché ProfilsActifs partout - titre d'onglet, en-tête, pied de page, boutons, mails envoyés par le service, messages d'erreur, écran vide
+- [x] Nom affiché ProfilsActifs partout - titre d'onglet, en-tête, pied de page, boutons, mails envoyés par le service, messages d'erreur, écran vide
 - [ ] Vidéo de -2mn enregistrement des fonctionnalités principales = démo vidéo de l’app
 - [x] Listes des termes remplacés « tiktok » vocabulaire choisi - a envoyer
 - [x] Phrase -20 mots Landing page - a envoyer
@@ -16,8 +16,8 @@
 - [x] Note de Déploiement d’une page  - pas d’hébergement entièrement en local etc - a envoyer
 - [x] Démo de la feature vidéo ( -100mo / refusé si pas bon format / upload interrompu ) - a envoyer
 - [x] 20 profils par page - pagination côté serveur - a envoyer
-- [ ] Pas d’autoplay simultané - a envoyer
-- [ ] Sauvergarde progression questionnaire ( survivre a redémarrage navigateur / pas de stockage local sur le navigateur ) - a envoyer 
+- [x] Pas d’autoplay simultané - a envoyer
+- [] Sauvergarde progression questionnaire ( survivre a redémarrage navigateur / pas de stockage local sur le navigateur ) - a envoyer 
 - [ ] Tests de charge documentés (pour plus tard)
 - [x] Consentement données vidéos écrit, spécifique et révocable enregistré (révocation = suppression du fichier) - à démontrer
 - [x] critères de filtrage effectivement exposés par votre interface et par votre API - à justifier un par un
