@@ -26,3 +26,29 @@ export const getAllQuestion = async (req: Request, res: Response, next: NextFunc
         return next(error);
     }
 };
+
+/**
+ * Controller: Get the candidate progression
+ * @route GET /api/questionnaire/progression
+ * @access Private
+ */
+export const getCandidateProgression = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.body?.user;
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const whereClause: any = {
+            profileId: user.profile.id
+        };
+        const progression = await prisma.questionnaireProgress.findFirst({
+            where: whereClause,
+            orderBy: { lastSavedAt: 'desc' },
+        });
+        return res.status(200).json(progression);
+    } catch (error) {
+        return next(error);
+    }
+};
+
