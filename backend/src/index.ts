@@ -17,6 +17,17 @@ app.use(helmet());
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3001' }));
 app.use(express.json()); // Parses incoming JSON payloads
 
+// Profile photos are served directly (unlike videos, which stay behind the
+// authenticated /media streaming route for legal/consent reasons) since
+// public profile pages display them without an auth header. helmet()'s
+// default Cross-Origin-Resource-Policy: same-origin would otherwise make
+// the browser (not curl — this is a browser-enforced policy) silently
+// refuse to render them on the frontend's different origin/port.
+app.use('/uploads/avatars', (req, res, next) => {
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+}, express.static(path.resolve(__dirname, '../uploads/avatars')));
+
 // OpenAPI / Swagger Setup
 // Satisfies the strict IT constraint to have Swagger UI accessible.
 const swaggerDocument = YAML.load(path.resolve(__dirname, '../swagger.yaml'));

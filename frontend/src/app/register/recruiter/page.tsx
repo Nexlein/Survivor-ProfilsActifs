@@ -32,7 +32,15 @@ export default function RecruiterRegisterPage() {
 
     setIsSubmitting(true);
     try {
-      await register({ email, password, fullName, role: "RECRUITER" });
+      await register({
+        email,
+        password,
+        fullName,
+        role: "RECRUITER",
+        companyName,
+        industry: sector,
+        position,
+      });
       const { token, user } = await login(email, password);
       setToken(token);
       setUser(user);

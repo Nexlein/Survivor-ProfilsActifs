@@ -12,8 +12,10 @@ import {
   clearUser,
   deleteAccount,
   getMyProfile,
+  resolveAvatarUrl,
   translateApiError,
   updateProfile,
+  uploadAvatar,
   useCurrentUser,
 } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
@@ -32,19 +34,31 @@ export default function EditProfilePage() {
   const [location, setLocation] = useState("");
 
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [skillInput, setSkillInput] = useState("");
+  const [skills, setSkills] = useState<string[]>([]);
+  const [bio, setBio] = useState("");
 
   function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
+    setPhotoFile(file);
     const reader = new FileReader();
     reader.onload = () => setPhotoPreview(reader.result as string);
     reader.readAsDataURL(file);
+  }
+
+  function addSkill() {
+    const value = skillInput.trim();
+    if (!value || skills.includes(value) || skills.length >= 10) return;
+    setSkills((s) => [...s, value]);
+    setSkillInput("");
   }
 
   useEffect(() => {
@@ -60,6 +74,9 @@ export default function EditProfilePage() {
         setFullName(p.fullName);
         setSector(p.targetSector ?? "");
         setLocation(p.location ?? "");
+        setSkills((p.skills ?? []).map((s) => s.name));
+        const resolvedAvatar = resolveAvatarUrl(p.avatarUrl);
+        if (resolvedAvatar) setPhotoPreview(resolvedAvatar);
       })
       .catch((err) => setLoadError(translateApiError(err)))
       .finally(() => setIsLoading(false));
@@ -67,13 +84,16 @@ export default function EditProfilePage() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    if (!profile) return;
     setError(null);
-    setSuccess(false);
     setIsSubmitting(true);
 
     try {
+      if (photoFile) {
+        await uploadAvatar(photoFile);
+      }
       await updateProfile({ fullName, targetSector: sector, location });
-      setSuccess(true);
+      router.push(`/profils/${profile.userId}`);
     } catch (err) {
       setError(translateApiError(err));
     } finally {
@@ -133,9 +153,9 @@ export default function EditProfilePage() {
             Changer la photo
           </Button>
         </div>
-        {photoPreview && (
+        {photoFile && (
           <p className="text-text-secondary text-xs -mt-2">
-            Aperçu local uniquement — l&apos;envoi de photo n&apos;est pas encore connecté au serveur.
+            Nouvelle photo sélectionnée — elle sera envoyée à l&apos;enregistrement.
           </p>
         )}
 
@@ -155,22 +175,56 @@ export default function EditProfilePage() {
         />
 
         <div>
-          <label className="block text-[13px] font-semibold text-text font-heading mb-1.5">
+          <label htmlFor="skill-input" className="block text-[13px] font-semibold text-text font-heading mb-1.5">
             Compétences
           </label>
-          {profile.skills && profile.skills.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {profile.skills.map((skill) => (
-                <Chip key={skill.id}>{skill.name}</Chip>
+          <input
+            id="skill-input"
+            placeholder="Ajouter une compétence…"
+            value={skillInput}
+            onChange={(e) => setSkillInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addSkill();
+              }
+            }}
+            className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
+          />
+          {skills.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-2.5">
+              {skills.map((skill) => (
+                <Chip key={skill} onRemove={() => setSkills((s) => s.filter((x) => x !== skill))}>
+                  {skill}
+                </Chip>
               ))}
             </div>
-          ) : (
-            <p className="text-text-secondary text-sm">Aucune compétence renseignée.</p>
           )}
+          <p className="text-text-secondary text-xs mt-1.5">
+            Modification des compétences pas encore connectée au serveur — l&apos;API ne permet pas
+            encore de les mettre à jour depuis cette page.
+          </p>
+        </div>
+
+        <div>
+          <label htmlFor="bio" className="block text-[13px] font-semibold text-text font-heading mb-1.5">
+            À propos
+          </label>
+          <textarea
+            id="bio"
+            rows={4}
+            placeholder="Présentez-vous en quelques lignes…"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
+          />
+          <p className="text-text-secondary text-xs mt-1.5">
+            Section pas encore connectée au serveur — ce champ n&apos;existe pas encore dans la base de
+            données.
+          </p>
         </div>
 
         {error && <p role="alert" className="text-error text-sm">{error}</p>}
-        {success && <p className="text-success text-sm">Profil mis à jour.</p>}
 
         <Button type="submit" variant="primary" disabled={isSubmitting} className="self-start">
           {isSubmitting ? "Enregistrement..." : "Enregistrer les modifications"}

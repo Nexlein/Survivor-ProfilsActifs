@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { deleteProfile, getProfile, updateProfile, getCurrentProfile, getAllProfiles, getProfileByUserId } from '../controllers/profile';
+import { deleteProfile, getProfile, updateProfile, getCurrentProfile, getAllProfiles, getProfileByUserId, uploadProfileAvatar } from '../controllers/profile';
 import { authenticateToken } from '../middlewares/auth';
+import { uploadAvatar } from '../middlewares/upload';
 
 export const profileRouter = Router();
 
@@ -13,5 +14,6 @@ profileRouter.get('/all', authenticateToken, getAllProfiles);
 
 // Public route (optional auth handled in controller for age checks)
 profileRouter.get('/user/:id', getProfileByUserId);
+profileRouter.post('/avatar', uploadAvatar.single('avatar'), uploadProfileAvatar);
 
 export default profileRouter;

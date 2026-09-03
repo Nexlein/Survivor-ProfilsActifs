@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 const TOKEN_KEY = "profilsactifs_token";
 const USER_KEY = "profilsactifs_user";
 
@@ -117,6 +117,34 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return data as T;
 }
 
+// Locally-uploaded avatars come back as a relative /uploads/... path (needs
+// the API origin prefixed); seeded/demo avatars are already absolute URLs.
+export function resolveAvatarUrl(avatarUrl: string | null | undefined): string | undefined {
+  if (!avatarUrl) return undefined;
+  return avatarUrl.startsWith("/") ? `${API_URL}${avatarUrl}` : avatarUrl;
+}
+
+export async function uploadAvatar(file: File): Promise<Profile> {
+  const token = getToken();
+  const body = new FormData();
+  body.append("avatar", file);
+
+  // No Content-Type header here on purpose — the browser sets the
+  // multipart/form-data boundary itself, which JSON.stringify-based
+  // request() above doesn't support.
+  const res = await fetch(`${API_URL}/profile/avatar`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    body,
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new ApiError(res.status, data.error ?? "Une erreur est survenue");
+  }
+  return data as Profile;
+}
+
 export function login(email: string, password: string) {
   return request<AuthResponse>("/auth/login", {
     method: "POST",
@@ -130,6 +158,14 @@ export type RegisterPayload = {
   fullName: string;
   role: "JOB_SEEKER" | "RECRUITER";
   dateOfBirth?: string;
+  // JOB_SEEKER
+  targetSector?: string;
+  location?: string;
+  skills?: string[];
+  // RECRUITER
+  companyName?: string;
+  industry?: string;
+  position?: string;
 };
 
 export type RegisterResponse = {
@@ -156,6 +192,7 @@ export type Profile = {
   fullName: string;
   targetSector: string | null;
   location: string | null;
+  avatarUrl: string | null;
   certificationScore: number | null;
   hasWorkPermit: boolean;
   skills?: { id: string; name: string }[];

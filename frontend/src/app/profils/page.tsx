@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button, buttonClasses } from "@/components/ui/Button";
 import { ProfileCard } from "@/components/ui/Card";
 import { Checkbox } from "@/components/ui/Checkbox";
-import { Profile, getAllProfiles, translateApiError } from "@/lib/api";
+import { Profile, getAllProfiles, resolveAvatarUrl, translateApiError } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
 
 // 20 profils par page — exigence de Thomas Vignal (docs/mails/contraintes_techniques.md).
@@ -159,6 +159,7 @@ export default function ProfileCatalogPage() {
                     key={profile.id}
                     name={profile.fullName}
                     role={profile.targetSector ?? "Secteur non renseigné"}
+                    avatarUrl={resolveAvatarUrl(profile.avatarUrl)}
                     certified={profile.hasWorkPermit}
                     footer={
                       <Link

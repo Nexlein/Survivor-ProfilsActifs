@@ -8,7 +8,7 @@ import { Button, buttonClasses } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { Tabs } from "@/components/ui/Tabs";
 import { ContactModal } from "@/components/profile/ContactModal";
-import { Profile, getProfileByUserId, getUser, translateApiError } from "@/lib/api";
+import { Profile, getProfileByUserId, getUser, resolveAvatarUrl, translateApiError } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
 
 export default function PublicProfilePage() {
@@ -53,7 +53,12 @@ export default function PublicProfilePage() {
   return (
     <main className="flex flex-col lg:flex-row gap-8 p-6 sm:p-12 max-w-5xl mx-auto">
       <aside className="flex-none w-full lg:max-w-[260px]">
-        <div className="w-[110px] h-[110px] rounded-full bg-border mx-auto mb-3" />
+        <div className="w-[110px] h-[110px] rounded-full bg-border mx-auto mb-3 overflow-hidden">
+          {resolveAvatarUrl(profile.avatarUrl) && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={resolveAvatarUrl(profile.avatarUrl)} alt="" className="w-full h-full object-cover" />
+          )}
+        </div>
         <h2 className="text-center mb-1">{profile.fullName}</h2>
         {profile.targetSector && (
           <p className="text-center italic font-body text-sm text-text-secondary mb-1.5">
