@@ -24,14 +24,10 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/profilsactifs
       - run: npm run build --workspace=backend
 
-      # 3. Build Frontend
-      - run: npm run build --workspace=frontend
+      # 3. Build Frontend (explicit cd to ensure .next is written in frontend/)
+      - run: cd frontend && npm run build
 
-      # 4. Debug: find Next.js build output
-      - name: Find Next.js build output
-        run: find . -name 'BUILD_ID' 2>/dev/null | head -10 && ls -la frontend/ 2>/dev/null || true
-
-      # 5. Upload build artifacts
+      # 4. Upload build artifacts
       - name: Upload backend build
         uses: actions/upload-artifact@v4
         with:
@@ -44,5 +40,5 @@ jobs:
         with:
           name: frontend-build
           path: frontend/.next
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 7
