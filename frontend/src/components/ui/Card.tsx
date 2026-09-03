@@ -6,24 +6,33 @@ type ProfileCardProps = {
   role: string;
   avatarUrl?: string;
   certified?: boolean;
+  className?: string;
+  footer?: ReactNode;
 };
 
-export function ProfileCard({ name, role, avatarUrl, certified }: ProfileCardProps) {
+export function ProfileCard({ name, role, avatarUrl, certified, className = "", footer }: ProfileCardProps) {
   return (
-    <div className="w-[220px] bg-bg rounded-lg p-4 shadow-card">
-      <div className="flex gap-2.5 items-center mb-2">
-        <div className="w-10 h-10 rounded-full bg-border overflow-hidden shrink-0">
+    <div
+      className={`w-full sm:w-[220px] bg-bg rounded-lg p-5 shadow-card transition-all duration-150 hover:shadow-modal hover:-translate-y-0.5 ${className}`}
+    >
+      <div className="flex gap-3 items-center mb-3.5">
+        <div className="w-14 h-14 rounded-full bg-border overflow-hidden shrink-0 ring-1 ring-black/5">
           {avatarUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
           )}
         </div>
-        <div>
-          <div className="font-bold text-[13px] font-heading text-text">{name}</div>
-          <div className="italic text-xs font-body text-text-secondary">{role}</div>
+        <div className="min-w-0">
+          <div className="font-bold text-sm font-heading text-text truncate">{name}</div>
+          <div className="italic text-xs font-body text-text-secondary truncate">{role}</div>
         </div>
       </div>
-      {certified && <Badge variant="success">★ Certifié JEB</Badge>}
+      {certified ? (
+        <Badge variant="success">★ Certifié JEB</Badge>
+      ) : (
+        <Badge variant="neutral">Certification en cours</Badge>
+      )}
+      {footer && <div className="mt-3.5">{footer}</div>}
     </div>
   );
 }

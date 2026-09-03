@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Spectral } from "next/font/google";
 import localFont from "next/font/local";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 const marianne = localFont({
@@ -23,14 +25,21 @@ const spectral = Spectral({
 });
 
 export const metadata: Metadata = {
-  title: "ProfilsActifs",
+  title: {
+    template: "%s — ProfilsActifs",
+    default: "ProfilsActifs",
+  },
   description: "Plateforme de mise en relation professionnelle par vidéo — Ministère du Job et Bonheur",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`h-full ${marianne.variable} ${spectral.variable}`}>
-      <body className="min-h-full flex flex-col font-body">{children}</body>
+      <body className="min-h-full flex flex-col font-body">
+        <Header />
+        <div className="flex-1 flex flex-col">{children}</div>
+        <Footer />
+      </body>
     </html>
   );
 }

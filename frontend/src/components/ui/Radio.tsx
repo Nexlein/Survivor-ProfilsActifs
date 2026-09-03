@@ -6,7 +6,7 @@ type RadioProps = InputHTMLAttributes<HTMLInputElement> & {
 
 export function Radio({ label, id, className = "", ...props }: RadioProps) {
   return (
-    <label htmlFor={id} className="flex items-center gap-2 text-[13px] text-text cursor-pointer">
+    <label htmlFor={id} className="flex items-center gap-2 text-[13px] font-heading text-text cursor-pointer">
       <input
         id={id}
         type="radio"

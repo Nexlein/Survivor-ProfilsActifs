@@ -73,9 +73,14 @@ a:hover {
   color: var(--color-action);
 }
 
+/* Anneau à deux tons : le liseré blanc reste visible sur fond foncé (ex.
+   les CTA du bandeau hero bleu marine), l'anneau marine reste visible sur
+   fond clair — un simple outline marine devient invisible sur fond marine. */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid white;
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-primary);
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar {
