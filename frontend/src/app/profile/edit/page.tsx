@@ -12,8 +12,10 @@ import {
   clearUser,
   deleteAccount,
   getMyProfile,
+  resolveAvatarUrl,
   translateApiError,
   updateProfile,
+  uploadAvatar,
   useCurrentUser,
 } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
@@ -36,6 +38,7 @@ export default function EditProfilePage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [skillInput, setSkillInput] = useState("");
@@ -45,6 +48,7 @@ export default function EditProfilePage() {
   function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
+    setPhotoFile(file);
     const reader = new FileReader();
     reader.onload = () => setPhotoPreview(reader.result as string);
     reader.readAsDataURL(file);
@@ -71,6 +75,8 @@ export default function EditProfilePage() {
         setSector(p.targetSector ?? "");
         setLocation(p.location ?? "");
         setSkills((p.skills ?? []).map((s) => s.name));
+        const resolvedAvatar = resolveAvatarUrl(p.avatarUrl);
+        if (resolvedAvatar) setPhotoPreview(resolvedAvatar);
       })
       .catch((err) => setLoadError(translateApiError(err)))
       .finally(() => setIsLoading(false));
@@ -83,6 +89,9 @@ export default function EditProfilePage() {
     setIsSubmitting(true);
 
     try {
+      if (photoFile) {
+        await uploadAvatar(photoFile);
+      }
       await updateProfile({ fullName, targetSector: sector, location });
       router.push(`/profils/${profile.userId}`);
     } catch (err) {
@@ -144,9 +153,9 @@ export default function EditProfilePage() {
             Changer la photo
           </Button>
         </div>
-        {photoPreview && (
+        {photoFile && (
           <p className="text-text-secondary text-xs -mt-2">
-            Aperçu local uniquement — l&apos;envoi de photo n&apos;est pas encore connecté au serveur.
+            Nouvelle photo sélectionnée — elle sera envoyée à l&apos;enregistrement.
           </p>
         )}
 
