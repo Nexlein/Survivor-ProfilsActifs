@@ -306,6 +306,45 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /profile/avatar:
+    post:
+      summary: Upload / replace profile photo
+      description: Accepts a single image file (max 5 MB) and sets it as the current user's avatarUrl.
+      tags:
+        - Profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - avatar
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Avatar uploaded and profile updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "400":
+          description: No file provided or invalid file type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /profile/all:
     get:
       summary: Get All Profiles
@@ -775,6 +814,10 @@ components:
           type: string
           nullable: true
           example: Paris
+        avatarUrl:
+          type: string
+          nullable: true
+          example: /uploads/avatars/1725360000000-123456789.jpg
         certificationScore:
           type: integer
           nullable: true
