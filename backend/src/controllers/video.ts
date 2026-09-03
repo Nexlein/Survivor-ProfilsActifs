@@ -4,13 +4,6 @@ import prisma from '../prisma';
 import fs from 'fs';
 import path from 'path';
 
-// Helper to remove likes and views
-const stripPublicVideoStats = (video: any) => {
-    if (!video) return video;
-    const { likes, views, ...safeVideo } = video;
-    return safeVideo;
-};
-
 /**
  * Controller: Create Profile Video (Unified LINK/UPLOAD)
  * @route POST /api/profile/videos
@@ -18,7 +11,12 @@ const stripPublicVideoStats = (video: any) => {
  */
 export const createProfileVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body?.user;
+        // req.body.user (set by authenticateToken) doesn't survive here: multer
+        // parses the multipart body *after* auth runs and replaces req.body
+        // wholesale. req.user is set independently by the same middleware and
+        // isn't affected, so read from there instead (same fix as the avatar
+        // upload route).
+        const user = (req as any).user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
@@ -28,7 +26,7 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
             return res.status(404).json({ error: 'Profile not found' });
         }
 
-        const { type, videoUrl, consentTextVersion } = req.body;
+        const { type, videoUrl, consentTextVersion, subtitleUrl: linkSubtitleUrl } = req.body;
 
         let finalUrl = '';
         let subtitleUrl: string | null = null;
@@ -48,6 +46,7 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
                 return res.status(400).json({ error: 'videoUrl is required for LINK type' });
             }
             finalUrl = videoUrl;
+            subtitleUrl = linkSubtitleUrl || null;
         } else {
             return res.status(400).json({ error: 'type must be LINK or UPLOAD' });
         }
@@ -64,7 +63,7 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
             },
         });
 
-        return res.status(201).json(stripPublicVideoStats(video));
+        return res.status(201).json(video);
     } catch (error) {
         return next(error);
     }
@@ -138,39 +137,7 @@ export const getVideo = async (req: Request, res: Response, next: NextFunction) 
             return res.status(403).json({ error: 'This video is not available.' });
         }
 
-        return res.status(200).json(stripPublicVideoStats(video));
-    } catch (error) { return next(error); }
-};
-
-export const likeVideo = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.body;
-        if (!id) return res.status(400).json({ error: 'Video ID is required' });
-        const existingVideo = await prisma.video.findUnique({ where: { id: id } });
-        if (!existingVideo) return res.status(404).json({ error: 'Video not found' });
-        if (existingVideo.status !== 'APPROVED') return res.status(403).json({ error: 'Cannot interact with unapproved video' });
-
-        const video = await prisma.video.update({
-            where: { id: id },
-            data: { likes: { increment: 1 } },
-        });
-        return res.status(200).json(stripPublicVideoStats(video));
-    } catch (error) { return next(error); }
-};
-
-export const viewVideo = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.body;
-        if (!id) return res.status(400).json({ error: 'Video ID is required' });
-        const existingVideo = await prisma.video.findUnique({ where: { id: id } });
-        if (!existingVideo) return res.status(404).json({ error: 'Video not found' });
-        if (existingVideo.status !== 'APPROVED') return res.status(403).json({ error: 'Cannot interact with unapproved video' });
-
-        const video = await prisma.video.update({
-            where: { id: id },
-            data: { views: { increment: 1 } },
-        });
-        return res.status(200).json(stripPublicVideoStats(video));
+        return res.status(200).json(video);
     } catch (error) { return next(error); }
 };
 
@@ -201,8 +168,7 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
             where: whereClause, take, skip, orderBy: { createdAt: 'desc' },
         });
 
-        const safeVideos = videos.map(stripPublicVideoStats);
-        return res.status(200).json(safeVideos);
+        return res.status(200).json(videos);
     } catch (error) { return next(error); }
 };
 

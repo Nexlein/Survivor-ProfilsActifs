@@ -119,8 +119,6 @@ async function main() {
               type: 'LINK',
               url: 'https://www.w3schools.com/html/mov_bbb.mp4', // Safe sample video
               subtitleUrl: null,
-              likes: Math.floor(Math.random() * 50),
-              views: Math.floor(Math.random() * 500),
               consentDate: new Date(),
               consentTextVersion: 'v1.0 - 2026-09-01',
               status: status,

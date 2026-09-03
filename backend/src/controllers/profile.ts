@@ -171,7 +171,6 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
                         url: true,
                         subtitleUrl: true,
                         createdAt: true,
-                        // INTENTIONALLY EXCLUDING 'likes' AND 'views' TO COMPLY WITH LEGAL REQUIREMENTS
                     }
                 }
             }
@@ -216,7 +215,6 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
                         url: true,
                         subtitleUrl: true,
                         createdAt: true,
-                        // STRICLY EXCLUDING 'likes' AND 'views'
                     }
                 }
             }

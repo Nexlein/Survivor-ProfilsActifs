@@ -191,9 +191,7 @@ paths:
                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
       responses:
         "200":
-          description:
-            Token refreshed successfully, returns new JWT token and user
-            info
+          description: Token refreshed successfully, returns new JWT token and user info
           content:
             application/json:
               schema:
@@ -278,15 +276,11 @@ paths:
                   maxItems: 10
                 visible:
                   type: boolean
-                  description:
-                    Toggles the public visibility of the profile (defaults
-                    to true)
+                  description: Toggles the public visibility of the profile (defaults to true)
                 dateOfBirth:
                   type: string
                   format: date-time
-                  description:
-                    Required to be >= 16 years old to activate profile
-                    visibility
+                  description: Required to be >= 16 years old to activate profile visibility
       responses:
         "200":
           description: Profile updated successfully
@@ -342,9 +336,7 @@ paths:
   /profile/avatar:
     post:
       summary: Upload / replace profile photo
-      description:
-        Accepts a single image file (max 5 MB) and sets it as the current
-        user's avatarUrl.
+      description: Accepts a single image file (max 5 MB) and sets it as the current user's avatarUrl.
       tags:
         - Profile
       security:
@@ -475,90 +467,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /video/like:
-    post:
-      summary: Like a Video
-      tags:
-        - Video
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  example: 123e4567-e89b-12d3-a456-426614174000
-      responses:
-        "200":
-          description: Video liked successfully (likes count incremented)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Video"
-        "400":
-          description: Video ID is required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /video/view:
-    post:
-      summary: Register a Video View
-      tags:
-        - Video
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  example: 123e4567-e89b-12d3-a456-426614174000
-      responses:
-        "200":
-          description: Video view registered successfully (views count incremented)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Video"
-        "400":
-          description: Video ID is required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
   /compliance/data-export:
     get:
       summary: Personal Data Export (GDPR)
-      description:
-        Right of access to data. Returns all personal data associated with
-        the account.
+      description: Right of access to data. Returns all personal data associated with the account.
       tags:
         - Compliance
       security:
@@ -575,9 +487,7 @@ paths:
   /compliance/account:
     delete:
       summary: Right to be Forgotten (GDPR)
-      description:
-        Full and permanent account deletion, including physical files (.mp4,
-        .vtt).
+      description: Full and permanent account deletion, including physical files (.mp4, .vtt).
       tags:
         - Compliance
       security:
@@ -707,6 +617,9 @@ paths:
                 videoUrl:
                   type: string
                   description: Required if type is LINK
+                subtitleUrl:
+                  type: string
+                  description: Optional, only used if type is LINK (ignored for UPLOAD — use the subtitle file field instead)
                 consentTextVersion:
                   type: string
                 video:
@@ -716,6 +629,7 @@ paths:
                 subtitle:
                   type: string
                   format: binary
+                  description: Optional, only used if type is UPLOAD
       responses:
         "201":
           description: Video created

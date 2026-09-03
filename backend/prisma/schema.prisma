@@ -87,8 +87,6 @@ model Video {
   status      VideoStatus @default(PENDING) // Legal: A priori moderation
   url         String
   subtitleUrl String? // Legal: RGAA accessibility
-  likes       Int         @default(0) // Product: Determines benefits (Hidden publicly)
-  views       Int         @default(0) // Hidden publicly
 
   // Legal: Consent tracking
   consentDate        DateTime?

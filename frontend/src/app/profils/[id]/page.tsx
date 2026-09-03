@@ -8,7 +8,15 @@ import { Button, buttonClasses } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { Tabs } from "@/components/ui/Tabs";
 import { ContactModal } from "@/components/profile/ContactModal";
-import { Profile, getProfileByUserId, getUser, resolveAvatarUrl, translateApiError } from "@/lib/api";
+import { VideoPlayer } from "@/components/profile/VideoPlayer";
+import {
+  Profile,
+  deleteVideo,
+  getProfileByUserId,
+  getUser,
+  resolveAvatarUrl,
+  translateApiError,
+} from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
 
 export default function PublicProfilePage() {
@@ -17,6 +25,8 @@ export default function PublicProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isDeletingVideo, setIsDeletingVideo] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
 
   usePageTitle(profile ? profile.fullName : "Profil");
 
@@ -26,6 +36,20 @@ export default function PublicProfilePage() {
       .catch((err) => setError(translateApiError(err)))
       .finally(() => setIsLoading(false));
   }, [params.id]);
+
+  async function handleDeleteVideo(videoId: string) {
+    setIsDeletingVideo(true);
+    setVideoError(null);
+    try {
+      await deleteVideo(videoId);
+      const refreshed = await getProfileByUserId(params.id);
+      setProfile(refreshed);
+    } catch (err) {
+      setVideoError(translateApiError(err));
+    } finally {
+      setIsDeletingVideo(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -108,10 +132,38 @@ export default function PublicProfilePage() {
               id: "video",
               label: "Vidéo",
               content:
-                profile.videos && profile.videos.length > 0 ? (
-                  <div>Vidéo disponible.</div>
-                ) : (
-                  <p>Aucune vidéo publiée pour l&apos;instant.</p>
+                profile.videos && profile.videos.length > 0 ? (() => {
+                  const currentVideo = profile.videos[0];
+                  return (
+                    <div className="flex flex-col gap-3">
+                      <VideoPlayer video={currentVideo} />
+                      {isOwner && (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="self-start"
+                          disabled={isDeletingVideo}
+                          onClick={() => handleDeleteVideo(currentVideo.id)}
+                        >
+                          {isDeletingVideo ? "Suppression..." : "Supprimer ma vidéo"}
+                        </Button>
+                      )}
+                      {videoError && (
+                        <p role="alert" className="text-error text-sm">
+                          {videoError}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })() : (
+                  <div className="flex flex-col gap-3">
+                    <p>Aucune vidéo publiée pour l&apos;instant.</p>
+                    {isOwner && (
+                      <Link href="/profile/videos/new" className={buttonClasses("primary", "sm")}>
+                        Publier ma vidéo
+                      </Link>
+                    )}
+                  </div>
                 ),
             },
             {

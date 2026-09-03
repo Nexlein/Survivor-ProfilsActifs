@@ -39,8 +39,8 @@ export const streamVideo = async (req: Request, res: Response, next: NextFunctio
             return res.status(403).json({ error: accessError });
         }
 
-        const uploadDir = process.env.UPLOAD_DIR || './uploads';
-        const absoluteUploadDir = path.resolve(process.cwd(), uploadDir);
+        // Must match the directory multer actually writes to (middlewares/upload.ts).
+        const absoluteUploadDir = path.resolve(__dirname, '../../uploads/videos');
         const filename = path.basename(video.url);
         const videoPath = path.join(absoluteUploadDir, filename);
 
@@ -100,8 +100,8 @@ export const streamSubtitle = async (req: Request, res: Response, next: NextFunc
             return res.status(403).json({ error: accessError });
         }
 
-        const uploadDir = process.env.UPLOAD_DIR || './uploads';
-        const absoluteUploadDir = path.resolve(process.cwd(), uploadDir);
+        // Must match the directory multer actually writes to (middlewares/upload.ts).
+        const absoluteUploadDir = path.resolve(__dirname, '../../uploads/videos');
         const filename = path.basename(video.subtitleUrl);
         const subtitlePath = path.join(absoluteUploadDir, filename);
 

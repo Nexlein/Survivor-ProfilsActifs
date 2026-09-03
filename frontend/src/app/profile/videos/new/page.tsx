@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Tabs } from "@/components/ui/Tabs";
+import { createVideoLink, createVideoUpload, translateApiError, useCurrentUser } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
+
+const CONSENT_VERSION = "v1.0 - 2026-09-01";
+const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 
 function toEmbedUrl(url: string): string | null {
   try {
@@ -29,13 +34,23 @@ function toEmbedUrl(url: string): string | null {
 
 export default function AddVideoPage() {
   usePageTitle("Publier une vidéo");
+  const router = useRouter();
+  const currentUser = useCurrentUser();
+
+  const [activeTab, setActiveTab] = useState<"link" | "upload">("link");
+
   const [videoUrl, setVideoUrl] = useState("");
-  const [title, setTitle] = useState("");
   const [subtitleUrl, setSubtitleUrl] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
   const [embedUrl, setEmbedUrl] = useState<string | null>(null);
   const [previewError, setPreviewError] = useState<string | null>(null);
+
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [subtitleFile, setSubtitleFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
+
+  const [consent, setConsent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handlePreview() {
     setPreviewError(null);
@@ -48,10 +63,61 @@ export default function AddVideoPage() {
     setEmbedUrl(embed);
   }
 
-  function handlePublish() {
-    setNotice(
-      "La publication de vidéo n'est pas encore connectée au serveur — aucune route backend n'existe pour l'instant (voir le profil Prisma \"Video\", non exposé par l'API)."
-    );
+  function handleVideoFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setFileError(null);
+    if (!file.type.startsWith("video/")) {
+      setFileError("Format non pris en charge — un fichier vidéo est attendu.");
+      setVideoFile(null);
+      return;
+    }
+    if (file.size > MAX_VIDEO_BYTES) {
+      setFileError("Le fichier dépasse la limite de 100 Mo.");
+      setVideoFile(null);
+      return;
+    }
+    setVideoFile(file);
+  }
+
+  function handleSubtitleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setSubtitleFile(file);
+  }
+
+  async function handlePublish() {
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      if (activeTab === "link") {
+        if (!videoUrl.trim()) {
+          setError("Merci de renseigner un lien vidéo.");
+          return;
+        }
+        await createVideoLink({
+          videoUrl: videoUrl.trim(),
+          subtitleUrl: subtitleUrl.trim() || undefined,
+          consentTextVersion: CONSENT_VERSION,
+        });
+      } else {
+        if (!videoFile) {
+          setError("Merci de sélectionner un fichier vidéo.");
+          return;
+        }
+        await createVideoUpload({
+          video: videoFile,
+          subtitle: subtitleFile ?? undefined,
+          consentTextVersion: CONSENT_VERSION,
+        });
+      }
+      router.push(currentUser ? `/profils/${currentUser.id}` : "/");
+    } catch (err) {
+      setError(translateApiError(err));
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -60,6 +126,7 @@ export default function AddVideoPage() {
 
       <Tabs
         defaultTabId="link"
+        onChange={(id) => setActiveTab(id as "link" | "upload")}
         tabs={[
           {
             id: "link",
@@ -68,8 +135,6 @@ export default function AddVideoPage() {
               <VideoLinkForm
                 videoUrl={videoUrl}
                 setVideoUrl={setVideoUrl}
-                title={title}
-                setTitle={setTitle}
                 subtitleUrl={subtitleUrl}
                 setSubtitleUrl={setSubtitleUrl}
                 onPreview={handlePreview}
@@ -81,7 +146,15 @@ export default function AddVideoPage() {
           {
             id: "upload",
             label: "Uploader un fichier",
-            content: <VideoUploadForm />,
+            content: (
+              <VideoUploadForm
+                videoFile={videoFile}
+                onVideoFileChange={handleVideoFileChange}
+                subtitleFile={subtitleFile}
+                onSubtitleFileChange={handleSubtitleFileChange}
+                fileError={fileError}
+              />
+            ),
           },
         ]}
       />
@@ -89,7 +162,7 @@ export default function AddVideoPage() {
       <div className="bg-[#FFF8F0] rounded-lg p-4 my-5">
         <p className="text-[13px] text-text mb-2.5">
           En publiant cette vidéo, vous consentez à ce que votre image et votre voix soient visibles
-          publiquement.
+          publiquement. Elle sera vérifiée par un modérateur avant publication.
         </p>
         <Checkbox
           id="video-consent"
@@ -97,18 +170,18 @@ export default function AddVideoPage() {
           className="mt-0.5"
           checked={consent}
           onChange={(e) => setConsent(e.target.checked)}
-          label="Je consens à la publication de cette vidéo (date et version enregistrées)."
+          label={`Je consens à la publication de cette vidéo (consentement ${CONSENT_VERSION}, horodaté à l'enregistrement).`}
         />
       </div>
 
-      {notice && (
+      {error && (
         <p role="alert" className="text-error text-sm mb-4">
-          {notice}
+          {error}
         </p>
       )}
 
-      <Button variant="primary" disabled={!consent} onClick={handlePublish}>
-        Publier ma vidéo
+      <Button variant="primary" disabled={!consent || isSubmitting} onClick={handlePublish}>
+        {isSubmitting ? "Envoi..." : "Publier ma vidéo"}
       </Button>
     </main>
   );
@@ -117,8 +190,6 @@ export default function AddVideoPage() {
 function VideoLinkForm({
   videoUrl,
   setVideoUrl,
-  title,
-  setTitle,
   subtitleUrl,
   setSubtitleUrl,
   onPreview,
@@ -127,8 +198,6 @@ function VideoLinkForm({
 }: {
   videoUrl: string;
   setVideoUrl: (v: string) => void;
-  title: string;
-  setTitle: (v: string) => void;
   subtitleUrl: string;
   setSubtitleUrl: (v: string) => void;
   onPreview: () => void;
@@ -161,21 +230,12 @@ function VideoLinkForm({
       </div>
       <div>
         <label className="block text-[13px] font-semibold text-text font-heading mb-1.5">
-          Titre de la vidéo
-        </label>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
-        />
-      </div>
-      <div>
-        <label className="block text-[13px] font-semibold text-text font-heading mb-1.5">
           Sous-titres (URL fichier VTT)
         </label>
         <input
           value={subtitleUrl}
           onChange={(e) => setSubtitleUrl(e.target.value)}
+          placeholder="https://…/sous-titres.vtt"
           className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
         />
         <p className="text-xs text-text-secondary mt-1.5">
@@ -186,13 +246,45 @@ function VideoLinkForm({
   );
 }
 
-function VideoUploadForm() {
+function VideoUploadForm({
+  videoFile,
+  onVideoFileChange,
+  subtitleFile,
+  onSubtitleFileChange,
+  fileError,
+}: {
+  videoFile: File | null;
+  onVideoFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  subtitleFile: File | null;
+  onSubtitleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  fileError: string | null;
+}) {
   return (
-    <div className="pt-4">
-      <div className="border-2 border-dashed border-primary rounded-lg p-8 text-center">
+    <div className="pt-4 flex flex-col gap-3.5">
+      <label className="border-2 border-dashed border-primary rounded-lg p-8 text-center cursor-pointer block">
+        <input type="file" accept="video/*" onChange={onVideoFileChange} className="hidden" />
         <div className="text-2xl mb-2">⬆</div>
-        <p className="text-sm text-text">Glissez votre vidéo ici ou cliquez pour parcourir</p>
-        <p className="text-xs text-text-secondary mt-1.5">100 Mo maximum — formats MP4, MOV, AVI</p>
+        <p className="text-sm text-text">
+          {videoFile ? videoFile.name : "Cliquez pour choisir votre vidéo"}
+        </p>
+        <p className="text-xs text-text-secondary mt-1.5">100 Mo maximum</p>
+      </label>
+      {fileError && (
+        <p role="alert" className="text-error text-xs">
+          {fileError}
+        </p>
+      )}
+      <div>
+        <label className="block text-[13px] font-semibold text-text font-heading mb-1.5">
+          Sous-titres (fichier .vtt, optionnel)
+        </label>
+        <input
+          type="file"
+          accept=".vtt,text/vtt"
+          onChange={onSubtitleFileChange}
+          className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm file:mr-3 file:border-0 file:bg-bg-secondary file:rounded file:px-3 file:py-1.5"
+        />
+        {subtitleFile && <p className="text-xs text-text-secondary mt-1.5">{subtitleFile.name}</p>}
       </div>
     </div>
   );
