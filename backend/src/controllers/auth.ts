@@ -17,7 +17,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
         const user = await prisma.user.findUnique({
             where: { email },
-            include: { profile: true },
+            include: { profile: { include: { skills: true } } },
         });
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
@@ -51,7 +51,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
  */
 export const register = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { email, password, role, fullName, dateOfBirth } = req.body;
+        const {
+            email, password, role, fullName, dateOfBirth,
+            targetSector, location, skills,
+            companyName, industry, position
+        } = req.body;
 
         if (!email || !password || !fullName) {
             return res.status(400).json({ error: 'Email, password and fullName are required' });
@@ -72,8 +76,31 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
             return res.status(409).json({ error: 'Email is already in use' });
         }
 
+        if (skills && Array.isArray(skills) && skills.length > 10) {
+            return res.status(400).json({ error: 'Maximum 10 skills allowed' });
+        }
+
         const passwordHash = await bcrypt.hash(password, 10);
         const userRole = role === 'RECRUITER' ? 'RECRUITER' : 'JOB_SEEKER';
+
+        const profileData: any = { fullName };
+
+        if (userRole === 'JOB_SEEKER') {
+            if (targetSector) profileData.targetSector = targetSector;
+            if (location) profileData.location = location;
+            if (skills && Array.isArray(skills)) {
+                profileData.skills = {
+                    connectOrCreate: skills.map((skillName: string) => ({
+                        where: { name: skillName },
+                        create: { name: skillName }
+                    }))
+                };
+            }
+        } else if (userRole === 'RECRUITER') {
+            if (companyName) profileData.companyName = companyName;
+            if (industry) profileData.industry = industry;
+            if (position) profileData.position = position;
+        }
 
         const newUser = await prisma.user.create({
             data: {
@@ -82,9 +109,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                 role: userRole,
                 dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
                 profile: {
-                    create: {
-                        fullName,
-                    }
+                    create: profileData
                 },
             },
             select: {
@@ -93,7 +118,9 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                 role: true,
                 dateOfBirth: true,
                 createdAt: true,
-                profile: true,
+                profile: {
+                    include: { skills: true }
+                },
             }
         });
 
@@ -109,7 +136,10 @@ export const getCurrentUser = async (req: Request, res: Response, next: NextFunc
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
+        const profile = await prisma.profile.findUnique({
+            where: { userId: user.id },
+            include: { skills: true }
+        });
         return res.json({ ...user, profile });
     } catch (error) {
         return next(error);
