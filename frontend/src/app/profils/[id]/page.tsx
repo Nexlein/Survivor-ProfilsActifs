@@ -136,6 +136,17 @@ export default function PublicProfilePage() {
                   const currentVideo = profile.videos[0];
                   return (
                     <div className="flex flex-col gap-3">
+                      {isOwner && currentVideo.status === "PENDING" && (
+                        <p className="bg-bg-secondary text-text-secondary text-sm rounded-md px-3.5 py-2.5">
+                          En attente de modération — seul vous pouvez la voir pour l&apos;instant.
+                        </p>
+                      )}
+                      {isOwner && currentVideo.status === "REJECTED" && (
+                        <p className="bg-[#FDF0EE] text-error text-sm rounded-md px-3.5 py-2.5">
+                          Rejetée par la modération
+                          {currentVideo.rejectionReason ? ` : ${currentVideo.rejectionReason}` : "."}
+                        </p>
+                      )}
                       <VideoPlayer video={currentVideo} />
                       {isOwner && (
                         <Button

@@ -208,12 +208,13 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
                 user: true,
                 skills: true,
                 videos: {
-                    where: { status: 'APPROVED' },
                     select: {
                         id: true,
                         type: true,
                         url: true,
                         subtitleUrl: true,
+                        status: true,
+                        rejectionReason: true,
                         createdAt: true,
                     }
                 }
@@ -224,6 +225,13 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
         if (!profile) return res.status(404).json({ error: 'Not found' });
 
         const isOwner = currentUser && currentUser.id === profile.userId;
+        const isAdmin = currentUser?.role === 'ADMIN';
+
+        // A PENDING/REJECTED video isn't public yet — only its owner (to see
+        // moderation status) or an admin (to moderate it) should see it here.
+        if (!isOwner && !isAdmin) {
+            profile.videos = profile.videos.filter((v) => v.status === 'APPROVED');
+        }
 
         // RGPD: Missing Age or Explicitly Hidden (Ticket 16)
         if (!isOwner) {
