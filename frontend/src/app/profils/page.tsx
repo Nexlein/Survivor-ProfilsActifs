@@ -147,9 +147,9 @@ export default function ProfileCatalogPage() {
             setPage(1);
           }}
         />
-        <button type="button" onClick={resetFilters} className="text-[13px]">
+        <Button type="button" variant="secondary" size="sm" onClick={resetFilters} className="w-full">
           Réinitialiser
-        </button>
+        </Button>
       </aside>
 
       <section className="flex-1 min-w-0">
