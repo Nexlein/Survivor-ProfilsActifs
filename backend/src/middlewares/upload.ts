@@ -18,14 +18,21 @@ const storage = multer.diskStorage({
     }
 });
 
+const allowedMimeTypes = [
+    'video/mp4',
+    'video/quicktime', // MOV
+    'video/x-msvideo', // AVI
+    'text/vtt'
+];
+
 export const upload = multer({
     storage,
     limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB Strict limit
     fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-        if (file.mimetype.startsWith('video/') || file.mimetype === 'text/vtt') {
+        if (allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error('Invalid file type. Only videos and subtitles are allowed.'));
+            cb(new Error('Invalid file type. Only MP4, MOV, AVI videos and VTT subtitles are allowed.'));
         }
     }
 });
