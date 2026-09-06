@@ -269,6 +269,28 @@ export function deleteVideo(id: string) {
   return request<{ message: string; id: string }>(`/profile/videos/${id}`, { method: "DELETE" });
 }
 
+export type ModerationVideo = Video & {
+  profile: { id: string; fullName: string; avatarUrl: string | null };
+};
+
+export type ModerationVideoPage = {
+  videos: ModerationVideo[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
+export function getModerationVideoFeed(status: "PENDING" | "APPROVED" | "REJECTED", page = 1) {
+  return request<ModerationVideoPage>(`/video/feed?status=${status}&page=${page}`);
+}
+
+export function moderateVideo(id: string, approved: boolean, reason?: string) {
+  return request<Video>("/video/approval", {
+    method: "PUT",
+    body: JSON.stringify({ id, approved, reason }),
+  });
+}
+
 // /media/:id (and /:id/subtitle) require an Authorization header, so a plain
 // <video src="..."> can't hit them directly — fetch the bytes ourselves and
 // hand the <video>/<track> element a local blob: URL instead.
