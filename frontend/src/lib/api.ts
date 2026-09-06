@@ -291,6 +291,38 @@ export function moderateVideo(id: string, approved: boolean, reason?: string) {
   });
 }
 
+export type InteractionType = "VIEW" | "CONTACT" | "FAVORITE" | "LIKE";
+
+export function logInteraction(payload: { profileId: string; type: "VIEW" | "CONTACT"; videoId?: string; message?: string }): Promise<void>;
+export function logInteraction(payload: { profileId: string; type: "FAVORITE" | "LIKE"; videoId?: string }): Promise<{ active: boolean }>;
+export function logInteraction(payload: { profileId: string; type: InteractionType; videoId?: string; message?: string }) {
+  return request<{ active: boolean } | void>("/interaction", { method: "POST", body: JSON.stringify(payload) });
+}
+
+export type Notification = {
+  id: string;
+  type: "VIEW" | "CONTACT";
+  message: string | null;
+  read: boolean;
+  createdAt: string;
+  recruiter: { id: string; profile: { fullName: string; companyName: string | null } | null };
+};
+
+export function getNotifications() {
+  return request<Notification[]>("/interaction/notifications");
+}
+
+export function markNotificationRead(id: string) {
+  return request<Notification>(`/interaction/${id}/read`, { method: "PUT" });
+}
+
+export type RecruiterStats = { profilesViewed: number; favorites: number; messagesSent: number };
+export type AdminInteractionStats = { interactionsThisMonth: number };
+
+export function getInteractionStats() {
+  return request<RecruiterStats | AdminInteractionStats>("/interaction/stats");
+}
+
 // /media/:id (and /:id/subtitle) require an Authorization header, so a plain
 // <video src="..."> can't hit them directly — fetch the bytes ourselves and
 // hand the <video>/<track> element a local blob: URL instead.

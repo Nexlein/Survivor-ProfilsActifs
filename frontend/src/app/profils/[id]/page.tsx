@@ -14,6 +14,7 @@ import {
   deleteVideo,
   getProfileByUserId,
   getUser,
+  logInteraction,
   resolveAvatarUrl,
   translateApiError,
 } from "@/lib/api";
@@ -27,6 +28,8 @@ export default function PublicProfilePage() {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isDeletingVideo, setIsDeletingVideo] = useState(false);
   const [videoError, setVideoError] = useState<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   usePageTitle(profile ? profile.fullName : "Profil");
 
@@ -36,6 +39,30 @@ export default function PublicProfilePage() {
       .catch((err) => setError(translateApiError(err)))
       .finally(() => setIsLoading(false));
   }, [params.id]);
+
+  // Recruiters browsing a candidate's profile silently log a VIEW so the
+  // candidate sees it in their notifications — logged once per profile load,
+  // not on every re-render.
+  useEffect(() => {
+    if (!profile) return;
+    const currentUser = getUser();
+    if (currentUser?.role !== "RECRUITER" || currentUser.id === profile.userId) return;
+    logInteraction({ profileId: profile.id, type: "VIEW" }).catch(() => {
+      /* best-effort — a failed view log shouldn't disrupt browsing */
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.id]);
+
+  async function toggleInteraction(type: "FAVORITE" | "LIKE") {
+    if (!profile) return;
+    const setActive = type === "FAVORITE" ? setIsFavorite : setIsLiked;
+    try {
+      const res = await logInteraction({ profileId: profile.id, type });
+      setActive(res.active);
+    } catch (err) {
+      setError(translateApiError(err));
+    }
+  }
 
   async function handleDeleteVideo(videoId: string) {
     setIsDeletingVideo(true);
@@ -117,10 +144,23 @@ export default function PublicProfilePage() {
         )}
 
         {!isOwner && currentUser?.role === "RECRUITER" && (
-          <div className="mb-4">
+          <div className="flex flex-col gap-2 mb-4">
             <Button variant="primary" className="w-full" onClick={() => setIsContactOpen(true)}>
               Contacter ce candidat
             </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="flex-1"
+                onClick={() => toggleInteraction("FAVORITE")}
+              >
+                {isFavorite ? "★ Favori" : "☆ Ajouter aux favoris"}
+              </Button>
+              <Button variant="secondary" size="sm" className="flex-1" onClick={() => toggleInteraction("LIKE")}>
+                {isLiked ? "♥ Aimé" : "♡ J'aime"}
+              </Button>
+            </div>
           </div>
         )}
       </aside>
@@ -208,6 +248,7 @@ export default function PublicProfilePage() {
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}
         candidateName={profile.fullName}
+        profileId={profile.id}
       />
     </main>
   );
