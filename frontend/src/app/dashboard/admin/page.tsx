@@ -1,16 +1,19 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button, buttonClasses } from "@/components/ui/Button";
+import { AdminInteractionStats, getInteractionStats } from "@/lib/api";
+import { usePageTitle } from "@/lib/use-page-title";
 
-export const metadata: Metadata = { title: "Tableau de bord admin" };
-
-// Données de démonstration — aucune route d'agrégation/statistiques admin
-// n'existe côté backend (voir résumé final).
-const KPIS = [
+// Profils actifs / taux de certification / vidéos publiées restent de la
+// démonstration : aucune route d'agrégation n'existe encore pour elles
+// côté backend (voir résumé final) — seul "Interactions ce mois" est
+// branché sur le modèle Interaction.
+const STATIC_KPIS = [
   { value: "1 248", label: "Profils actifs" },
   { value: "34%", label: "Taux de certification" },
   { value: "3 420", label: "Vidéos publiées" },
-  { value: "892", label: "Interactions ce mois" },
 ];
 
 const WEEKLY_SIGNUPS = [40, 55, 35, 70, 60, 85, 50];
@@ -21,6 +24,28 @@ const MODERATION_QUEUE = [
 ];
 
 export default function AdminDashboardPage() {
+  usePageTitle("Tableau de bord admin");
+  const [interactionsThisMonth, setInteractionsThisMonth] = useState<number | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getInteractionStats()
+      .then((res) => {
+        if (!cancelled) setInteractionsThisMonth((res as AdminInteractionStats).interactionsThisMonth);
+      })
+      .catch(() => {
+        /* KPI tile just falls back to a dash on failure */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const kpis = [
+    ...STATIC_KPIS,
+    { value: interactionsThisMonth !== null ? String(interactionsThisMonth) : "—", label: "Interactions ce mois" },
+  ];
+
   return (
     <main className="px-6 py-8">
       <h2 className="mb-5">Tableau de bord admin</h2>
@@ -30,7 +55,7 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {KPIS.map((kpi) => (
+        {kpis.map((kpi) => (
           <div key={kpi.label} className="bg-white rounded-lg p-4.5 shadow-card">
             <div className="text-xl font-extrabold text-primary font-heading">{kpi.value}</div>
             <div className="text-xs text-text-secondary">{kpi.label}</div>

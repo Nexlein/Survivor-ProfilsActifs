@@ -1,25 +1,52 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { getInteractionStats, RecruiterStats, translateApiError } from "@/lib/api";
+import { usePageTitle } from "@/lib/use-page-title";
 
-export const metadata: Metadata = { title: "Tableau de bord recruteur" };
-
-// Statistiques et contacts de démonstration — aucune route backend n'existe
-// encore pour agréger ces données (voir résumé final).
-const STATS = [
-  { value: "47", label: "Profils consultés ce mois" },
-  { value: "12", label: "Favoris enregistrés" },
-  { value: "8", label: "Messages envoyés" },
-];
-
+// "Mes contacts récents" reste de la démonstration : le modèle Interaction
+// n'a pas encore de route pour lister les candidats contactés avec leur
+// score/statut de réponse (au-delà du simple compteur ci-dessous).
 const CONTACTS = [
   { name: "Marie Dupont", sector: "Assistanat", score: "87/100", date: "12/08/2026", status: "Répondu" },
   { name: "Karim Belkacem", sector: "Logistique", score: "74/100", date: "10/08/2026", status: "En attente" },
 ];
 
 export default function RecruiterDashboardPage() {
+  usePageTitle("Tableau de bord recruteur");
+  const [stats, setStats] = useState<RecruiterStats | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getInteractionStats()
+      .then((res) => {
+        if (!cancelled) setStats(res as RecruiterStats);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(translateApiError(err));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const STATS = [
+    { value: stats ? String(stats.profilesViewed) : "—", label: "Profils consultés ce mois" },
+    { value: stats ? String(stats.favorites) : "—", label: "Favoris enregistrés" },
+    { value: stats ? String(stats.messagesSent) : "—", label: "Messages envoyés ce mois" },
+  ];
+
   return (
     <main className="px-6 py-8">
       <h2 className="mb-5">Tableau de bord recruteur</h2>
+
+      {error && (
+        <p role="alert" className="text-error text-sm mb-4">
+          {error}
+        </p>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {STATS.map((stat) => (
