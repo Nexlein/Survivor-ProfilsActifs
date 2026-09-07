@@ -151,7 +151,7 @@ model QuestionnaireResult {
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   totalScore            Int
-  hasCertificationBadge Boolean
+  hasCertificationBadge Boolean @default(false)
   questionnaireVersion  Int      @default(1)
   completedAt           DateTime @default(now())
 }
