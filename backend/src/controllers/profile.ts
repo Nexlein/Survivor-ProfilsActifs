@@ -178,8 +178,8 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
                         select: {
                             id: true,
                             type: true,
-                            url: true,
-                            subtitleUrl: true,
+                            providerId: true,
+                            providerName: true,
                             createdAt: true,
                         }
                     }
@@ -225,8 +225,8 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
                     select: {
                         id: true,
                         type: true,
-                        url: true,
-                        subtitleUrl: true,
+                        providerId: true,
+                        providerName: true,
                         status: true,
                         rejectionReason: true,
                         createdAt: true,
