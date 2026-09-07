@@ -16,6 +16,7 @@ Les données sont collectées conformément à notre Registre des Activités de 
 
 La révocation du consentement vidéo entraîne la **suppression physique et définitive** du fichier vidéo, sans délai.
 
-## 4. Modalités de calcul (Avantages)
+## 4. Indépendance des Droits Sociaux
 
-Conformément aux directives, les interactions (Likes) sur les vidéos peuvent influencer certains avantages (Cf. Article 47). Un minimum de 100 likes par vidéo est requis.
+**Aucune donnée de ce service n'est utilisée pour déterminer vos droits ni le montant de vos allocations.**
+ProfilsActifs est un outil exclusif de mise en relation professionnelle. Les interactions (vues, contacts) et l'obtention du badge de certification n'ont aucun impact, positif ou négatif, sur le versement des prestations sociales.

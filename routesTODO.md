@@ -79,7 +79,7 @@ Ce document répertorie l'ensemble des routes API du projet ProfilsActifs, avec 
 | `GET` | `/questionnaire/questions` | Privé (Candidat) | Récupération de la liste des questions et options du questionnaire. | A faire |
 | `GET` | `/questionnaire/progress` | Privé (Candidat) | Récupération de la progression sauvegardée du candidat. | A faire |
 | `POST` | `/questionnaire/progress` | Privé (Candidat) | Sauvegarde intermédiaire de l'avancement du questionnaire. | A faire |
-| `POST` | `/questionnaire/submit` | Privé (Candidat) | Soumission finale, calcul du score de certification et attribution du permis de travail (`hasWorkPermit`). | A faire |
+| `POST` | `/questionnaire/submit` | Privé (Candidat) | Soumission finale, calcul du score de certification et attribution du badge de certification. | A faire |
 
 ---
 

@@ -7,8 +7,8 @@
 | Profil Professionnel Recruteur | Transparence | Contrat (CGU) | Entreprise, Secteur, Poste | Durée du compte | Candidats | `Profile` |
 | Publication Vidéo | Visibilité | Consentement | URL, Sous-titres, Date consentement, Version texte consentement | Jusqu'à révocation | Public, Recruteurs | `Video` |
 | Sauvegarde Questionnaire | Confort utilisateur | Intérêt légitime | Réponses partielles | Durée du compte | Equipe interne | `QuestionnaireProgress` |
-| Questionnaire | Permis JEB | Intérêt légitime | Score Final | Durée du compte | Equipe interne | `Profile` (`certificationScore`) |
-| Interactions (Vues/Likes/Contact) | Suivi & Avantages | Contrat | Type interaction, IP, Date | Durée du compte | Recruteurs, Candidat, Admin | `Interaction` |
+| Questionnaire | Badge de certification | Intérêt légitime | Score Final | Durée du compte | Equipe interne | `Profile` (`certificationScore`) |
+| Interactions (Vues/Likes/Contact) | Suivi professionnel | Contrat | Type interaction, IP, Date | Durée du compte | Recruteurs, Candidat, Admin | `Interaction` |
 | Journal Connexion | Sécurité | Obligation légale | IP, Date | 1 an | Equipe interne | `LoginLog` |
 
 ## Droits des Personnes (RGPD)
