@@ -398,7 +398,14 @@ export async function fetchMediaBlobUrl(path: string): Promise<string> {
   const res = await fetch(`${API_URL}${path}`, {
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
   });
-  if (!res.ok) throw new ApiError(res.status, "Impossible de charger le média.");
+  if (!res.ok) {
+    let errorMsg = "Impossible de charger le média.";
+    try {
+      const data = await res.json();
+      if (data && data.error) errorMsg = data.error;
+    } catch (e) {}
+    throw new ApiError(res.status, errorMsg);
+  }
   const blob = await res.blob();
   return URL.createObjectURL(blob);
 }
