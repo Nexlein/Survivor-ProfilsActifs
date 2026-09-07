@@ -22,3 +22,6 @@ generated/
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# Local File Storage
+backend/storage/

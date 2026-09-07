@@ -1,22 +1,12 @@
-import { getEighteenYearsAgo } from '../utils/date';
-import { isValidVideoFile } from '../utils/videoMagicBytes';
+import { getEighteenYearsAgo } from '../utils/date.js';
+import { isValidVideoFile } from '../utils/videoMagicBytes.js';
 import { Request, Response, NextFunction } from 'express';
-import prisma from '../prisma';
+import { prisma } from '../prisma.js';
 import fs from 'fs';
-import path from 'path';
+import { ProviderFactory } from '../providers/ProviderFactory.js';
 
-/**
- * Controller: Create Profile Video (Unified LINK/UPLOAD)
- * @route POST /api/profile/videos
- * @access Private
- */
 export const createProfileVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        // req.body.user (set by authenticateToken) doesn't survive here: multer
-        // parses the multipart body *after* auth runs and replaces req.body
-        // wholesale. req.user is set independently by the same middleware and
-        // isn't affected, so read from there instead (same fix as the avatar
-        // upload route).
         const user = (req as any).user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
@@ -27,50 +17,39 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
             return res.status(404).json({ error: 'Profile not found' });
         }
 
-        const { type, videoUrl, consentTextVersion, subtitleUrl: linkSubtitleUrl } = req.body;
+        const { consentTextVersion, type } = req.body;
 
-        let finalUrl = '';
-        let subtitleUrl: string | null = null;
-
-        if (type === 'UPLOAD') {
-            const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-            const videoFile = files?.['video']?.[0];
-            const subtitleFile = files?.['subtitle']?.[0];
-
-            if (!videoFile) {
-                return res.status(400).json({ error: 'No video file provided for UPLOAD type' });
-            }
-
-            // Content-based check: the declared Content-Type (checked by multer's
-            // fileFilter) is caller-controlled and proves nothing about the
-            // actual bytes on disk. Reject on the real file content.
-            if (!isValidVideoFile(videoFile.path)) {
-                fs.unlink(videoFile.path, () => {});
-                if (subtitleFile) fs.unlink(subtitleFile.path, () => {});
-                return res.status(400).json({
-                    error: 'Invalid file content',
-                    message: 'The uploaded file is not a valid MP4, MOV or AVI video (content does not match its declared type).',
-                });
-            }
-
-            finalUrl = `/uploads/videos/${videoFile.filename}`;
-            subtitleUrl = subtitleFile ? `/uploads/videos/${subtitleFile.filename}` : null;
-        } else if (type === 'LINK') {
-            if (!videoUrl) {
-                return res.status(400).json({ error: 'videoUrl is required for LINK type' });
-            }
-            finalUrl = videoUrl;
-            subtitleUrl = linkSubtitleUrl || null;
-        } else {
-            return res.status(400).json({ error: 'type must be LINK or UPLOAD' });
+        if (type === 'LINK') {
+            return res.status(400).json({ error: 'LINK integration is permanently disabled.' });
         }
+
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+        const videoFile = files?.['video']?.[0];
+        const subtitleFile = files?.['subtitle']?.[0];
+
+        if (!videoFile) {
+            return res.status(400).json({ error: 'No video file provided' });
+        }
+
+        if (!isValidVideoFile(videoFile.path)) {
+            fs.unlink(videoFile.path, () => { });
+            if (subtitleFile) fs.unlink(subtitleFile.path, () => { });
+            return res.status(400).json({
+                error: 'Invalid file content',
+                message: 'The uploaded file is not a valid MP4, MOV or AVI video.',
+            });
+        }
+
+        const provider = ProviderFactory.getProvider();
+        const providerName = ProviderFactory.getProviderName();
+        const providerId = await provider.store(videoFile, subtitleFile);
 
         const video = await prisma.video.create({
             data: {
                 profileId: profile.id,
-                type,
-                url: finalUrl,
-                subtitleUrl,
+                type: 'UPLOAD',
+                providerId,
+                providerName,
                 consentDate: new Date(),
                 consentTextVersion: consentTextVersion || 'v1.0',
                 status: 'PENDING'
@@ -83,14 +62,9 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
     }
 };
 
-/**
- * Controller: Delete Profile Video
- * @route DELETE /api/profile/videos/:id
- * @access Private
- */
 export const deleteProfileVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body?.user;
+        const user = (req as any).user || req.body?.user;
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
@@ -104,8 +78,7 @@ export const deleteProfileVideo = async (req: Request, res: Response, next: Next
         const existingVideo = await prisma.video.findUnique({ where: { id: videoId } });
         if (!existingVideo) return res.status(404).json({ error: 'Video not found' });
 
-        // SECURITY CHECK: Ensure the video belongs to the authenticated user's profile
-        if (existingVideo.profileId !== profile.id) {
+        if (existingVideo.profileId !== profile.id && user.role !== 'ADMIN') {
             return res.status(403).json({ error: 'You do not have permission to delete this video' });
         }
 
@@ -113,17 +86,9 @@ export const deleteProfileVideo = async (req: Request, res: Response, next: Next
             where: { id: videoId },
         });
 
-        // PHYSICAL DELETION (Right to be forgotten)
-        if (video.type === 'UPLOAD') {
-            if (video.url) {
-                const filePath = path.resolve(__dirname, '../../', video.url.replace(/^\//, ''));
-                if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-            }
-            if (video.subtitleUrl) {
-                const subPath = path.resolve(__dirname, '../../', video.subtitleUrl.replace(/^\//, ''));
-                if (fs.existsSync(subPath)) fs.unlinkSync(subPath);
-            }
-        }
+        // GDPR Right to Be Forgotten
+        const provider = ProviderFactory.getProvider();
+        await provider.delete(existingVideo.providerId);
 
         return res.status(200).json({
             message: 'Video deleted successfully',
@@ -136,13 +101,13 @@ export const deleteProfileVideo = async (req: Request, res: Response, next: Next
 
 export const getVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.body;
+        const id = req.params.id || req.body.id;
         if (!id) return res.status(400).json({ error: 'Video ID is required' });
 
         const video = await prisma.video.findUnique({ where: { id: id } });
         if (!video) return res.status(404).json({ error: 'Video not found' });
 
-        const user = req.body?.user;
+        const user = (req as any).user || req.body?.user;
         const userProfile = user ? await prisma.profile.findUnique({ where: { userId: user.id } }) : null;
         const isOwner = userProfile?.id === video.profileId;
         const isAdmin = user?.role === 'ADMIN';
@@ -157,7 +122,7 @@ export const getVideo = async (req: Request, res: Response, next: NextFunction) 
 
 export const getVideoFeed = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body?.user;
+        const user = (req as any).user || req.body?.user;
         if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
@@ -213,7 +178,7 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
 
 export const approveVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body?.user;
+        const user = (req as any).user || req.body?.user;
         if (!user || user.role !== 'ADMIN') {
             return res.status(403).json({ error: 'Forbidden. Admin role required.' });
         }

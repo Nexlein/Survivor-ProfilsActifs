@@ -17,7 +17,6 @@ enum Role {
 }
 
 enum VideoType {
-  LINK
   UPLOAD
 }
 
@@ -84,10 +83,12 @@ model Video {
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  type        VideoType   @default(LINK)
-  status      VideoStatus @default(PENDING) // Legal: A priori moderation
-  url         String
-  subtitleUrl String? // Legal: RGAA accessibility
+  type         VideoType   @default(UPLOAD)
+  status       VideoStatus @default(PENDING) // Legal: A priori moderation
+  
+  // Abstraction Provider
+  providerId   String
+  providerName String
 
   // Legal: Consent tracking
   consentDate        DateTime?
@@ -106,30 +107,6 @@ model Skill {
   id       String    @id @default(uuid())
   name     String    @unique
   profiles Profile[]
-}
-
-model QuestionnaireSettings {
-  id             String   @id @default("global")
-  currentVersion Int      @default(1)
-  updatedAt      DateTime @updatedAt
-}
-
-model Question {
-  id        String   @id @default(uuid())
-  text      String
-  weighting Int      @default(1)
-  options   Option[]
-
-  version  Int     @default(1)
-  isActive Boolean @default(true)
-}
-
-model Option {
-  id         String   @id @default(uuid())
-  questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  text       String
-  points     Int      @default(0)
 }
 
 model Interaction {
@@ -175,5 +152,6 @@ model QuestionnaireResult {
 
   totalScore            Int
   hasPermisDeTravailler Boolean
+  questionnaireVersion  Int      @default(1)
   completedAt           DateTime @default(now())
 }

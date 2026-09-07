@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { Request } from 'express';
 
-const uploadDir = path.resolve(__dirname, '../../uploads/videos');
+const uploadDir = path.resolve(__dirname, '../../storage/tmp');
 
 const storage = multer.diskStorage({
     destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
