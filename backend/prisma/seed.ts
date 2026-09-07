@@ -129,7 +129,7 @@ async function main() {
         targetSector: getRandom(SECTORS),
         location: getRandom(LOCATIONS),
         avatarUrl: `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'women' : 'men'}/${i % 50}.jpg`,
-        hasWorkPermit: true,
+        hasCertificationBadge: true,
         visible: isVisible,
         skills: {
           connect: userSkills.map(s => ({ id: s.id })),
@@ -182,7 +182,7 @@ async function main() {
     data: {
       profileId: secondProfileId,
       totalScore,
-      hasPermisDeTravailler: true,
+      hasCertificationBadge: true,
     },
   });
 

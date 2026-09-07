@@ -108,7 +108,7 @@ export const getSentContacts = async (req: Request, res: Response, next: NextFun
             orderBy: { createdAt: 'desc' },
             include: {
                 profile: {
-                    select: { userId: true, fullName: true, targetSector: true, certificationScore: true, hasWorkPermit: true },
+                    select: { userId: true, fullName: true, targetSector: true, certificationScore: true, hasCertificationBadge: true },
                 },
             },
         });
@@ -170,7 +170,7 @@ export const getInteractionStats = async (req: Request, res: Response, next: Nex
             const [interactionsThisMonth, profilesActive, certifiedProfiles, totalProfiles, videosPublished, videosPending] = await Promise.all([
                 prisma.interaction.count({ where: { createdAt: { gte: startOfMonth } } }),
                 prisma.profile.count({ where: { visible: true } }),
-                prisma.profile.count({ where: { hasWorkPermit: true } }),
+                prisma.profile.count({ where: { hasCertificationBadge: true } }),
                 prisma.profile.count(),
                 prisma.video.count({ where: { status: 'APPROVED' } }),
                 prisma.video.count({ where: { status: 'PENDING' } }),

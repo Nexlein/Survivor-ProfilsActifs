@@ -943,7 +943,7 @@ components:
           type: integer
           nullable: true
           example: 85
-        hasWorkPermit:
+        hasCertificationBadge:
           type: boolean
           example: true
         createdAt:
@@ -969,7 +969,7 @@ components:
         certificationScore:
           type: integer
           example: 85
-        hasWorkPermit:
+        hasCertificationBadge:
           type: boolean
           example: true
     QuestionnaireQuestion:

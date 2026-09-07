@@ -131,7 +131,7 @@ export const submitQuestionnaire = async (req: Request, res: Response, next: Nex
             },
             data: {
                 certificationScore: totalScore,
-                hasWorkPermit: hasCertification,
+                hasCertificationBadge: hasCertification,
             },
         });
 
@@ -139,14 +139,14 @@ export const submitQuestionnaire = async (req: Request, res: Response, next: Nex
             where: { profileId: profile.id },
             update: {
                 totalScore,
-                hasPermisDeTravailler: hasCertification,
+                hasCertificationBadge: hasCertification,
                 questionnaireVersion: currentVersion,
                 completedAt: new Date()
             },
             create: {
                 profileId: profile.id,
                 totalScore,
-                hasPermisDeTravailler: hasCertification,
+                hasCertificationBadge: hasCertification,
                 questionnaireVersion: currentVersion
             },
         });
@@ -160,7 +160,7 @@ export const submitQuestionnaire = async (req: Request, res: Response, next: Nex
         return res.status(200).json({
             message: 'Questionnaire submitted successfully',
             totalScore,
-            hasWorkPermit: hasCertification,
+            hasCertificationBadge: hasCertification,
             completedAt: new Date(),
         });
     } catch (error) {

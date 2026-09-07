@@ -65,12 +65,12 @@ model Profile {
   position    String?
 
   // JEB Work Permit
-  certificationScore Int?
-  hasWorkPermit      Boolean @default(false)
+  certificationScore    Int?
+  hasCertificationBadge Boolean @default(false)
 
-  skills             Skill[]
-  videos             Video[]
-  interactions       Interaction[]          @relation("ProfileInteractions")
+  skills                Skill[]
+  videos                Video[]
+  interactions          Interaction[]          @relation("ProfileInteractions")
   questionnaireProgress QuestionnaireProgress?
   questionnaireResult   QuestionnaireResult?
 
@@ -83,9 +83,9 @@ model Video {
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  type         VideoType   @default(UPLOAD)
-  status       VideoStatus @default(PENDING) // Legal: A priori moderation
-  
+  type   VideoType   @default(UPLOAD)
+  status VideoStatus @default(PENDING) // Legal: A priori moderation
+
   // Abstraction Provider
   providerId   String
   providerName String
@@ -151,7 +151,7 @@ model QuestionnaireResult {
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   totalScore            Int
-  hasPermisDeTravailler Boolean
+  hasCertificationBadge Boolean
   questionnaireVersion  Int      @default(1)
   completedAt           DateTime @default(now())
 }
