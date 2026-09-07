@@ -92,6 +92,34 @@ export const getNotifications = async (req: Request, res: Response, next: NextFu
 };
 
 /**
+ * Controller: List CONTACT messages the current recruiter has sent
+ * @route GET /api/interaction/sent
+ * @access Private (RECRUITER)
+ */
+export const getSentContacts = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.body?.user;
+        if (!user || user.role !== 'RECRUITER') {
+            return res.status(403).json({ error: 'Forbidden. Recruiter role required.' });
+        }
+
+        const contacts = await prisma.interaction.findMany({
+            where: { recruiterId: user.id, type: 'CONTACT' },
+            orderBy: { createdAt: 'desc' },
+            include: {
+                profile: {
+                    select: { userId: true, fullName: true, targetSector: true, certificationScore: true, hasWorkPermit: true },
+                },
+            },
+        });
+
+        return res.status(200).json(contacts);
+    } catch (error) {
+        return next(error);
+    }
+};
+
+/**
  * Controller: Mark one received notification as read
  * @route PUT /api/interaction/:id/read
  * @access Private (candidate, owner only)
@@ -135,10 +163,26 @@ export const getInteractionStats = async (req: Request, res: Response, next: Nex
         startOfMonth.setHours(0, 0, 0, 0);
 
         if (user.role === 'ADMIN') {
-            const interactionsThisMonth = await prisma.interaction.count({
-                where: { createdAt: { gte: startOfMonth } },
+            // Bundled with the interaction count so the admin dashboard can
+            // fetch every KPI it needs in one request — these aren't
+            // Interaction-model stats, but platform-wide counts the
+            // dashboard was previously showing as static placeholder data.
+            const [interactionsThisMonth, profilesActive, certifiedProfiles, totalProfiles, videosPublished, videosPending] = await Promise.all([
+                prisma.interaction.count({ where: { createdAt: { gte: startOfMonth } } }),
+                prisma.profile.count({ where: { visible: true } }),
+                prisma.profile.count({ where: { hasWorkPermit: true } }),
+                prisma.profile.count(),
+                prisma.video.count({ where: { status: 'APPROVED' } }),
+                prisma.video.count({ where: { status: 'PENDING' } }),
+            ]);
+            const certificationRate = totalProfiles > 0 ? Math.round((certifiedProfiles / totalProfiles) * 100) : 0;
+            return res.status(200).json({
+                interactionsThisMonth,
+                profilesActive,
+                certificationRate,
+                videosPublished,
+                videosPending,
             });
-            return res.status(200).json({ interactionsThisMonth });
         }
 
         const [profilesViewed, favorites, messagesSent] = await Promise.all([

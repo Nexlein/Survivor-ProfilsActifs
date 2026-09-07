@@ -1,22 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { getInteractionStats, RecruiterStats, translateApiError } from "@/lib/api";
+import Link from "next/link";
+import { buttonClasses } from "@/components/ui/Button";
+import { getInteractionStats, getSentContacts, RecruiterStats, SentContact, translateApiError } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
-
-// "Mes contacts récents" reste de la démonstration : le modèle Interaction
-// n'a pas encore de route pour lister les candidats contactés avec leur
-// score/statut de réponse (au-delà du simple compteur ci-dessous).
-const CONTACTS = [
-  { name: "Marie Dupont", sector: "Assistanat", score: "87/100", date: "12/08/2026", status: "Répondu" },
-  { name: "Karim Belkacem", sector: "Logistique", score: "74/100", date: "10/08/2026", status: "En attente" },
-];
 
 export default function RecruiterDashboardPage() {
   usePageTitle("Tableau de bord recruteur");
   const [stats, setStats] = useState<RecruiterStats | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [contacts, setContacts] = useState<SentContact[] | null>(null);
+  const [contactsError, setContactsError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -26,6 +21,20 @@ export default function RecruiterDashboardPage() {
       })
       .catch((err) => {
         if (!cancelled) setError(translateApiError(err));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    getSentContacts()
+      .then((res) => {
+        if (!cancelled) setContacts(res);
+      })
+      .catch((err) => {
+        if (!cancelled) setContactsError(translateApiError(err));
       });
     return () => {
       cancelled = true;
@@ -58,26 +67,49 @@ export default function RecruiterDashboardPage() {
       </div>
 
       <h3 className="mb-3">Mes contacts récents</h3>
-      <div className="bg-white rounded-lg shadow-card overflow-x-auto">
-        <div className="min-w-[720px]">
-          {CONTACTS.map((contact) => (
-            <div
-              key={contact.name}
-              className="flex gap-3 items-center px-4 py-3 border-b border-border last:border-b-0 flex-nowrap text-[13px]"
-            >
-              <div className="w-8 h-8 rounded-full bg-border shrink-0" />
-              <div className="flex-1 min-w-[120px] font-semibold text-text">{contact.name}</div>
-              <div className="text-text-secondary min-w-[100px]">{contact.sector}</div>
-              <div className="text-primary font-semibold min-w-[70px]">{contact.score}</div>
-              <div className="text-text-secondary min-w-[90px]">{contact.date}</div>
-              <div className="min-w-[90px]">{contact.status}</div>
-              <Button variant="secondary" size="sm" className="shrink-0">
-                Voir le profil
-              </Button>
-            </div>
-          ))}
+
+      {contactsError && (
+        <p role="alert" className="text-error text-sm mb-3">
+          {contactsError}
+        </p>
+      )}
+
+      {contacts !== null && contacts.length === 0 && !contactsError && (
+        <p className="text-text-secondary text-sm">
+          Vous n&apos;avez encore contacté aucun candidat.
+        </p>
+      )}
+
+      {contacts !== null && contacts.length > 0 && (
+        <div className="bg-white rounded-lg shadow-card overflow-x-auto">
+          <div className="min-w-[720px]">
+            {contacts.map((contact) => (
+              <div
+                key={contact.id}
+                className="flex gap-3 items-center px-4 py-3 border-b border-border last:border-b-0 flex-nowrap text-[13px]"
+              >
+                <div className="w-8 h-8 rounded-full bg-border shrink-0" />
+                <div className="flex-1 min-w-[120px] font-semibold text-text">{contact.profile.fullName}</div>
+                <div className="text-text-secondary min-w-[100px]">{contact.profile.targetSector ?? "—"}</div>
+                <div className="text-primary font-semibold min-w-[90px]">
+                  {contact.profile.hasWorkPermit && contact.profile.certificationScore !== null
+                    ? `${contact.profile.certificationScore}/1000`
+                    : "Non certifié"}
+                </div>
+                <div className="text-text-secondary min-w-[90px]">
+                  {new Date(contact.createdAt).toLocaleDateString("fr-FR")}
+                </div>
+                <Link
+                  href={`/profils/${contact.profile.userId}`}
+                  className={buttonClasses("secondary", "sm", "shrink-0")}
+                >
+                  Voir le profil
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </main>
   );
 }

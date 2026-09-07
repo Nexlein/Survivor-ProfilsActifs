@@ -66,7 +66,7 @@ export function Tabs({ tabs, defaultTabId, onChange }: TabsProps) {
               tabIndex={isActive ? 0 : -1}
               onClick={() => selectTab(tab.id)}
               onKeyDown={(event) => handleKeyDown(event, index)}
-              className={`px-4 py-2.5 border-b-2 font-bold text-sm font-heading ${
+              className={`px-4 py-2.5 border-b-2 font-bold text-sm font-heading whitespace-nowrap ${
                 isActive ? "border-primary text-primary" : "border-transparent text-text-secondary"
               }`}
             >
