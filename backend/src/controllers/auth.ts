@@ -160,7 +160,15 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
         if (!token) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret');
+        let decodedToken;
+        try {
+            decodedToken = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret');
+        } catch {
+            // An expired/invalid token here is an expected client-side
+            // condition (the whole point of this endpoint), not a server
+            // error — surface it as 401, not a 500 via the error middleware.
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
         const user = await prisma.user.findUnique({ where: { id: (decodedToken as any).id } });
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });

@@ -79,6 +79,31 @@ export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
 
+// The backend re-mints a token by re-verifying the current one (same
+// jwt.verify, same secret, no grace period) — so this only ever succeeds
+// while the existing token is still valid. It's meant to be called
+// proactively, well before the 24h expiry (see useTokenRefresh below), not
+// reactively after a 401: by the time a request 401s, this token has
+// already failed the exact same check and refreshing it would 401 too.
+export async function refreshToken(): Promise<AuthResponse | null> {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API_URL}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as AuthResponse;
+    setToken(data.token);
+    setUser(data.user);
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken();
 
@@ -115,6 +140,25 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
 
   return data as T;
+}
+
+// Best-effort: invalidates the session server-side, then always clears local
+// state regardless of whether the request succeeded (an unreachable API
+// shouldn't strand the user in a "logged in" UI they can't get out of).
+export async function logout(): Promise<void> {
+  const token = getToken();
+  if (token) {
+    try {
+      await fetch(`${API_URL}/auth/logout`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch {
+      // ignored — local logout still proceeds below
+    }
+  }
+  clearToken();
+  clearUser();
 }
 
 // Locally-uploaded avatars come back as a relative /uploads/... path (needs
