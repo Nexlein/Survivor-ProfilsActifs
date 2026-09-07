@@ -9,7 +9,7 @@ You build ProfilsActifs.
 
 Before writing ANY product logic or database code, you MUST read:
 
-1. `docs/brief_jibjob_en.pdf` - The product brief (Vertical feed, Likes = Unemployment benefits, 100-question Work Permit).
+1. `docs/brief_profilsactifs.md` - The product brief
 2. `docs/mails/exigences_juridiques.md` - Strict legal requirements (Age limits, Video consent logging, Hard deletion rules, Non-discrimination).
 3. `docs/mails/contraintes_techniques.md` - Strict IT constraints (Swagger, local-only hosting, 100MB limits).
 4. `docs/mails/identite_visuelle.md` - Strict UI & Vocabulary constraints (Colors, Fonts, Banned words).

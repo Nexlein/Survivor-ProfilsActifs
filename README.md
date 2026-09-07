@@ -18,7 +18,8 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 - [Visual Identity & Comms](docs/mails/identite_visuelle.md)
 - [Comms Deliverables](docs/comms_deliverables.md)
 - [Data Register](docs/legal_data_register.md)
-- [Brief](docs/brief_jibjob_en.pdf)
+- [Brief](docs/brief_profilsactifs.md)
+- [Definitive Functional Specifications](docs/functional_specifications.md)
 
 ## Quick Start (Monorepo)
 
