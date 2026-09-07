@@ -36,9 +36,13 @@ export const exportData = async (req: Request, res: Response, next: NextFunction
             return res.status(404).json({ error: 'User not found' });
         }
 
+        // Never include the password hash in a data export, even the user's
+        // own — it has no legitimate use here and shouldn't leave the DB.
+        const { passwordHash, ...exportableUser } = user;
+
         return res.status(200).json({
             message: 'GDPR export successful',
-            data: user,
+            data: exportableUser,
         });
     } catch (error) {
         return next(error);
