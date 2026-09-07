@@ -70,7 +70,7 @@ export default function ProfileCatalogPage() {
       if (sector && p.targetSector !== sector) return false;
       if (skill && !p.skills?.some((s) => s.name === skill)) return false;
       if (location && !p.location?.toLowerCase().includes(location.toLowerCase())) return false;
-      if (certifiedOnly && !p.hasWorkPermit) return false;
+      if (certifiedOnly && !p.hasCertificationBadge) return false;
       return true;
     });
   }, [profiles, search, sector, skill, location, certifiedOnly]);
@@ -191,7 +191,7 @@ export default function ProfileCatalogPage() {
                     name={profile.fullName}
                     role={profile.targetSector ?? "Secteur non renseigné"}
                     avatarUrl={resolveAvatarUrl(profile.avatarUrl)}
-                    certified={profile.hasWorkPermit}
+                    certified={profile.hasCertificationBadge}
                     footer={
                       <Link
                         href={`/profils/${profile.userId}`}

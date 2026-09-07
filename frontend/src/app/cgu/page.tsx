@@ -37,7 +37,7 @@ export default function CguPage() {
         <section>
           <h2 className="mb-2">4. Certification JEB</h2>
           <p>
-            Le Permis de Travailler JEB est délivré à l&apos;issue du questionnaire de certification et
+            Le badge de certification est délivré à l&apos;issue du questionnaire de certification et
             n&apos;a pas valeur de diplôme officiel.
           </p>
         </section>

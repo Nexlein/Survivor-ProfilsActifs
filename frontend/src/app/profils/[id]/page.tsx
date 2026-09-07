@@ -120,7 +120,7 @@ export default function PublicProfilePage() {
           <p className="text-center text-[13px] text-text-secondary mb-3">📍 {profile.location}</p>
         )}
 
-        {profile.hasWorkPermit ? (
+        {profile.hasCertificationBadge ? (
           <div className="mb-4">
             <Badge variant="success">★ Certifié JEB</Badge>
             {profile.certificationScore !== null && (

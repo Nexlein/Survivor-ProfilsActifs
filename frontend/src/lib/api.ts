@@ -258,7 +258,7 @@ export type Profile = {
   industry: string | null;
   position: string | null;
   certificationScore: number | null;
-  hasWorkPermit: boolean;
+  hasCertificationBadge: boolean;
   skills?: { id: string; name: string }[];
   videos?: Video[];
   createdAt: string;
@@ -369,7 +369,7 @@ export type SentContact = {
     fullName: string;
     targetSector: string | null;
     certificationScore: number | null;
-    hasWorkPermit: boolean;
+    hasCertificationBadge: boolean;
   };
 };
 
@@ -455,7 +455,7 @@ export type QuestionnaireProgress = {
 export type QuestionnaireResult = {
   message: string;
   totalScore: number;
-  hasWorkPermit: boolean;
+  hasCertificationBadge: boolean;
   completedAt: string;
 };
 

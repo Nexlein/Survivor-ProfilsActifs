@@ -92,7 +92,7 @@ export default function RecruiterDashboardPage() {
                 <div className="flex-1 min-w-[120px] font-semibold text-text">{contact.profile.fullName}</div>
                 <div className="text-text-secondary min-w-[100px]">{contact.profile.targetSector ?? "—"}</div>
                 <div className="text-primary font-semibold min-w-[90px]">
-                  {contact.profile.hasWorkPermit && contact.profile.certificationScore !== null
+                  {contact.profile.hasCertificationBadge && contact.profile.certificationScore !== null
                     ? `${contact.profile.certificationScore}/1000`
                     : "Non certifié"}
                 </div>

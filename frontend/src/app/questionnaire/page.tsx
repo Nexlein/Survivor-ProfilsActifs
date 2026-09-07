@@ -80,7 +80,7 @@ export default function QuestionnairePage() {
     try {
       const submitted = await submitQuestionnaire(answers);
       setResult(submitted);
-      setView(submitted.hasWorkPermit ? "pass" : "fail");
+      setView(submitted.hasCertificationBadge ? "pass" : "fail");
     } catch (err) {
       setSubmitError(translateApiError(err));
     } finally {
@@ -209,7 +209,7 @@ export default function QuestionnairePage() {
           JEB ★
         </div>
         <h1 className="text-success mb-2.5">
-          Félicitations ! Vous avez obtenu votre Permis de Travailler JEB.
+          Félicitations ! Vous avez obtenu votre badge de certification.
         </h1>
         <p className="font-bold text-text mb-1.5">Score final : {result?.totalScore}/1000</p>
         <p className="text-text-secondary mb-6">Votre badge est maintenant affiché sur votre profil.</p>
