@@ -380,8 +380,17 @@ export async function fetchMediaBlobUrl(path: string): Promise<string> {
   return URL.createObjectURL(blob);
 }
 
+// Right to be forgotten: goes through /compliance/account (not /profile) —
+// it also physically deletes uploaded video/subtitle files from disk, which
+// a plain profile delete doesn't do.
 export function deleteAccount() {
-  return request<Profile>("/profile", { method: "DELETE" });
+  return request<{ message: string }>("/compliance/account", { method: "DELETE" });
+}
+
+// Right of access: the full GDPR export of everything the platform holds
+// about the current user (profile, videos, interactions, login history).
+export function exportMyData() {
+  return request<{ message: string; data: unknown }>("/compliance/data-export");
 }
 
 export type ProfilePage = {
