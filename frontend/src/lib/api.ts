@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 const TOKEN_KEY = "profilsactifs_token";
 const USER_KEY = "profilsactifs_user";
 
@@ -38,7 +38,7 @@ export function clearUser() {
   window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
 }
 
-export function subscribeToAuthChange(callback: () => void) {
+function subscribeToAuthChange(callback: () => void) {
   window.addEventListener(AUTH_CHANGE_EVENT, callback);
   return () => window.removeEventListener(AUTH_CHANGE_EVENT, callback);
 }
@@ -57,7 +57,7 @@ export type AuthResponse = {
   user: AuthUser;
 };
 
-export class ApiError extends Error {
+class ApiError extends Error {
   status: number;
 
   constructor(status: number, message: string) {
@@ -66,7 +66,7 @@ export class ApiError extends Error {
   }
 }
 
-export function getToken(): string | null {
+function getToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -360,8 +360,31 @@ export function markNotificationRead(id: string) {
   return request<Notification>(`/interaction/${id}/read`, { method: "PUT" });
 }
 
+export type SentContact = {
+  id: string;
+  message: string | null;
+  createdAt: string;
+  profile: {
+    userId: string;
+    fullName: string;
+    targetSector: string | null;
+    certificationScore: number | null;
+    hasWorkPermit: boolean;
+  };
+};
+
+export function getSentContacts() {
+  return request<SentContact[]>("/interaction/sent");
+}
+
 export type RecruiterStats = { profilesViewed: number; favorites: number; messagesSent: number };
-export type AdminInteractionStats = { interactionsThisMonth: number };
+export type AdminInteractionStats = {
+  interactionsThisMonth: number;
+  profilesActive: number;
+  certificationRate: number;
+  videosPublished: number;
+  videosPending: number;
+};
 
 export function getInteractionStats() {
   return request<RecruiterStats | AdminInteractionStats>("/interaction/stats");

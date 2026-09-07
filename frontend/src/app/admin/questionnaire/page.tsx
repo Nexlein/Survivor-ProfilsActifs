@@ -11,7 +11,7 @@ type QuizQuestion = {
 };
 
 // Données de démonstration — le modèle Prisma Question/Option existe déjà
-// côté backend, mais aucune route CRUD n'est exposée (voir résumé final).
+// côté backend, mais aucune route CRUD n'est exposée.
 const DEMO_QUESTIONS: QuizQuestion[] = [
   { id: "1", text: "Face à un désaccord de méthode en équipe...", weight: 3 },
   { id: "2", text: "Un client vous fait une remarque désagréable...", weight: 2 },
@@ -34,7 +34,7 @@ export default function QuestionnaireAdminPage() {
 
   function handleSave() {
     setNotice(
-      "L'enregistrement n'est pas encore connecté au serveur — aucune route CRUD n'existe pour les questions (voir résumé final)."
+      "L'enregistrement n'est pas encore connecté au serveur — aucune route CRUD n'existe pour les questions."
     );
   }
 
