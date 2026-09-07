@@ -1,13 +1,19 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
-import path from 'path';
+// --- 1. Core Node.js & Environment ---
+import 'dotenv/config'; // Loads environment variables (must be first)
+import path from 'path'; // Utilities for file and directory paths
 
-import routes from './routes';
-import { errorHandler } from './middlewares/error';
+// --- 2. Express Framework & Middlewares ---
+import express from 'express'; // Core web framework
+import cors from 'cors'; // Cross-Origin Resource Sharing (allows frontend access)
+import helmet from 'helmet'; // HTTP response headers for security
+
+// --- 3. Documentation (Swagger/OpenAPI) ---
+import swaggerUi from 'swagger-ui-express'; // Serves the Swagger UI interface
+import YAML from 'yamljs'; // Parses the swagger.yaml definition file
+
+// --- 4. Internal Modules ---
+import routes from './routes'; // Main router aggregating all endpoints
+import { errorHandler } from './middlewares/error'; // Global error handler
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +44,10 @@ app.use('/', routes);
 
 // Global Error Handler (must be the last middleware)
 app.use(errorHandler);
+
+// Validate and load the versioned JSON questionnaire
+import { loadQuestionnaire } from './utils/questionnaireLoader';
+loadQuestionnaire();
 
 app.listen(PORT, () => {
   console.log(`Server ready at http://localhost:${PORT}`);
