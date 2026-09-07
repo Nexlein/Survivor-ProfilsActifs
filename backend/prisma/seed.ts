@@ -11,7 +11,7 @@ type QuestionSeedOption = {
 
 type QuestionSeed = {
   id: string;
-  category: string;
+  type: string;
   text: string;
   weighting: number;
   options: QuestionSeedOption[];
@@ -27,14 +27,13 @@ const getRandom = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)]
 async function main() {
   console.log('Starting database seeding...');
 
-  const questionsSeedPath = path.resolve(__dirname, 'questions_seed.json');
-  const questionnaireSeeds = JSON.parse(fs.readFileSync(questionsSeedPath, 'utf8')) as QuestionSeed[];
+  const questionsSeedPath = path.resolve(process.cwd(), '../certification/questions.v1.json');
+  const questionnaireData = JSON.parse(fs.readFileSync(questionsSeedPath, 'utf8'));
+  const questionnaireSeeds = questionnaireData.questions as QuestionSeed[];
 
   console.log('Cleaning existing data...');
   await prisma.interaction.deleteMany();
   await prisma.loginLog.deleteMany();
-  await prisma.option.deleteMany();
-  await prisma.question.deleteMany();
   await prisma.questionnaireProgress.deleteMany();
   await prisma.questionnaireResult.deleteMany();
   await prisma.video.deleteMany();
@@ -153,29 +152,6 @@ async function main() {
       firstProfileId = profile.id;
     } else if (!secondProfileId) {
       secondProfileId = profile.id;
-    }
-  }
-
-  console.log('Creating questionnaire...');
-
-  for (const questionSeed of questionnaireSeeds) {
-    await prisma.question.create({
-      data: {
-        id: questionSeed.id,
-        text: questionSeed.text,
-        weighting: questionSeed.weighting,
-      },
-    });
-
-    for (const optionSeed of questionSeed.options) {
-      await prisma.option.create({
-        data: {
-          id: optionSeed.id,
-          questionId: questionSeed.id,
-          text: optionSeed.text,
-          points: optionSeed.points,
-        },
-      });
     }
   }
 
