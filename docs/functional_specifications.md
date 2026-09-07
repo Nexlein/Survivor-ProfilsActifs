@@ -8,7 +8,7 @@
   - *Fait* : Vérification effectuée. "JibJob" n'est conservé que dans l'historique des mails de refus, et le document `project_hierarchy.md` a été entièrement réécrit pour refléter le bannissement du nom.
 - [x] **Objectif** : Mise en relation professionnelle par vidéo courte. Ce n'est pas un réseau social.
 - [x] **Charte Graphique** : Typographie Marianne/Spectral. Couleurs `#1B3A6B` et `#FF9900`.
-- [ ] **Vocabulaire et Sémantique (URGENT - Matignon)** :
+- [x] **Vocabulaire et Sémantique (URGENT - Matignon)** :
   - Les termes `tendances`, `populaire`, `viral` sont strictement interdits. On parle de `profils mis en avant`.
   - L'expression `Permis de travailler` est strictement interdite. Utiliser `Badge de certification`. Le badge valorise mais n'autorise aucun droit.
   - **Toute mention liant l'application aux allocations ou droits sociaux est strictement interdite** (interfaces, variables, DB, migrations).
@@ -29,14 +29,14 @@
 - **Certification (Questionnaire)** :
   - [ ] **Réduction à 20 questions** (au lieu de 100).
     - *À faire* : Modifier le JSON pour ne garder que 20 questions. Fournir une justification de 5 lignes sur le choix des 20 questions conservées.
-  - [ ] **Non-bloquant** : Le passage de la certification n'est plus obligatoire pour qu'un profil soit visible par les recruteurs.
+  - [x] **Non-bloquant** : Le passage de la certification n'est plus obligatoire pour qu'un profil soit visible par les recruteurs.
   - [ ] **Gestion des passations existantes** : Les réponses aux 80 questions supprimées rendent les anciens scores obsolètes.
     - *À faire* : Créer un script (rejouable) pour invalider ou recalculer les scores existants et marquer les badges. Fournir des statistiques avant/après.
-  - [ ] **Mise en avant** : Le badge de certification doit être visuellement distinct sur le profil public.
+  - [x] **Mise en avant** : Le badge de certification doit être visuellement distinct sur le profil public.
 
 ## 3. Flux Public et Espace Recruteur
 
-- [ ] **Feed et UI (Fin de l'effet TikTok)** :
+- [x] **Feed et UI (Fin de l'effet TikTok)** :
   - Le feed vertical plein écran en autoplay disparaît.
   - Retour à une **grille de profils** classique paginée (20 max), avec lecture vidéo uniquement sur clic.
   - *À faire* : Rediriger (301) les anciennes URL du feed plein écran vers la nouvelle grille.
@@ -55,7 +55,7 @@
 - [x] **API & Swagger** : API RESTful documentée via OpenAPI 3.0.
 - [x] **Bootloader Zod** : Crash serveur si le JSON du questionnaire est invalide.
 - [x] **Healthcheck** : Route `/health` renvoyant 503 si la BDD est injoignable.
-- [ ] **Accessibilité** : RGAA niveau AA (navigation clavier, contrastes) sur 3 écrans.
+- [x] **Accessibilité** : RGAA niveau AA (navigation clavier, contrastes) sur 3 écrans.
 
 ## 6. Livrables Attendus (Mardi 12h00 pour le code, Mercredi 12h00 pour la data)
 
