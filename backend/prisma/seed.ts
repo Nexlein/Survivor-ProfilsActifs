@@ -138,9 +138,9 @@ async function main() {
         videos: {
           create: [
             {
-              type: 'LINK',
-              url: 'https://www.w3schools.com/html/mov_bbb.mp4', // Safe sample video
-              subtitleUrl: null,
+              type: 'UPLOAD',
+              providerId: `seed-dummy-video-${i}`,
+              providerName: 'local',
               consentDate: new Date(),
               consentTextVersion: 'v1.0 - 2026-09-01',
               status: status,
