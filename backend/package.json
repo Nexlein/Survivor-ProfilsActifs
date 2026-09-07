@@ -24,7 +24,8 @@
     "@types/yamljs": "^0.2.34",
     "prisma": "^7.10.0",
     "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
