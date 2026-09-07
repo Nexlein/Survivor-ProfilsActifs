@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 const TOKEN_KEY = "profilsactifs_token";
 const USER_KEY = "profilsactifs_user";
 
@@ -38,7 +38,7 @@ export function clearUser() {
   window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
 }
 
-export function subscribeToAuthChange(callback: () => void) {
+function subscribeToAuthChange(callback: () => void) {
   window.addEventListener(AUTH_CHANGE_EVENT, callback);
   return () => window.removeEventListener(AUTH_CHANGE_EVENT, callback);
 }
@@ -57,7 +57,7 @@ export type AuthResponse = {
   user: AuthUser;
 };
 
-export class ApiError extends Error {
+class ApiError extends Error {
   status: number;
 
   constructor(status: number, message: string) {
@@ -66,7 +66,7 @@ export class ApiError extends Error {
   }
 }
 
-export function getToken(): string | null {
+function getToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -77,6 +77,31 @@ export function setToken(token: string) {
 
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
+}
+
+// The backend re-mints a token by re-verifying the current one (same
+// jwt.verify, same secret, no grace period) — so this only ever succeeds
+// while the existing token is still valid. It's meant to be called
+// proactively, well before the 24h expiry (see useTokenRefresh below), not
+// reactively after a 401: by the time a request 401s, this token has
+// already failed the exact same check and refreshing it would 401 too.
+export async function refreshToken(): Promise<AuthResponse | null> {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API_URL}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as AuthResponse;
+    setToken(data.token);
+    setUser(data.user);
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -115,6 +140,25 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
 
   return data as T;
+}
+
+// Best-effort: invalidates the session server-side, then always clears local
+// state regardless of whether the request succeeded (an unreachable API
+// shouldn't strand the user in a "logged in" UI they can't get out of).
+export async function logout(): Promise<void> {
+  const token = getToken();
+  if (token) {
+    try {
+      await fetch(`${API_URL}/auth/logout`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch {
+      // ignored — local logout still proceeds below
+    }
+  }
+  clearToken();
+  clearUser();
 }
 
 // Locally-uploaded avatars come back as a relative /uploads/... path (needs
@@ -269,6 +313,83 @@ export function deleteVideo(id: string) {
   return request<{ message: string; id: string }>(`/profile/videos/${id}`, { method: "DELETE" });
 }
 
+export type ModerationVideo = Video & {
+  profile: { id: string; fullName: string; avatarUrl: string | null };
+};
+
+export type ModerationVideoPage = {
+  videos: ModerationVideo[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
+export function getModerationVideoFeed(status: "PENDING" | "APPROVED" | "REJECTED", page = 1) {
+  return request<ModerationVideoPage>(`/video/feed?status=${status}&page=${page}`);
+}
+
+export function moderateVideo(id: string, approved: boolean, reason?: string) {
+  return request<Video>("/video/approval", {
+    method: "PUT",
+    body: JSON.stringify({ id, approved, reason }),
+  });
+}
+
+export type InteractionType = "VIEW" | "CONTACT" | "FAVORITE" | "LIKE";
+
+export function logInteraction(payload: { profileId: string; type: "VIEW" | "CONTACT"; videoId?: string; message?: string }): Promise<void>;
+export function logInteraction(payload: { profileId: string; type: "FAVORITE" | "LIKE"; videoId?: string }): Promise<{ active: boolean }>;
+export function logInteraction(payload: { profileId: string; type: InteractionType; videoId?: string; message?: string }) {
+  return request<{ active: boolean } | void>("/interaction", { method: "POST", body: JSON.stringify(payload) });
+}
+
+export type Notification = {
+  id: string;
+  type: "VIEW" | "CONTACT";
+  message: string | null;
+  read: boolean;
+  createdAt: string;
+  recruiter: { id: string; profile: { fullName: string; companyName: string | null } | null };
+};
+
+export function getNotifications() {
+  return request<Notification[]>("/interaction/notifications");
+}
+
+export function markNotificationRead(id: string) {
+  return request<Notification>(`/interaction/${id}/read`, { method: "PUT" });
+}
+
+export type SentContact = {
+  id: string;
+  message: string | null;
+  createdAt: string;
+  profile: {
+    userId: string;
+    fullName: string;
+    targetSector: string | null;
+    certificationScore: number | null;
+    hasWorkPermit: boolean;
+  };
+};
+
+export function getSentContacts() {
+  return request<SentContact[]>("/interaction/sent");
+}
+
+export type RecruiterStats = { profilesViewed: number; favorites: number; messagesSent: number };
+export type AdminInteractionStats = {
+  interactionsThisMonth: number;
+  profilesActive: number;
+  certificationRate: number;
+  videosPublished: number;
+  videosPending: number;
+};
+
+export function getInteractionStats() {
+  return request<RecruiterStats | AdminInteractionStats>("/interaction/stats");
+}
+
 // /media/:id (and /:id/subtitle) require an Authorization header, so a plain
 // <video src="..."> can't hit them directly — fetch the bytes ourselves and
 // hand the <video>/<track> element a local blob: URL instead.
@@ -282,8 +403,17 @@ export async function fetchMediaBlobUrl(path: string): Promise<string> {
   return URL.createObjectURL(blob);
 }
 
+// Right to be forgotten: goes through /compliance/account (not /profile) —
+// it also physically deletes uploaded video/subtitle files from disk, which
+// a plain profile delete doesn't do.
 export function deleteAccount() {
-  return request<Profile>("/profile", { method: "DELETE" });
+  return request<{ message: string }>("/compliance/account", { method: "DELETE" });
+}
+
+// Right of access: the full GDPR export of everything the platform holds
+// about the current user (profile, videos, interactions, login history).
+export function exportMyData() {
+  return request<{ message: string; data: unknown }>("/compliance/data-export");
 }
 
 export type ProfilePage = {

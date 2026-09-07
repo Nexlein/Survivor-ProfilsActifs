@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
+import { logInteraction, translateApiError } from "@/lib/api";
 
 const MIN_LENGTH = 50;
 
@@ -10,32 +11,74 @@ type ContactModalProps = {
   isOpen: boolean;
   onClose: () => void;
   candidateName: string;
+  profileId: string;
 };
 
-export function ContactModal({ isOpen, onClose, candidateName }: ContactModalProps) {
+export function ContactModal({ isOpen, onClose, candidateName, profileId }: ContactModalProps) {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [notice, setNotice] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  function handleSend() {
+  async function handleSend() {
     if (message.length < MIN_LENGTH) return;
-    setNotice(
-      "L'envoi de message n'est pas encore connecté au serveur — aucune route backend n'existe pour l'instant (voir le modèle Prisma \"Interaction\", non exposé par l'API)."
+    setIsSending(true);
+    setError(null);
+    try {
+      await logInteraction({
+        profileId,
+        type: "CONTACT",
+        message: subject ? `${subject}\n\n${message}` : message,
+      });
+      setSent(true);
+    } catch (err) {
+      setError(translateApiError(err));
+    } finally {
+      setIsSending(false);
+    }
+  }
+
+  function handleClose() {
+    setSubject("");
+    setMessage("");
+    setError(null);
+    setSent(false);
+    onClose();
+  }
+
+  if (sent) {
+    return (
+      <Modal
+        isOpen={isOpen}
+        onClose={handleClose}
+        title={`Contacter ${candidateName}`}
+        footer={
+          <Button variant="primary" onClick={handleClose}>
+            Fermer
+          </Button>
+        }
+      >
+        <p className="text-success text-sm">
+          Votre message a bien été envoyé à {candidateName}. Il/elle pourra vous répondre depuis son
+          espace de notifications.
+        </p>
+      </Modal>
     );
   }
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title={`Contacter ${candidateName}`}
       footer={
         <>
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" onClick={handleClose}>
             Annuler
           </Button>
-          <Button variant="primary" onClick={handleSend} disabled={message.length < MIN_LENGTH}>
-            Envoyer le message
+          <Button variant="primary" onClick={handleSend} disabled={message.length < MIN_LENGTH || isSending}>
+            {isSending ? "Envoi..." : "Envoyer le message"}
           </Button>
         </>
       }
@@ -68,7 +111,11 @@ export function ContactModal({ isOpen, onClose, candidateName }: ContactModalPro
           Votre message sera transmis au candidat par notification. Il pourra y répondre depuis son
           espace.
         </p>
-        {notice && <p className="text-error text-sm">{notice}</p>}
+        {error && (
+          <p role="alert" className="text-error text-sm">
+            {error}
+          </p>
+        )}
       </div>
     </Modal>
   );

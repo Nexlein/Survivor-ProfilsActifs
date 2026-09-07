@@ -129,6 +129,28 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
         const pageSize = 20;
         const skip = (page - 1) * pageSize;
 
+        // Admin moderation queue: the public feed below only ever surfaces
+        // APPROVED videos, so admins need their own branch to list videos by
+        // moderation status (defaulting to the PENDING queue).
+        if (user.role === 'ADMIN') {
+            const requestedStatus = (req.query.status as string || 'PENDING').toUpperCase();
+            const validStatuses = ['PENDING', 'APPROVED', 'REJECTED'];
+            const status = validStatuses.includes(requestedStatus) ? requestedStatus : 'PENDING';
+
+            const [videos, total] = await Promise.all([
+                prisma.video.findMany({
+                    where: { status: status as any },
+                    take: pageSize,
+                    skip,
+                    orderBy: { createdAt: 'asc' },
+                    include: { profile: { select: { id: true, fullName: true, avatarUrl: true } } },
+                }),
+                prisma.video.count({ where: { status: status as any } }),
+            ]);
+
+            return res.status(200).json({ videos, total, page, pageSize });
+        }
+
         const eighteenYearsAgo = getEighteenYearsAgo();
 
         const whereClause: any = {

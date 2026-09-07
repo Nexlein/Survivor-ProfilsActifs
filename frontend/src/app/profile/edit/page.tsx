@@ -11,6 +11,7 @@ import {
   clearToken,
   clearUser,
   deleteAccount,
+  exportMyData,
   getMyProfile,
   resolveAvatarUrl,
   translateApiError,
@@ -48,6 +49,9 @@ export default function EditProfilePage() {
   const [skillInput, setSkillInput] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
   const [bio, setBio] = useState("");
+
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
 
   function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -113,6 +117,27 @@ export default function EditProfilePage() {
       setError(translateApiError(err));
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleExportData() {
+    setIsExporting(true);
+    setExportError(null);
+    try {
+      const res = await exportMyData();
+      const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `profilsactifs-mes-donnees-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setExportError(translateApiError(err));
+    } finally {
+      setIsExporting(false);
     }
   }
 
@@ -261,6 +286,22 @@ export default function EditProfilePage() {
           {isSubmitting ? "Enregistrement..." : "Enregistrer les modifications"}
         </Button>
       </form>
+
+      <div className="mt-8 pt-6 border-t border-border">
+        <h3 className="mb-1.5">Vos données</h3>
+        <p className="text-text-secondary text-sm mb-3">
+          Conformément au RGPD, vous pouvez télécharger une copie de toutes les données que
+          ProfilsActifs détient sur vous (profil, vidéos, interactions, historique de connexion).
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleExportData} disabled={isExporting}>
+          {isExporting ? "Préparation..." : "Exporter mes données (JSON)"}
+        </Button>
+        {exportError && (
+          <p role="alert" className="text-error text-sm mt-2">
+            {exportError}
+          </p>
+        )}
+      </div>
 
       <div className="mt-8 pt-6 border-t border-border">
         <button

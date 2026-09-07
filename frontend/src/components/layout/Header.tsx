@@ -5,7 +5,13 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { buttonClasses } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { AuthUser, clearToken, clearUser, getMyProfile, resolveAvatarUrl, useCurrentUser } from "@/lib/api";
+import { AuthUser, getMyProfile, logout, refreshToken, resolveAvatarUrl, useCurrentUser } from "@/lib/api";
+
+// Tokens are minted for 24h server-side; refreshing well before that keeps
+// an open tab's session alive without ever exposing the 24h cliff to the
+// user. Refresh only works proactively (see refreshToken's doc comment) —
+// there's no point trying it any less often than this margin allows.
+const TOKEN_REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
 type NavLink = { href: string; label: string };
 
@@ -63,10 +69,17 @@ export function Header() {
     };
   }, [user, pathname]);
 
-  function handleLogout() {
-    clearToken();
-    clearUser();
+  useEffect(() => {
+    if (!user) return;
+    const interval = setInterval(() => {
+      refreshToken();
+    }, TOKEN_REFRESH_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [user]);
+
+  async function handleLogout() {
     setIsAccountMenuOpen(false);
+    await logout();
     router.push("/");
   }
 
