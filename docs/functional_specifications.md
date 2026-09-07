@@ -4,8 +4,8 @@
 
 ## 1. Identité et Positionnement
 
-- [ ] **Nom du projet** : ProfilsActifs (le nom JibJob est formellement interdit).
-  - *À faire* : Parcourir `agent.md`, `README.md` et les commentaires du code pour remplacer les reliquats du mot "JibJob".
+- [x] **Nom du projet** : ProfilsActifs (le nom JibJob est formellement interdit).
+  - *Fait* : Vérification effectuée. "JibJob" n'est conservé que dans l'historique des mails de refus, et le document `project_hierarchy.md` a été entièrement réécrit pour refléter le bannissement du nom.
 - [x] **Objectif** : Mise en relation professionnelle par vidéo courte. Ce n'est pas un réseau social.
 - [x] **Charte Graphique** : Typographie Marianne/Spectral. Couleurs `#1B3A6B` et `#FF9900`.
 - [ ] **Vocabulaire et Sémantique (URGENT - Matignon)** :

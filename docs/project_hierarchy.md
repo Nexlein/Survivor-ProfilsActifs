@@ -1,22 +1,31 @@
-# Project Hierarchy & Authority
+# Project Decision Hierarchy
 
-When reading the project briefs and emails, conflicting instructions may appear. The project team must follow this strict hierarchy of authority:
+When reading the project briefs and emails, conflicting instructions may appear. Here is the strict resolution hierarchy following the Matignon intervention (Sept 7).
 
-## 1. Product Features & Core Logic -> JEB (The Minister)
+## 1. Top Authority -> Matignon / Cabinet (Benjamin Sellami)
 
-JEB's handwritten annotations in the `brief_jibjob_en.pdf` **override** the typed text.
+The definitive functional specifications (`docs/functional_specifications.md`) and the rollback instructions (`docs/mails/retour_version_1.md`) override EVERYTHING else.
 
-- He dictates the core concept ("TikTok for the unemployed").
-- He dictates the strict rules (Exactly 100 questions, Likes calculate benefits).
+- All "TikTok" mechanics, viral mechanics, and social rights connections are absolutely forbidden.
+- The project is named **ProfilsActifs**. The name JibJob is banned.
 
-## 2. Visual Identity & UI -> Benjamin Sellami (Communications)
+## 2. Legal Requirements -> Florine Pontaillac
 
-While JEB wants a "young, dynamic" UI, Benjamin has explicitly stated that the official Government Style Guide is **MANDATORY** and takes precedence over JEB's visual guidance.
+Legal compliance overrides UI aesthetics and product features.
 
-## 3. Database & Legal Compliance -> Florine Pontaillac (Legal)
+- Strict age gating (16+ only, 16-18 hidden from public).
+- Absolute physical deletion of video files upon consent revocation.
+- Strict A Priori moderation for videos (no instant publishing).
+- No public engagement counters (likes/views) to avoid discrimination.
 
-Florine's emails (e.g., `docs/mails/exigences_juridiques.md`) are absolute requirements. If her legal demands (consent tracking, age verification, hard deletion) are not met, the project will be blocked from launching.
+## 3. Technical Constraints -> Thomas Vignal
 
-## 4. Infrastructure -> Thomas Vignal (Digital Advisor)
+Technical stability overrides product convenience.
 
-Handles email quarantine and server infrastructure.
+- Questionnaire progress must be saved.
+- Zod validation strictly enforces JSON shapes on boot.
+- 100% local hosting, PostgreSQL, Swagger documentation.
+
+## 4. BANNED Authority -> JEB's Initial Annotated Brief
+
+**WARNING:** The annotated brief containing JEB's handwritten notes ("JibJob", "TikTok for the unemployed", "Likes = benefits") has been officially revoked by the Cabinet. It must be ignored.
