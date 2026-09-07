@@ -439,6 +439,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Service Unavailable (Degraded Mode Active)
         "403":
           description: "Accès interdit (Profil de mineur)"
   /questionnaire/questions:
@@ -745,7 +747,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /media/{id}:
+  /video/play/{id}:
     get:
       summary: Stream a video
       tags:
@@ -765,6 +767,8 @@ paths:
           description: Full video stream
         "206":
           description: Partial video stream (Range)
+        "503":
+          description: Service Unavailable (Degraded Mode Active)
         "403":
           description: Forbidden (Video is PENDING or REJECTED)
           content:
@@ -842,6 +846,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Service Unavailable (Degraded Mode Active)
         "403":
           description: Admin role required
           content:
