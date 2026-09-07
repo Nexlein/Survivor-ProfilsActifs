@@ -7,10 +7,10 @@ const STORAGE_DIR = path.join(process.cwd(), 'storage', 'videos');
 
 export const streamVideo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const providerId = req.params.providerId as string;
+        const videoId = req.params.id as string;
         const user = (req as any).user;
 
-        const video = await prisma.video.findFirst({ where: { providerId } });
+        const video = await prisma.video.findUnique({ where: { id: videoId } });
         if (!video) {
             return res.status(404).json({ error: 'Video not found' });
         }
@@ -23,8 +23,13 @@ export const streamVideo = async (req: Request, res: Response, next: NextFunctio
             return res.status(403).json({ error: 'Video is pending moderation or rejected.' });
         }
 
+        // DEGRADED MODE / PROVIDER ABSTRACTION
+        if (process.env.VIDEO_PROVIDER === 'dummy' || video.providerName !== 'local') {
+            return res.status(503).json({ error: 'Service de streaming vidéo en cours de maintenance (Mode Dégradé Actif).' });
+        }
+
         const files = fs.readdirSync(STORAGE_DIR);
-        const videoFile = files.find(f => f.startsWith(providerId) && !f.endsWith('.vtt'));
+        const videoFile = files.find(f => f.startsWith(video.providerId) && !f.endsWith('.vtt'));
 
         if (!videoFile) {
             return res.status(404).json({ error: 'Media file not found on disk.' });
@@ -65,9 +70,13 @@ export const streamVideo = async (req: Request, res: Response, next: NextFunctio
 
 export const streamSubtitle = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const providerId = req.params.providerId as string;
+        const videoId = req.params.id as string;
+        const video = await prisma.video.findUnique({ where: { id: videoId } });
+        if (!video) {
+            return res.status(404).json({ error: 'Video not found' });
+        }
 
-        const subPath = path.join(STORAGE_DIR, `${providerId}.vtt`);
+        const subPath = path.join(STORAGE_DIR, `${video.providerId}.vtt`);
         if (!fs.existsSync(subPath)) {
             return res.status(404).send('Subtitle not found');
         }

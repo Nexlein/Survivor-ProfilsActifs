@@ -10,7 +10,7 @@ videoRouter.get('/feed', authenticateToken, getVideoFeed);
 videoRouter.put('/approval', authenticateToken, approveVideo);
 
 // Video Provider Abstraction endpoints
-videoRouter.get('/play/:providerId', optionalAuthenticateToken, streamVideo);
-videoRouter.get('/subtitle/:providerId', streamSubtitle);
+videoRouter.get('/play/:id', optionalAuthenticateToken, streamVideo);
+videoRouter.get('/play/:id/subtitle', streamSubtitle);
 
 export default videoRouter;
