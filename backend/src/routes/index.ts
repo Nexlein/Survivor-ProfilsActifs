@@ -5,7 +5,6 @@ import { profileRouter } from './profile';
 import { complianceRouter } from './compliance';
 import questionnaireRouter from './questionnaire';
 import { videoRouter } from './video';
-import { mediaRouter } from './media';
 
 const router = Router();
 
@@ -16,6 +15,5 @@ router.use('/profile', profileRouter);
 router.use('/compliance', complianceRouter);
 router.use('/questionnaire', questionnaireRouter);
 router.use('/video', videoRouter);
-router.use('/media', mediaRouter);
 
 export default router;
