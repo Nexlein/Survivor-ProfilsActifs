@@ -30,7 +30,7 @@ export function VideoPlayer({ video }: { video: Video }) {
   const [error, setError] = useState<string | null>(null);
 
   const isUpload = video.type === "UPLOAD";
-  // /media/:id requires an Authorization header (legal access gating on
+  // /video/play/:id requires an Authorization header (legal access gating on
   // pending/rejected videos), so a plain <video src> can't hit it directly —
   // fetch the bytes ourselves and hand the element a blob: URL instead.
   // LINK videos point at an external host and don't need this.
@@ -39,7 +39,7 @@ export function VideoPlayer({ video }: { video: Video }) {
     let cancelled = false;
     const objectUrls: string[] = [];
 
-    fetchMediaBlobUrl(`/media/${video.id}`)
+    fetchMediaBlobUrl(`/video/play/${video.id}`)
       .then((url) => {
         if (cancelled) return;
         objectUrls.push(url);
@@ -48,7 +48,7 @@ export function VideoPlayer({ video }: { video: Video }) {
       .catch((err) => !cancelled && setError(translateApiError(err)));
 
     if (video.subtitleUrl) {
-      fetchMediaBlobUrl(`/media/${video.id}/subtitle`)
+      fetchMediaBlobUrl(`/video/play/${video.id}/subtitle`)
         .then((url) => {
           if (cancelled) return;
           objectUrls.push(url);

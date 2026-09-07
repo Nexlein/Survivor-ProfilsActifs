@@ -390,7 +390,7 @@ export function getInteractionStats() {
   return request<RecruiterStats | AdminInteractionStats>("/interaction/stats");
 }
 
-// /media/:id (and /:id/subtitle) require an Authorization header, so a plain
+// /video/play/:id (and /:id/subtitle) require an Authorization header, so a plain
 // <video src="..."> can't hit them directly — fetch the bytes ourselves and
 // hand the <video>/<track> element a local blob: URL instead.
 export async function fetchMediaBlobUrl(path: string): Promise<string> {
