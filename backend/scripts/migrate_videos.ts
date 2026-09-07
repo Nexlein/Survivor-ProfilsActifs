@@ -106,7 +106,8 @@ async function main() {
       await prisma.$executeRaw`
         UPDATE "Video" 
         SET "providerId" = ${newProviderId}, 
-            "providerName" = ${newProviderName}
+            "providerName" = ${newProviderName},
+            "type" = 'UPLOAD'::"VideoType"
         WHERE id = ${video.id};
       `;
 
