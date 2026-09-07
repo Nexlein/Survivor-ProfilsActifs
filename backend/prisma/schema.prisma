@@ -109,30 +109,6 @@ model Skill {
   profiles Profile[]
 }
 
-model QuestionnaireSettings {
-  id             String   @id @default("global")
-  currentVersion Int      @default(1)
-  updatedAt      DateTime @updatedAt
-}
-
-model Question {
-  id        String   @id @default(uuid())
-  text      String
-  weighting Int      @default(1)
-  options   Option[]
-
-  version  Int     @default(1)
-  isActive Boolean @default(true)
-}
-
-model Option {
-  id         String   @id @default(uuid())
-  questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  text       String
-  points     Int      @default(0)
-}
-
 model Interaction {
   id          String @id @default(uuid())
   recruiterId String
@@ -174,5 +150,6 @@ model QuestionnaireResult {
 
   totalScore            Int
   hasPermisDeTravailler Boolean
+  questionnaireVersion  Int      @default(1)
   completedAt           DateTime @default(now())
 }
