@@ -137,8 +137,27 @@ export const getCurrentProfile = async (req: Request, res: Response, next: NextF
  * only profiles of minors are restricted to authenticated recruiters
  * (docs/mails/mesures_conservatoires.md).
  */
+// Query params that would let a client filter/sort candidates by popularity
+// (likes/views) are rejected on purpose: ranking profiles by engagement
+// metrics introduces a bias risk in a recruitment catalog, so this isn't a
+// missing feature to add later — it's an intentional restriction.
+const FORBIDDEN_POPULARITY_QUERY_PARAMS = [
+    'likes', 'minLikes', 'maxLikes', 'likeCount',
+    'views', 'minViews', 'maxViews', 'viewCount',
+    'sortBy', 'orderBy',
+];
+
 export const getAllProfiles = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const usedForbiddenParam = FORBIDDEN_POPULARITY_QUERY_PARAMS.find(
+            (param) => req.query[param] !== undefined
+        );
+        if (usedForbiddenParam) {
+            return res.status(400).json({
+                error: `Filtering or sorting profiles by "${usedForbiddenParam}" is not supported.`
+            });
+        }
+
         // Optional Auth Extraction — same pattern as getProfileByUserId.
         let user: any = null;
         const authHeader = req.headers['authorization'];
