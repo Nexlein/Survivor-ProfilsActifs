@@ -232,6 +232,9 @@ export default function AdminDashboardPage() {
                   {new Date(item.createdAt).toLocaleDateString("fr-FR")}
                 </div>
                 <div className="min-w-[90px]">En attente</div>
+                <Link href={`/profils/${item.id}`} className={buttonClasses("secondary", "sm")}>
+                  Voir le profil
+                </Link>
                 <Button
                   variant="success"
                   size="sm"
