@@ -118,7 +118,7 @@ export const submitQuestionnaire = async (req: Request, res: Response, next: Nex
             if (selectedOptionId) {
                 const selectedOption = question.options.find(o => o.id === selectedOptionId);
                 if (selectedOption) {
-                    totalScore += selectedOption.points;
+                    totalScore += selectedOption.points * question.weighting;
                 }
             }
         }

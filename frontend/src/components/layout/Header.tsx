@@ -34,7 +34,6 @@ function getNavLinks(user: AuthUser | null): NavLink[] {
     return [
       { href: "/dashboard/admin", label: "Tableau de bord" },
       { href: "/admin/moderation", label: "Modération" },
-      { href: "/admin/questionnaire", label: "Questionnaire" },
     ];
   }
   return [
