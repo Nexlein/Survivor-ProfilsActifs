@@ -190,6 +190,10 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
                 where: whereClause,
                 take: pageSize,
                 skip,
+                orderBy: [
+                    { updatedAt: 'desc' },
+                    { id: 'asc' }
+                ],
                 include: {
                     skills: true,
                     videos: {
