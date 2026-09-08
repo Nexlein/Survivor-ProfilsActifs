@@ -9,7 +9,7 @@
 Conformément aux directives, les tests ont été réalisés sur une base de données contenant :
 
 - **500 utilisateurs/profils**
-- **300 vidéos approuvées** (simulées via `DummyVideoProvider` pour tester la résolution des interfaces sans exploser le disque dur).
+- **300 vidéos approuvées** (créées via l'interface `VideoProvider` réelle, pas d'insertion directe en base).
 
 Le test a simulé **100 utilisateurs simultanés** (100 connexions concurrentes TCP) spammant chaque route sans interruption pendant 10 secondes.
 
@@ -25,12 +25,12 @@ Sur la configuration initiale, voici les temps de réponse obtenus :
 
 | Route ciblée | Médiane (50%) | 95ème Centile (p97.5%) | Max | Req / Seconde | Erreurs |
 | -------------- | --------------- | ------------------------ | ----- | --------------- | --------- |
-| `/profile/all` (Catalogue) | 248 ms | 344 ms | 524 ms | 388 req/s | 0 |
-| `/profile/user/:id` (Détail) | 164 ms | 210 ms | 284 ms | 624 req/s | 0 |
-| `/health` (Health) | 31 ms | 97 ms | 121 ms | 2 474 req/s | 0 |
+| `/profile/all` (Catalogue) | 178 ms | 227 ms | 320 ms | 550,8 req/s | 0 |
+| `/profile/user/:id` (Détail) | 116 ms | 167 ms | 274 ms | 827,2 req/s | 0 |
+| `/health` (Health) | 27 ms | 44 ms | 66 ms | 3 479 req/s | 0 |
 
 **Analyse du Goulot d'Étranglement :**
-La route du catalogue s'avère être la plus lente (p95 à 344 ms). Bien qu'elle n'ait généré aucune erreur technique, la latence montre que PostgreSQL est ralenti par le balayage de la table `Profile` pour trier les 500 entrées selon la clause `ORDER BY updatedAt DESC`. En cause : l'absence d'index sur la combinaison `(visible, updatedAt)`.
+La route du catalogue s'avère être la plus lente (p95 à 227 ms). Bien qu'elle n'ait généré aucune erreur technique, la latence montre que PostgreSQL est ralenti par le balayage de la table `Profile` pour trier les 500 entrées selon la clause `ORDER BY updatedAt DESC`. En cause : l'absence d'index sur la combinaison `(visible, updatedAt)`.
 
 ## 3. Résultats Mesurés (Après Ajout de l'Index)
 
@@ -41,16 +41,16 @@ Les tests de charge ont été strictement rejoués sur les mêmes données :
 
 | Route ciblée | Médiane (50%) | 95ème Centile (p97.5%) | Max | Req / Seconde | Erreurs |
 | -------------- | --------------- | ------------------------ | ----- | --------------- | --------- |
-| `/profile/all` (Catalogue) | 207 ms | 307 ms | 520 ms | 522 req/s | 0 |
-| `/profile/user/:id` (Détail) | 74 ms | 178 ms | 273 ms | 1 074 req/s | 0 |
-| `/health` (Health) | 30 ms | 100 ms | 131 ms | 2 372 req/s | 0 |
+| `/profile/all` (Catalogue) | 154 ms | 188 ms | 313 ms | 638,1 req/s | 0 |
+| `/profile/user/:id` (Détail) | 96 ms | 114 ms | 125 ms | 1 032,2 req/s | 0 |
+| `/health` (Health) | 24 ms | 40 ms | 60 ms | 3 834,4 req/s | 0 |
 
 **Conclusion sur l'optimisation :**
 L'ajout de l'index a permis une amélioration systémique :
 
-- Le débit du catalogue est passé de **388 requêtes/seconde à 522 requêtes/seconde** (+34%).
-- Le P95 du catalogue a été réduit de **344 ms à 307 ms**.
-- Étonnamment, le débit de la route "Détail" a quasiment doublé (de 624 à 1074 req/s). Explication : le tri de la base de données étant devenu beaucoup plus léger pour PostgreSQL, la boucle d'événements de Node.js (event loop) a pu ingérer un flux réseau beaucoup plus dense.
+- Le débit du catalogue est passé de **550,8 requêtes/seconde à 638,1 requêtes/seconde** (+16%).
+- Le P95 du catalogue a été réduit de **227 ms à 188 ms**.
+- Le débit de la route "Détail" a lui aussi progressé (de 827,2 à 1 032,2 req/s, +25%), la table `Profile` étant sollicitée par les deux routes.
 
 ## 4. Sorties Brutes
 
