@@ -28,11 +28,11 @@
   - [x] **Droit à l'oubli** : Révocation = suppression physique et définitive du `.mp4`.
   - [ ] **Sous-titres** : L'interface doit pouvoir afficher une vraie piste de sous-titres (accessibilité).
 - **Certification (Questionnaire)** :
-  - [ ] **Réduction à 20 questions** (au lieu de 100).
-    - *À faire* : Modifier le JSON pour ne garder que 20 questions. Fournir une justification de 5 lignes sur le choix des 20 questions conservées.
+  - [x] **Réduction à 20 questions** (au lieu de 100).
+    - *Fait (07/09)* : `certification/questions.v1.json` passé en version 2, 20 questions retenues (2 par dimension), pondération ajustée pour rester sur 1000 points / seuil 700 inchangé. Justification et liste complète dans `docs/reponses_juridiques.md` §5.
   - [x] **Non-bloquant** : Le passage de la certification n'est plus obligatoire pour qu'un profil soit visible par les recruteurs.
-  - [ ] **Gestion des passations existantes** : Les réponses aux 80 questions supprimées rendent les anciens scores obsolètes.
-    - *À faire* : Créer un script (rejouable) pour invalider ou recalculer les scores existants et marquer les badges. Fournir des statistiques avant/après.
+  - [x] **Gestion des passations existantes** : Les réponses aux 80 questions supprimées rendent les anciens scores obsolètes.
+    - *Fait (07/09)* : script rejouable `backend/scripts/migrate_questionnaire_v2.ts` (`npm run migrate:questionnaire`), idempotent, invalide les `QuestionnaireResult` d'une version obsolète (recalcul vérifié impossible — les réponses détaillées ne sont pas conservées après soumission) et nettoie les passations en cours obsolètes. Testé sur les données de démo : 1 résultat invalidé, stats avant/après affichées par le script.
   - [x] **Mise en avant** : Le badge de certification doit être visuellement distinct sur le profil public.
 
 ## 3. Flux Public et Espace Recruteur
@@ -40,7 +40,7 @@
 - [x] **Feed et UI (Fin de l'effet TikTok)** :
   - Le feed vertical plein écran en autoplay disparaît.
   - Retour à une **grille de profils** classique paginée (20 max), avec lecture vidéo uniquement sur clic.
-  - *À faire* : Rediriger (301) les anciennes URL du feed plein écran vers la nouvelle grille.
+  - *Vérifié (07/09)* : recherche dans tout l'historique git — aucune route de feed plein écran n'a jamais existé dans ce dépôt. Rien à rediriger.
 - [x] **Catalogue et Filtres** : Justification professionnelle obligatoire (non-discrimination).
 - [x] **Compteurs d'engagement** : Strictement interdits d'affichage public ou API (Likes/Vues). Gardés uniquement en base.
 
