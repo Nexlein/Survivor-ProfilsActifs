@@ -116,7 +116,10 @@ export const getVideo = async (req: Request, res: Response, next: NextFunction) 
             return res.status(403).json({ error: 'This video is not available.' });
         }
 
-        return res.status(200).json(video);
+        const provider = ProviderFactory.getProvider();
+        const url = await provider.playbackUrl(video.providerId);
+        const subtitleUrl = await provider.subtitleUrl(video.providerId);
+        return res.status(200).json({ ...video, url, subtitleUrl });
     } catch (error) { return next(error); }
 };
 
@@ -148,7 +151,13 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
                 prisma.video.count({ where: { status: status as any } }),
             ]);
 
-            return res.status(200).json({ videos, total, page, pageSize });
+            const provider = ProviderFactory.getProvider();
+            const videosWithUrls = await Promise.all(videos.map(async (v) => ({
+                ...v,
+                url: await provider.playbackUrl(v.providerId),
+                subtitleUrl: await provider.subtitleUrl(v.providerId)
+            })));
+            return res.status(200).json({ videos: videosWithUrls, total, page, pageSize });
         }
 
         const eighteenYearsAgo = getEighteenYearsAgo();
@@ -172,7 +181,13 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
             prisma.video.count({ where: whereClause }),
         ]);
 
-        return res.status(200).json({ videos, total, page, pageSize });
+        const provider = ProviderFactory.getProvider();
+        const videosWithUrls = await Promise.all(videos.map(async (v) => ({
+            ...v,
+            url: await provider.playbackUrl(v.providerId),
+            subtitleUrl: await provider.subtitleUrl(v.providerId)
+        })));
+        return res.status(200).json({ videos: videosWithUrls, total, page, pageSize });
     } catch (error) { return next(error); }
 };
 
