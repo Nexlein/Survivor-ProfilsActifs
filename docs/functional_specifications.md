@@ -63,3 +63,14 @@
 - [ ] Rapport brut (grep) de l'éradication des mentions "Droits Sociaux/Allocations".
 - [ ] Script de migration des badges avec statistiques avant/après.
 - [ ] Fiche de registre de traitement de données, Projet de CGU, Note filtres, Accessibilité.
+
+## 7. Retours Juridiques (Florine Pontaillac)
+
+- [x] **Registre de Traitement** :
+  - Ajouter le DPO et les Responsables de traitement.
+  - Définir les durées de conservation des données.
+  - Minimiser les données stockées et leur durée de conservation (RGPD).
+- [x] **Conditions Générales d'Utilisation (CGU)** :
+  - Corriger la contradiction de l'Article 2 (âge : contrôle vs non obligatoire).
+  - Vulgariser le document (exclure le jargon technique comme "bcrypt").
+  - Adoucir les tournures de phrases pour le grand public.
