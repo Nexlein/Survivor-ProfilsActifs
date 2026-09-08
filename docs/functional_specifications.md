@@ -74,3 +74,12 @@
   - Corriger la contradiction de l'Article 2 (âge : contrôle vs non obligatoire).
   - Vulgariser le document (exclure le jargon technique comme "bcrypt").
   - Adoucir les tournures de phrases pour le grand public.
+
+## 8. Retours Tech Lead (Thomas Vignal - Tri et Charge)
+
+- [x] Tri déterministe du catalogue (`updatedAt` DESC, `id` ASC).
+- [x] Preuve algorithmique du tri (script et rapport de stabilité).
+- [x] Note descriptive de l'algorithme de classement et des filtres (limites incluses).
+- [x] Script de peuplement (Load test) : 500 profils, 300 vidéos via `VideoProvider`.
+- [x] Tests de charge : 100 utilisateurs simultanés sur le catalogue (`autocannon`).
+- [x] Rapport de performance (médiane, p95, goulot d'étranglement, avant/après index).
