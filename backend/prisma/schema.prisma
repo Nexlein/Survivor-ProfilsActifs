@@ -76,6 +76,9 @@ model Profile {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([visible, updatedAt(sort: Desc)])
+  @@index([userId])
 }
 
 model Video {
