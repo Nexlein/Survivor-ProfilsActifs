@@ -1,3 +1,6 @@
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import { prisma } from '../src/prisma';
 import { ProviderFactory } from '../src/providers/ProviderFactory';
 
@@ -45,16 +48,22 @@ async function main() {
   console.log('Generating 300 videos using VideoProvider...');
   const provider = ProviderFactory.getProvider();
 
-  // We mock an Express.Multer.File object
-  const mockFile = {
-    buffer: Buffer.from('mock video content'),
-    originalname: 'video.mp4',
-    mimetype: 'video/mp4',
-    size: 1024,
-  } as any;
-
   for (let i = 1; i <= 300; i++) {
     const profileId = `profile_${i}`; // Attach to first 300 candidates
+
+    // LocalVideoProvider.store() copies from a real disk path (the shape
+    // Multer's disk storage actually produces) — a buffer-only mock throws.
+    // Write the mock content to a real temp file so this goes through the
+    // provider interface exactly as production upload requests would.
+    const tmpPath = path.join(os.tmpdir(), `load-test-video-${i}.mp4`);
+    fs.writeFileSync(tmpPath, Buffer.from('mock video content'));
+    const mockFile = {
+      path: tmpPath,
+      originalname: 'video.mp4',
+      mimetype: 'video/mp4',
+      size: 1024,
+    } as any;
+
     const providerId = await provider.store(mockFile);
     await prisma.video.create({
       data: {

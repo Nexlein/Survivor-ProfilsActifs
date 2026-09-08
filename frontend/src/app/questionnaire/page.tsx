@@ -108,7 +108,7 @@ export default function QuestionnairePage() {
           sauvegardée automatiquement sur nos serveurs — vous pouvez fermer votre navigateur et
           reprendre plus tard, même sur un autre appareil.
         </p>
-        <p className="text-text-secondary text-sm mb-6">⏱ Durée estimée : 30 à 45 minutes</p>
+        <p className="text-text-secondary text-sm mb-6">⏱ Durée estimée : 5 à 10 minutes</p>
         <Button variant="primary" onClick={start}>
           {answeredCount > 0 ? "Reprendre le questionnaire" : "Commencer le questionnaire"}
         </Button>

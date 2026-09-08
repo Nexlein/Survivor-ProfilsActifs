@@ -13,6 +13,7 @@
     "db:clean": "docker compose -f backend/docker-compose.yml down -v",
     "db:seed": "cd backend && npx prisma db seed",
     "migrate:videos": "cd backend && npx tsx scripts/migrate_videos.ts",
+    "migrate:questionnaire": "cd backend && npx tsx scripts/migrate_questionnaire_v2.ts",
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev": "npm run db:start && concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
@@ -26,5 +27,13 @@
   },
   "dependencies": {
     "multer": "^2.3.0"
+  },
+  "allowScripts": {
+    "@prisma/engines": true,
+    "@scarf/scarf": true,
+    "bcrypt": true,
+    "esbuild": true,
+    "prisma": true,
+    "unrs-resolver": true
   }
 }
