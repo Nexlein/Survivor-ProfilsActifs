@@ -46,11 +46,6 @@ model User {
   passwordHash String
   role         Role
   dateOfBirth  DateTime? // Legal: Age verification (16-18 rules)
-  // Account-level moderation gate (distinct from Profile.visible, which is
-  // the candidate's own show/hide toggle). New JOB_SEEKER accounts start
-  // PENDING and are excluded from the public catalog until an admin
-  // approves them (see getAllProfiles/getProfileByUserId); it never blocks
-  // login, only catalog visibility — recruiters/admins default APPROVED.
   moderationStatus ModerationStatus @default(APPROVED)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
