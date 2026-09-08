@@ -82,7 +82,7 @@ export default function RecruiterDashboardPage() {
 
       {contacts !== null && contacts.length > 0 && (
         <div className="bg-white rounded-lg shadow-card overflow-x-auto">
-          <div className="min-w-[720px]">
+          <div className="min-w-[820px]">
             {contacts.map((contact) => (
               <div
                 key={contact.id}
@@ -98,6 +98,9 @@ export default function RecruiterDashboardPage() {
                 </div>
                 <div className="text-text-secondary min-w-[90px]">
                   {new Date(contact.createdAt).toLocaleDateString("fr-FR")}
+                </div>
+                <div className={`min-w-[70px] font-semibold ${contact.read ? "text-success" : "text-text-secondary"}`}>
+                  {contact.read ? "Vu" : "Non vu"}
                 </div>
                 <Link
                   href={`/profils/${contact.profile.userId}`}
