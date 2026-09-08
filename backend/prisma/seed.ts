@@ -92,7 +92,10 @@ async function main() {
     // 2 Ghosts (No age / visible=false) - completely hidden
     let dob: Date | null = new Date(`1990-01-01`); // Default adult
     let isVisible = true;
-    let status: 'APPROVED' | 'PENDING' | 'REJECTED' = 'APPROVED';
+    let status: 'APPROVED' | 'PENDING' | 'REJECTED' = 'APPROVED'; // seeded video's moderation status
+    // Account-level moderation status (admin validation queue) — independent
+    // of the video's own status above.
+    let accountModerationStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED' = 'APPROVED';
 
     if (i > 20 && i <= 23) {
       // Minor (17 years old)
@@ -100,15 +103,19 @@ async function main() {
       minorDate.setFullYear(minorDate.getFullYear() - 17);
       dob = minorDate;
     } else if (i > 23) {
-      // Ghost (No age, explicitly hidden)
+      // Ghost (No age, explicitly hidden) — an incomplete signup still
+      // awaiting admin validation.
       dob = null;
       isVisible = false;
       status = 'PENDING';
+      accountModerationStatus = 'PENDING';
     }
 
     // Randomize some statuses for adults
     if (i % 5 === 0 && i <= 20) status = 'PENDING';
     if (i % 7 === 0 && i <= 20) status = 'REJECTED';
+    if (i % 4 === 0 && i <= 20) accountModerationStatus = 'PENDING';
+    if (i === 20) accountModerationStatus = 'SUSPENDED';
 
     const user = await prisma.user.create({
       data: {
@@ -116,6 +123,7 @@ async function main() {
         passwordHash,
         role: 'JOB_SEEKER',
         dateOfBirth: dob,
+        moderationStatus: accountModerationStatus,
       },
     });
 

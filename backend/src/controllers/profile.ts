@@ -174,7 +174,9 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
 
         const whereClause: any = {
             visible: true,
-            user: { dateOfBirth: { not: null } }
+            // Admin moderation gate: candidates start PENDING at registration
+            // and only enter the public catalog once approved.
+            user: { dateOfBirth: { not: null }, moderationStatus: 'APPROVED' }
         };
 
         if (!user || user.role !== 'RECRUITER') {
@@ -277,6 +279,11 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
             }
             if (profile.user.dateOfBirth === null) {
                 return res.status(403).json({ error: 'Access denied: Profile owner has not verified their age' });
+            }
+            // Admins bypass the moderation gate — they need to see PENDING
+            // profiles in order to review and moderate them.
+            if (!isAdmin && profile.user.moderationStatus !== 'APPROVED') {
+                return res.status(403).json({ error: 'Access denied: Profile is pending moderation' });
             }
         }
 

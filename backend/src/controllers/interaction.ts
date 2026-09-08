@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma';
 
 const CONTACT_MIN_LENGTH = 50;
+const WEEKLY_SIGNUP_BUCKETS = 7;
+const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
 /**
  * Controller: Log a recruiter interaction on a candidate profile
@@ -175,19 +177,32 @@ export const getInteractionStats = async (req: Request, res: Response, next: Nex
             // dashboard was previously showing as static placeholder data.
             const [interactionsThisMonth, profilesActive, certifiedProfiles, totalProfiles, videosPublished, videosPending] = await Promise.all([
                 prisma.interaction.count({ where: { createdAt: { gte: startOfMonth } } }),
-                prisma.profile.count({ where: { visible: true } }),
+                prisma.profile.count({ where: { visible: true, user: { moderationStatus: 'APPROVED' } } }),
                 prisma.profile.count({ where: { hasCertificationBadge: true } }),
                 prisma.profile.count(),
                 prisma.video.count({ where: { status: 'APPROVED' } }),
                 prisma.video.count({ where: { status: 'PENDING' } }),
             ]);
             const certificationRate = totalProfiles > 0 ? Math.round((certifiedProfiles / totalProfiles) * 100) : 0;
+
+            const now = new Date();
+            const weeklySignups = await Promise.all(
+                Array.from({ length: WEEKLY_SIGNUP_BUCKETS }, (_, i) => {
+                    const bucketsAgo = WEEKLY_SIGNUP_BUCKETS - 1 - i;
+                    const weekStart = new Date(now.getTime() - (bucketsAgo + 1) * MS_PER_WEEK);
+                    const weekEnd = new Date(now.getTime() - bucketsAgo * MS_PER_WEEK);
+                    return prisma.user.count({ where: { createdAt: { gte: weekStart, lt: weekEnd } } })
+                        .then((count) => ({ weekStart: weekStart.toISOString(), count }));
+                })
+            );
+
             return res.status(200).json({
                 interactionsThisMonth,
                 profilesActive,
                 certificationRate,
                 videosPublished,
                 videosPending,
+                weeklySignups,
             });
         }
 

@@ -33,12 +33,20 @@ enum InteractionType {
   LIKE
 }
 
+enum ModerationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
 model User {
   id           String    @id @default(uuid())
   email        String    @unique
   passwordHash String
   role         Role
   dateOfBirth  DateTime? // Legal: Age verification (16-18 rules)
+  moderationStatus ModerationStatus @default(APPROVED)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
