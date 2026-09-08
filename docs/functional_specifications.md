@@ -62,10 +62,10 @@
 
 ## 6. Livrables Attendus (Mardi 12h00 pour le code, Mercredi 12h00 pour la data)
 
-- [ ] Journal des modifications (Changelog ligne par ligne avec instruction correspondante).
-- [ ] Rapport brut (grep) de l'éradication des mentions "Droits Sociaux/Allocations".
-- [ ] Script de migration des badges avec statistiques avant/après.
-- [ ] Fiche de registre de traitement de données, Projet de CGU, Note filtres, Accessibilité.
+- [x] Journal des modifications (Changelog ligne par ligne avec instruction correspondante).
+- [x] Rapport brut (grep) de l'éradication des mentions "Droits Sociaux/Allocations".
+- [x] Script de migration des badges avec statistiques avant/après.
+- [x] Fiche de registre de traitement de données, Projet de CGU, Note filtres, Accessibilité.
 
 ## 7. Retours Juridiques (Florine Pontaillac)
 
