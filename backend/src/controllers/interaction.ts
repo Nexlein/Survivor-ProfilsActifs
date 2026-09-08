@@ -19,7 +19,7 @@ export const createInteraction = async (req: Request, res: Response, next: NextF
             return res.status(403).json({ error: 'Forbidden. Recruiter role required.' });
         }
 
-        const { profileId, type, videoId, message } = req.body;
+        const { profileId, type, videoId, subject, message } = req.body;
         const validTypes = ['VIEW', 'CONTACT', 'FAVORITE', 'LIKE'];
         if (!profileId || !validTypes.includes(type)) {
             return res.status(400).json({ error: 'profileId and a valid type are required' });
@@ -28,8 +28,13 @@ export const createInteraction = async (req: Request, res: Response, next: NextF
         const profile = await prisma.profile.findUnique({ where: { id: profileId } });
         if (!profile) return res.status(404).json({ error: 'Profile not found' });
 
-        if (type === 'CONTACT' && (!message || message.trim().length < CONTACT_MIN_LENGTH)) {
-            return res.status(400).json({ error: `A message of at least ${CONTACT_MIN_LENGTH} characters is required for CONTACT.` });
+        if (type === 'CONTACT') {
+            if (!subject || subject.trim().length === 0) {
+                return res.status(400).json({ error: 'A subject is required for CONTACT.' });
+            }
+            if (!message || message.trim().length < CONTACT_MIN_LENGTH) {
+                return res.status(400).json({ error: `A message of at least ${CONTACT_MIN_LENGTH} characters is required for CONTACT.` });
+            }
         }
 
         if (type === 'FAVORITE' || type === 'LIKE') {
@@ -52,6 +57,7 @@ export const createInteraction = async (req: Request, res: Response, next: NextF
                 profileId,
                 videoId: videoId || null,
                 type,
+                subject: type === 'CONTACT' ? subject.trim() : null,
                 message: type === 'CONTACT' ? message.trim() : null,
             },
         });

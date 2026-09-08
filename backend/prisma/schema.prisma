@@ -124,6 +124,7 @@ model Interaction {
   video   Video?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
 
   type      InteractionType
+  subject   String? // CONTACT subject
   message   String? // CONTACT body — the recruiter's message to the candidate
   read      Boolean         @default(false) // Legal/UX: candidate-side notification read state
   createdAt DateTime        @default(now())

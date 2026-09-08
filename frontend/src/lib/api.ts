@@ -337,15 +337,16 @@ export function moderateVideo(id: string, approved: boolean, reason?: string) {
 
 export type InteractionType = "VIEW" | "CONTACT" | "FAVORITE" | "LIKE";
 
-export function logInteraction(payload: { profileId: string; type: "VIEW" | "CONTACT"; videoId?: string; message?: string }): Promise<void>;
+export function logInteraction(payload: { profileId: string; type: "VIEW" | "CONTACT"; videoId?: string; subject?: string; message?: string }): Promise<void>;
 export function logInteraction(payload: { profileId: string; type: "FAVORITE" | "LIKE"; videoId?: string }): Promise<{ active: boolean }>;
-export function logInteraction(payload: { profileId: string; type: InteractionType; videoId?: string; message?: string }) {
+export function logInteraction(payload: { profileId: string; type: InteractionType; videoId?: string; subject?: string; message?: string }) {
   return request<{ active: boolean } | void>("/interaction", { method: "POST", body: JSON.stringify(payload) });
 }
 
 export type Notification = {
   id: string;
   type: "VIEW" | "CONTACT";
+  subject: string | null;
   message: string | null;
   read: boolean;
   createdAt: string;
@@ -362,6 +363,7 @@ export function markNotificationRead(id: string) {
 
 export type SentContact = {
   id: string;
+  subject: string | null;
   message: string | null;
   createdAt: string;
   profile: {
@@ -403,7 +405,7 @@ export async function fetchMediaBlobUrl(path: string): Promise<string> {
     try {
       const data = await res.json();
       if (data && data.error) errorMsg = data.error;
-    } catch (e) {}
+    } catch (e) { }
     throw new ApiError(res.status, errorMsg);
   }
   const blob = await res.blob();

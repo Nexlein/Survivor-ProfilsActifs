@@ -113,6 +113,9 @@ export default function NotificationsPage() {
                   ? `${recruiterLabel(n)} vous a envoyé un message`
                   : `${recruiterLabel(n)} a consulté votre profil`}
               </p>
+              {n.type === "CONTACT" && n.subject && (
+                <p className="text-sm font-semibold text-text mt-1">{n.subject}</p>
+              )}
               {n.type === "CONTACT" && n.message && (
                 <p className="text-sm text-text-secondary mt-1 whitespace-pre-line">{n.message}</p>
               )}
