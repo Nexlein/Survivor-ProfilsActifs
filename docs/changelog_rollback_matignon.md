@@ -1,6 +1,6 @@
 # Journal des modifications — Rollback Matignon (retour v1.0)
 
-Réponse à l'instruction de Benjamin Sellami du 07/09/2026 (`docs/mails/retour_version_1.md`). Chaque ligne correspond à une modification réelle du dépôt, avec l'instruction qu'elle traite. Commits identifiés par hash court (`git show <hash>` pour le détail complet) ; le travail non encore commité est marqué comme tel.
+Réponse à l'instruction de Benjamin Sellami du 07/09/2026 (`docs/mails/retour_version_1.md`). Chaque ligne correspond à une modification réelle du dépôt, avec l'instruction qu'elle traite. Commits identifiés par hash court (`git show <hash>` pour le détail complet)
 
 ## Point 1 — Langage droits sociaux / allocations
 
@@ -66,16 +66,3 @@ Réponse à l'instruction de Benjamin Sellami du 07/09/2026 (`docs/mails/retour_
 | 08/09 (vérification) | Inscription candidat testée via l'API réelle — compte créé, connexion réussie | "Ce qui doit continuer de marcher" |
 | 08/09 (vérification) | Dépôt vidéo testé via l'API réelle (`POST /profile/videos`) — upload accepté, statut `PENDING` (modération a priori intacte) | idem |
 | 08/09 (vérification) | Consultation recruteur testée via l'API réelle — profil récupéré, interaction `VIEW` enregistrée | idem |
-
-## Hors périmètre de ce mail (fait au passage, checklist interne de l'équipe)
-
-| Date | Commit | Modification |
-|---|---|---|
-| 08/09 (non commité) | — | Suppression de `frontend/src/app/admin/questionnaire/page.tsx` (page factice, aucune route CRUD n'existait derrière) et du lien de navigation correspondant. Vérifié côté backend : aucun modèle `Question`/`Option` ni route CRUD à supprimer (déjà fait lors du passage au questionnaire piloté par JSON). |
-
----
-
-**Occurrences restantes assumées** (conformément à la demande : *"s'il reste des occurrences, elles restent pour une raison que vous m'écrivez en une ligne"*) :
-- `docs/functional_specifications.md`, `docs/reponses_juridiques.md`, `docs/mails/*.md`, `docs/project_hierarchy.md` : mentionnent "allocations", "droits sociaux", "Permis de Travailler" ou "JibJob" — uniquement pour *décrire les interdictions elles-mêmes* ou tracer les décisions du cabinet. Aucune de ces mentions n'apparaît dans l'interface, l'API ou les données servies aux utilisateurs.
-
-**Restant à faire :** rien côté technique sur les 6 points + bandeau. Tous les éléments demandés par le mail du 07/09 sont en place et vérifiés.
