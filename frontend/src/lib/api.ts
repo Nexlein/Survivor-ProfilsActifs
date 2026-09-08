@@ -384,10 +384,42 @@ export type AdminInteractionStats = {
   certificationRate: number;
   videosPublished: number;
   videosPending: number;
+  weeklySignups: { weekStart: string; count: number }[];
 };
 
 export function getInteractionStats() {
   return request<RecruiterStats | AdminInteractionStats>("/interaction/stats");
+}
+
+export type ModerationQueueUser = {
+  id: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  profile: { fullName: string; avatarUrl: string | null } | null;
+};
+
+export type ModerationQueuePage = {
+  users: ModerationQueueUser[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
+export function getModerationQueue(page = 1) {
+  return request<ModerationQueuePage>(`/admin/moderation/queue?page=${page}`);
+}
+
+export function approveAccount(userId: string) {
+  return request(`/admin/moderation/${userId}/approve`, { method: "PATCH" });
+}
+
+export function rejectAccount(userId: string) {
+  return request(`/admin/moderation/${userId}/reject`, { method: "PATCH" });
+}
+
+export function suspendAccount(userId: string) {
+  return request(`/admin/moderation/${userId}/suspend`, { method: "PATCH" });
 }
 
 // /video/play/:id (and /:id/subtitle) require an Authorization header, so a plain

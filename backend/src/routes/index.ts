@@ -6,6 +6,7 @@ import { complianceRouter } from './compliance';
 import questionnaireRouter from './questionnaire';
 import { videoRouter } from './video';
 import { interactionRouter } from './interaction';
+import { adminRouter } from './admin';
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use('/compliance', complianceRouter);
 router.use('/questionnaire', questionnaireRouter);
 router.use('/video', videoRouter);
 router.use('/interaction', interactionRouter);
+router.use('/admin', adminRouter);
 
 export default router;
