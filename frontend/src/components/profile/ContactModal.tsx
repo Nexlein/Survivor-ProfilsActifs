@@ -22,14 +22,15 @@ export function ContactModal({ isOpen, onClose, candidateName, profileId }: Cont
   const [sent, setSent] = useState(false);
 
   async function handleSend() {
-    if (message.length < MIN_LENGTH) return;
+    if (message.length < MIN_LENGTH || !subject.trim()) return;
     setIsSending(true);
     setError(null);
     try {
       await logInteraction({
         profileId,
         type: "CONTACT",
-        message: subject ? `${subject}\n\n${message}` : message,
+        subject: subject.trim(),
+        message: message.trim(),
       });
       setSent(true);
     } catch (err) {
@@ -77,7 +78,7 @@ export function ContactModal({ isOpen, onClose, candidateName, profileId }: Cont
           <Button variant="secondary" onClick={handleClose}>
             Annuler
           </Button>
-          <Button variant="primary" onClick={handleSend} disabled={message.length < MIN_LENGTH || isSending}>
+          <Button variant="primary" onClick={handleSend} disabled={message.length < MIN_LENGTH || !subject.trim() || isSending}>
             {isSending ? "Envoi..." : "Envoyer le message"}
           </Button>
         </>

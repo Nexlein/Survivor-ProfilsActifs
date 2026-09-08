@@ -908,6 +908,83 @@ paths:
       responses:
         "200":
           description: Video deleted
+  /interaction:
+    post:
+      summary: Enregistrer une interaction (Vue, Favori, Like, Contact)
+      tags: [Interaction]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - profileId
+                - type
+              properties:
+                profileId:
+                  type: string
+                type:
+                  type: string
+                  enum: [VIEW, CONTACT, FAVORITE, LIKE]
+                videoId:
+                  type: string
+                  nullable: true
+                subject:
+                  type: string
+                  nullable: true
+                message:
+                  type: string
+                  nullable: true
+      responses:
+        "201":
+          description: Interaction créée
+        "400":
+          description: Requête invalide (ex. objet manquant ou texte < 50 chars)
+  /interaction/notifications:
+    get:
+      summary: Lister les notifications reçues par le candidat
+      tags: [Interaction]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Liste des notifications
+  /interaction/{id}/read:
+    put:
+      summary: Marquer une notification comme lue
+      tags: [Interaction]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Notification mise à jour
+  /interaction/sent:
+    get:
+      summary: Lister les contacts envoyés par un recruteur
+      tags: [Interaction]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Liste des messages envoyés
+  /interaction/stats:
+    get:
+      summary: Statistiques d'interactions (dashboard)
+      tags: [Interaction]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Statistiques
   /admin/moderation/queue:
     get:
       summary: List accounts pending moderation (ADMIN only)
