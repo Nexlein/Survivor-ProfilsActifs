@@ -10,9 +10,10 @@
 - [x] **Charte Graphique** : Typographie Marianne/Spectral. Couleurs `#1B3A6B` et `#FF9900`.
 - [x] **Vocabulaire et Sémantique (URGENT - Matignon)** :
   - Les termes `tendances`, `populaire`, `viral` sont strictement interdits. On parle de `profils mis en avant`.
-  - L'expression `Permis de travailler` est strictement interdite. Utiliser `Badge de certification`. Le badge valorise mais n'autorise aucun droit.
-  - **Toute mention liant l'application aux allocations ou droits sociaux est strictement interdite** (interfaces, variables, DB, migrations).
-  - *À faire* : Grep complet du dépôt et nettoyage absolu. Fournir le log brut.
+  - [x] L'expression `Permis de travailler` est strictement interdite. Utiliser `Badge de certification`. Le badge valorise mais n'autorise aucun droit.
+    - *Fait (07/09)* : dernières occurrences trouvées dans `certification/questions.v1.json` (2 questions du quiz) corrigées. Le champ API est déjà `hasCertificationBadge` partout (front + back).
+  - [x] **Toute mention liant l'application aux allocations ou droits sociaux est strictement interdite** (interfaces, variables, DB, migrations).
+    - *Fait (07/09)* : grep complet du dépôt (interface, CGU, commentaires, migrations, tests, i18n, doc API, données de démo) — zéro occurrence. Log brut joint à Benjamin.
 
 ## 2. Espace Demandeur d'Emploi
 
