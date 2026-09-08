@@ -5,17 +5,17 @@ import Link from "next/link";
 import { Button, buttonClasses } from "@/components/ui/Button";
 import {
   AdminInteractionStats,
+  ModerationQueueUser,
   ModerationVideo,
+  approveAccount,
   getInteractionStats,
+  getModerationQueue,
   getModerationVideoFeed,
   moderateVideo,
+  rejectAccount,
   translateApiError,
 } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
-
-// Nombre d'inscriptions par semaine : reste de la démonstration, aucune
-// route d'agrégation temporelle n'existe côté backend pour ce graphique.
-const WEEKLY_SIGNUPS = [40, 55, 35, 70, 60, 85, 50];
 
 const PREVIEW_SIZE = 3;
 
@@ -26,6 +26,11 @@ export default function AdminDashboardPage() {
   const [pending, setPending] = useState<ModerationVideo[] | null>(null);
   const [queueError, setQueueError] = useState<string | null>(null);
   const [approvingId, setApprovingId] = useState<string | null>(null);
+
+  const [accountQueue, setAccountQueue] = useState<ModerationQueueUser[] | null>(null);
+  const [accountQueueTotal, setAccountQueueTotal] = useState(0);
+  const [accountQueueError, setAccountQueueError] = useState<string | null>(null);
+  const [pendingAccountActionId, setPendingAccountActionId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -55,6 +60,22 @@ export default function AdminDashboardPage() {
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    getModerationQueue()
+      .then((res) => {
+        if (cancelled) return;
+        setAccountQueue(res.users);
+        setAccountQueueTotal(res.total);
+      })
+      .catch((err) => {
+        if (!cancelled) setAccountQueueError(translateApiError(err));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   async function handleApprove(id: string) {
     setApprovingId(id);
     try {
@@ -67,12 +88,40 @@ export default function AdminDashboardPage() {
     }
   }
 
+  async function handleApproveAccount(userId: string) {
+    setPendingAccountActionId(userId);
+    try {
+      await approveAccount(userId);
+      setAccountQueue((prev) => prev?.filter((u) => u.id !== userId) ?? prev);
+      setAccountQueueTotal((t) => Math.max(0, t - 1));
+    } catch (err) {
+      setAccountQueueError(translateApiError(err));
+    } finally {
+      setPendingAccountActionId(null);
+    }
+  }
+
+  async function handleRejectAccount(userId: string) {
+    setPendingAccountActionId(userId);
+    try {
+      await rejectAccount(userId);
+      setAccountQueue((prev) => prev?.filter((u) => u.id !== userId) ?? prev);
+      setAccountQueueTotal((t) => Math.max(0, t - 1));
+    } catch (err) {
+      setAccountQueueError(translateApiError(err));
+    } finally {
+      setPendingAccountActionId(null);
+    }
+  }
+
   const kpis = [
     { value: stats ? String(stats.profilesActive) : "—", label: "Profils actifs" },
     { value: stats ? `${stats.certificationRate}%` : "—", label: "Taux de certification" },
     { value: stats ? String(stats.videosPublished) : "—", label: "Vidéos publiées" },
     { value: stats ? String(stats.interactionsThisMonth) : "—", label: "Interactions ce mois" },
   ];
+
+  const maxWeeklySignups = Math.max(1, ...(stats?.weeklySignups.map((w) => w.count) ?? [1]));
 
   return (
     <main className="px-6 py-8">
@@ -101,11 +150,11 @@ export default function AdminDashboardPage() {
 
       <h3 className="mb-3 hidden md:block">Nouvelles inscriptions par semaine</h3>
       <div className="hidden md:flex items-end gap-2.5 h-24 mb-8">
-        {WEEKLY_SIGNUPS.map((value, i) => (
+        {(stats?.weeklySignups ?? Array.from({ length: 7 }, () => ({ count: 0 }))).map((week, i) => (
           <div
             key={i}
             className="w-7 bg-primary"
-            style={{ height: `${value}%` }}
+            style={{ height: `${(week.count / maxWeeklySignups) * 100}%` }}
           />
         ))}
       </div>
@@ -124,11 +173,11 @@ export default function AdminDashboardPage() {
       )}
 
       {pending !== null && pending.length === 0 && !queueError && (
-        <p className="text-text-secondary text-sm">Aucune vidéo en attente.</p>
+        <p className="text-text-secondary text-sm mb-8">Aucune vidéo en attente.</p>
       )}
 
       {pending !== null && pending.length > 0 && (
-        <div className="bg-white rounded-lg shadow-card overflow-x-auto">
+        <div className="bg-white rounded-lg shadow-card overflow-x-auto mb-8">
           <div className="min-w-[480px]">
             {pending.map((video) => (
               <div
@@ -152,6 +201,64 @@ export default function AdminDashboardPage() {
             ))}
           </div>
         </div>
+      )}
+
+      <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
+        <h3>Comptes en attente de validation</h3>
+      </div>
+
+      {accountQueueError && (
+        <p role="alert" className="text-error text-sm mb-3">
+          {accountQueueError}
+        </p>
+      )}
+
+      {accountQueue !== null && accountQueue.length === 0 && !accountQueueError && (
+        <p className="text-text-secondary text-sm">Aucun compte en attente.</p>
+      )}
+
+      {accountQueue !== null && accountQueue.length > 0 && (
+        <div className="bg-white rounded-lg shadow-card overflow-x-auto">
+          <div className="min-w-[560px]">
+            {accountQueue.map((item) => (
+              <div
+                key={item.id}
+                className="flex gap-3 items-center px-4 py-3 border-b border-border last:border-b-0 flex-nowrap text-[13px]"
+              >
+                <div className="flex-1 min-w-[120px] font-semibold text-text">
+                  {item.profile?.fullName ?? item.email}
+                </div>
+                <div className="text-text-secondary min-w-[90px]">
+                  {new Date(item.createdAt).toLocaleDateString("fr-FR")}
+                </div>
+                <div className="min-w-[90px]">En attente</div>
+                <Button
+                  variant="success"
+                  size="sm"
+                  className="shrink-0"
+                  disabled={pendingAccountActionId === item.id}
+                  onClick={() => handleApproveAccount(item.id)}
+                >
+                  Valider
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="shrink-0"
+                  disabled={pendingAccountActionId === item.id}
+                  onClick={() => handleRejectAccount(item.id)}
+                >
+                  Rejeter
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {accountQueue !== null && accountQueueTotal > accountQueue.length && (
+        <p className="text-text-secondary text-xs mt-2">
+          {accountQueueTotal - accountQueue.length} de plus non affichés.
+        </p>
       )}
     </main>
   );

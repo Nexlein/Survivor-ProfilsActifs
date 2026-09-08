@@ -12,6 +12,7 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 - [API Routes Roadmap](docs/ROUTES_ROADMAP.md)
 - [Deployment Note](docs/deployment_note.md)
 - [Architecture & Schema](docs/architecture.md)
+- [Technical Choices & Rationale](docs/technical_choices.md)
 - [Project Hierarchy & Authority](docs/project_hierarchy.md)
 - [Legal Requirements](docs/mails/exigences_juridiques.md)
 - [Technical Constraints](docs/mails/contraintes_techniques.md)
@@ -32,10 +33,7 @@ cp frontend/.env.example frontend/.env
 # 2. Automated Setup (Installs everything, boots DB, pushes schema)
 npm run setup
 
-# 3. Seed Database (Optional: populates DB with mock users and videos)
-npm run db:seed
-
-# 4. Start Development Mode (Boots Frontend & Backend simultaneously)
+# 3. Start Development Mode (Boots Frontend & Backend simultaneously)
 npm run dev
 
 # 4. Start Production Mode (Builds and runs optimized bundles)
