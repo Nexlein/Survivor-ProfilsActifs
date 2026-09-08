@@ -17,9 +17,10 @@
 
 ## 2. Espace Demandeur d'Emploi
 
-- [ ] **Bandeau d'Avertissement Légal** :
+- [x] **Bandeau d'Avertissement Légal** :
   - Un bandeau permanent doit figurer en haut de TOUTES les pages de l'espace candidat (y compris connexion et erreur).
   - Texte exact imposé : *"Aucune donnée de ce service n'est utilisée pour déterminer vos droits ni le montant de vos allocations."*
+  - *Fait (08/09)* : `frontend/src/components/layout/LegalBanner.tsx`, rendu au-dessus du `Header` dans `layout.tsx` (donc sur toutes les pages, y compris erreur/404 qui héritent du layout racine). Affiché pour visiteur anonyme ou `JOB_SEEKER`, masqué pour `RECRUITER`/`ADMIN`. Texte exact, non fermable. Vérifié visuellement sur accueil, connexion et 404.
 - [x] **Création de profil** : Identité, compétences, secteur, localisation.
 - [x] **Protection des Mineurs (RGPD)** : Saisie obligatoire de la date de naissance. Blocage strict des < 16 ans. Les 16-18 ans sont masqués publiquement (visibles uniquement des recruteurs).
 - **Vidéos** :
@@ -48,7 +49,8 @@
 
 - [x] **Modération Vidéo (A Priori)** : Statut `PENDING`, inaccessible par URL directe. Motif de rejet obligatoire.
 - [ ] **Modération des profils** : Masquage manuel d'un profil abusif.
-- [ ] **Questionnaire UI** : Fichier JSON strict (fait). **Suppression de l'UI d'administration**.
+- [x] **Questionnaire UI** : Fichier JSON strict (fait). **Suppression de l'UI d'administration**.
+  - *Fait (08/09)* : `frontend/src/app/admin/questionnaire/` supprimé (page 100% factice — données `DEMO_QUESTIONS` en dur, aucune route CRUD n'existait côté backend, la page l'indiquait elle-même). Lien de nav "Questionnaire" retiré du menu admin (`Header.tsx`). Vérifié côté backend : aucun modèle `Question`/`Option` ni route CRUD (déjà supprimés lors du passage au questionnaire piloté par JSON) — rien à faire côté serveur.
 
 ## 5. Contraintes Techniques Obligatoires
 
