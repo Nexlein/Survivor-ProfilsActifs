@@ -108,6 +108,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                 passwordHash,
                 role: userRole,
                 dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+                moderationStatus: userRole === 'JOB_SEEKER' ? 'PENDING' : 'APPROVED',
                 profile: {
                     create: profileData
                 },
@@ -117,6 +118,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                 email: true,
                 role: true,
                 dateOfBirth: true,
+                moderationStatus: true,
                 createdAt: true,
                 profile: {
                     include: { skills: true }
