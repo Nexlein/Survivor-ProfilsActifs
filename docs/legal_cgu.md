@@ -1,22 +1,19 @@
-# Conditions Générales d'Utilisation (Projet)
+# Conditions Générales d'Utilisation
 
-## 1. Objet
+## 1. Notre mission
 
-ProfilsActifs est un service de mise en relation professionnelle par vidéo.
+ProfilsActifs a été conçu pour simplifier la recherche d'emploi et de talents. Notre plateforme permet aux candidats de mettre en valeur leurs compétences à travers la vidéo, et offre aux recruteurs un outil simple pour découvrir des profils inspirants.
 
-## 2. Données Personnelles
+## 2. Accès et inscription
 
-Les données sont collectées conformément à notre Registre des Activités de Traitement :
+Pour vous inscrire, **vous devez avoir au moins 16 ans**. Afin de garantir un environnement sûr et adapté, la saisie de votre date de naissance lors de la création de compte est **strictement obligatoire**. Les mineurs de 16 à 18 ans bénéficient de protections spécifiques (profil masqué au grand public, visible uniquement des recruteurs).
 
-- Compte : Email, Date de Naissance (Vérification Mineurs).
-- Profil Professionnel : Secteur, Localisation, Compétences (pour les candidats) ; Entreprise, Poste, Secteur (pour les recruteurs).
-- Vidéo : Image, Voix, Sous-titres. Consentement explicite, spécifique et révocable.
+## 3. Vos données et votre sécurité
 
-## 3. Révocation et Suppression
+Votre confiance est essentielle. Nous protégeons vos mots de passe et vos données personnelles avec les meilleurs standards de sécurité de l'État. Vous restez propriétaire de votre contenu : vous pouvez à tout moment révoquer votre consentement et supprimer votre vidéo ou votre compte. La suppression est alors immédiate, physique et définitive sur nos serveurs.
 
-La révocation du consentement vidéo entraîne la **suppression physique et définitive** du fichier vidéo, sans délai.
+## 4. Certification et Indépendance (Droits Sociaux)
 
-## 4. Indépendance des Droits Sociaux
-
+Le badge de certification a pour but exclusif de valoriser votre profil.
 **Aucune donnée de ce service n'est utilisée pour déterminer vos droits ni le montant de vos allocations.**
-ProfilsActifs est un outil exclusif de mise en relation professionnelle. Les interactions (vues, contacts) et l'obtention du badge de certification n'ont aucun impact, positif ou négatif, sur le versement des prestations sociales.
+ProfilsActifs est un outil exclusif de mise en relation. Votre utilisation de la plateforme (interactions, vidéos, badge) n'a aucun impact, positif ou négatif, sur le versement de vos prestations sociales.
