@@ -1,6 +1,5 @@
 import { getEighteenYearsAgo } from '../utils/date';
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 import prisma from '../prisma';
 import { ProviderFactory } from '../providers/ProviderFactory';
 
@@ -174,17 +173,10 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
             });
         }
 
-        // Optional Auth Extraction — same pattern as getProfileByUserId.
-        let user: any = null;
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        if (token) {
-            try {
-                user = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret') as any;
-            } catch (err) {
-                // Invalid token -> treat as unauthenticated
-            }
-        }
+        // Auth is optional here (public catalog) — the optionalAuthenticateToken
+        // middleware on this route already populates req.user when a valid
+        // token is present, and leaves it undefined otherwise.
+        const user: any = (req as any).user ?? null;
 
         const eighteenYearsAgo = getEighteenYearsAgo();
 
@@ -244,18 +236,10 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
  */
 export const getProfileByUserId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let currentUser = null;
-
-        // Optional Auth Extraction
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        if (token) {
-            try {
-                currentUser = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret') as any;
-            } catch (err) {
-                // Invalid token -> treat as unauthenticated
-            }
-        }
+        // Auth is optional here — the optionalAuthenticateToken middleware on
+        // this route already populates req.user when a valid token is
+        // present, and leaves it undefined otherwise.
+        const currentUser: any = (req as any).user ?? null;
 
         const profile = await prisma.profile.findUnique({
             where: { userId: req.params.id as string },

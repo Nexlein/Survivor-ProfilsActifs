@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { getNotifications, markNotificationRead, Notification, translateApiError } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const FILTERS = [
   { id: "all", label: "Toutes" },
@@ -34,6 +35,7 @@ function recruiterLabel(n: Notification): string {
 
 export default function NotificationsPage() {
   usePageTitle("Notifications");
+  const authReady = useRequireAuth();
   const [filter, setFilter] = useState<FilterId>("all");
   const [notifications, setNotifications] = useState<Notification[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -68,6 +70,8 @@ export default function NotificationsPage() {
     if (filter === "contact") return n.type === "CONTACT";
     return true;
   });
+
+  if (!authReady) return null;
 
   return (
     <main className="max-w-2xl mx-auto px-6 py-8">

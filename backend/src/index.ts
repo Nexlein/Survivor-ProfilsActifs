@@ -14,6 +14,11 @@ import YAML from 'yamljs'; // Parses the swagger.yaml definition file
 // --- 4. Internal Modules ---
 import routes from './routes'; // Main router aggregating all endpoints
 import { errorHandler } from './middlewares/error'; // Global error handler
+import { getEnv } from './utils/env';
+
+// Fail fast if required secrets/config are missing rather than booting with
+// an undefined JWT_SECRET or DATABASE_URL.
+getEnv();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
