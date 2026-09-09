@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/api";
 
-// Client-side route guard: call at the top of a page that must not render
-// its real content for an anonymous visitor (or one with the wrong role).
-
 export function useRequireAuth(allowedRoles?: string[]): boolean {
   const router = useRouter();
   const [ready, setReady] = useState(false);
@@ -21,7 +18,9 @@ export function useRequireAuth(allowedRoles?: string[]): boolean {
       router.replace("/");
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setReady(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return ready;
