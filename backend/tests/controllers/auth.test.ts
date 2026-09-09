@@ -68,7 +68,7 @@ describe("register — age verification", () => {
     it("rejects a duplicate email with 409", async () => {
         (prisma.user.findUnique as any).mockResolvedValue({ id: "existing" });
 
-        const req: any = { body: { email: "a@b.com", password: "pw", fullName: "A B", role: "JOB_SEEKER" } };
+        const req: any = { body: { email: "a@b.com", password: "pw", fullName: "A B", role: "JOB_SEEKER", dateOfBirth: "1990-01-01" } };
         const res = mockRes();
 
         await register(req, res, next);

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma';
-import { getEnvInt } from '../utils/env';
+import { getEnv, getEnvInt } from '../utils/env';
 
 // jsonwebtoken's expiresIn type only accepts its own branded string literals
 // (e.g. "24h"), not a general `string` — this value is trusted server
@@ -98,7 +98,6 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         }
 
         const passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
-        const userRole = role === 'RECRUITER' ? 'RECRUITER' : 'JOB_SEEKER';
 
         const profileData: any = { fullName };
 

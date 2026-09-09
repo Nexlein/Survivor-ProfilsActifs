@@ -16,7 +16,6 @@ async function serializeProfileVideos(profile: any) {
 
 import fs from 'fs';
 import path from 'path';
-import { ProviderFactory } from '../providers/ProviderFactory';
 import { deletePhysicalProfileFiles } from '../utils/profileFiles';
 import { getEnvInt } from '../utils/env';
 
