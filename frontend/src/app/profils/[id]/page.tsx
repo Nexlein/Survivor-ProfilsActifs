@@ -29,7 +29,6 @@ export default function PublicProfilePage() {
   const [isDeletingVideo, setIsDeletingVideo] = useState(false);
   const [videoError, setVideoError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
 
   usePageTitle(profile ? profile.fullName : "Profil");
 
@@ -53,12 +52,11 @@ export default function PublicProfilePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.id]);
 
-  async function toggleInteraction(type: "FAVORITE" | "LIKE") {
+  async function toggleFavorite() {
     if (!profile) return;
-    const setActive = type === "FAVORITE" ? setIsFavorite : setIsLiked;
     try {
-      const res = await logInteraction({ profileId: profile.id, type });
-      setActive(res.active);
+      const res = await logInteraction({ profileId: profile.id, type: "FAVORITE" });
+      setIsFavorite(res.active);
     } catch (err) {
       setError(translateApiError(err));
     }
@@ -148,19 +146,9 @@ export default function PublicProfilePage() {
             <Button variant="primary" className="w-full" onClick={() => setIsContactOpen(true)}>
               Contacter ce candidat
             </Button>
-            <div className="flex gap-2">
-              <Button
-                variant="secondary"
-                size="sm"
-                className="flex-1"
-                onClick={() => toggleInteraction("FAVORITE")}
-              >
-                {isFavorite ? "★ Favori" : "☆ Ajouter aux favoris"}
-              </Button>
-              <Button variant="secondary" size="sm" className="flex-1" onClick={() => toggleInteraction("LIKE")}>
-                {isLiked ? "♥ Aimé" : "♡ J'aime"}
-              </Button>
-            </div>
+            <Button variant="secondary" size="sm" className="w-full" onClick={toggleFavorite}>
+              {isFavorite ? "★ Favori" : "☆ Ajouter aux favoris"}
+            </Button>
           </div>
         )}
       </aside>

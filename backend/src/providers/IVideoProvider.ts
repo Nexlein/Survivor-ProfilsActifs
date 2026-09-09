@@ -13,4 +13,12 @@ export interface IVideoProvider {
 
   // GDPR Right to be Forgotten: physically remove the media associated with this ID.
   delete(providerId: string): Promise<void>;
+
+  // Resolve the local filesystem path for the video file, if this provider serves
+  // files locally. Returns null for providers with no local file (e.g. a remote provider).
+  getLocalFilePath(providerId: string): Promise<string | null>;
+
+  // Resolve the local filesystem path for the subtitle file, if any. Returns null
+  // when there is no subtitle or the provider has no local file.
+  getLocalSubtitlePath(providerId: string): Promise<string | null>;
 }

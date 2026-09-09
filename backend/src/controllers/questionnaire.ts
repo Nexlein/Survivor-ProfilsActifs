@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma';
 import { getQuestionnaire, getCurrentVersion } from '../utils/questionnaireLoader';
 
-// 70% of the 1000 max points across the 100 seeded questions.
+// 70% of the 1000 max points across the 20 seeded questions.
 const CERTIFICATION_THRESHOLD = 700;
 
 export const getAllQuestion = async (req: Request, res: Response, next: NextFunction) => {

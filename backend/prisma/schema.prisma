@@ -30,7 +30,6 @@ enum InteractionType {
   VIEW
   CONTACT
   FAVORITE
-  LIKE
 }
 
 enum ModerationStatus {
@@ -87,6 +86,8 @@ model Profile {
 
   @@index([visible, updatedAt(sort: Desc)])
   @@index([userId])
+  @@index([targetSector])
+  @@index([location])
 }
 
 model Video {

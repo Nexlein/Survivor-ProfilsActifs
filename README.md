@@ -9,7 +9,7 @@ Video-based professional networking platform for the Ministère du Job et Bonheu
 
 - [Installation Guide](docs/installation.md)
 - [Swagger UI Guide](docs/swagger_guide.md)
-- [API Routes Roadmap](docs/ROUTES_ROADMAP.md)
+- [API Architecture Guide](docs/API_ARCHITECTURE.md)
 - [Deployment Note](docs/deployment_note.md)
 - [Architecture & Schema](docs/architecture.md)
 - [Technical Choices & Rationale](docs/technical_choices.md)

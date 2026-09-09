@@ -15,6 +15,8 @@
   --color-chip-text: #1b3a6b;
   --color-badge-contact-bg: #ffe9cc;
   --color-badge-contact-text: #8a5200;
+  --color-badge-favorite-bg: #fdecc8;
+  --color-badge-favorite-text: #7a5c00;
 
   /* Rayons */
   --radius-sm: 4px;

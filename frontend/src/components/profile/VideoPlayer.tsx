@@ -2,27 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchMediaBlobUrl, translateApiError, Video } from "@/lib/api";
-
-function toEmbedUrl(url: string): string | null {
-  try {
-    const parsed = new URL(url);
-    if (parsed.hostname.includes("youtube.com")) {
-      const id = parsed.searchParams.get("v");
-      return id ? `https://www.youtube.com/embed/${id}` : null;
-    }
-    if (parsed.hostname === "youtu.be") {
-      const id = parsed.pathname.slice(1);
-      return id ? `https://www.youtube.com/embed/${id}` : null;
-    }
-    if (parsed.hostname.includes("vimeo.com")) {
-      const id = parsed.pathname.split("/").filter(Boolean)[0];
-      return id ? `https://player.vimeo.com/video/${id}` : null;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
+import { toEmbedUrl } from "@/lib/videoEmbed";
 
 export function VideoPlayer({ video }: { video: Video }) {
   const [blobUrl, setBlobUrl] = useState<string | null>(null);

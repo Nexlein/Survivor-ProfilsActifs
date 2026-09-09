@@ -293,15 +293,6 @@ export function updateProfile(payload: UpdateProfilePayload) {
   });
 }
 
-export function createVideoLink(payload: { videoUrl: string; subtitleUrl?: string; consentTextVersion: string }) {
-  const body = new FormData();
-  body.append("type", "LINK");
-  body.append("videoUrl", payload.videoUrl);
-  if (payload.subtitleUrl) body.append("subtitleUrl", payload.subtitleUrl);
-  body.append("consentTextVersion", payload.consentTextVersion);
-  return requestForm<Video>("/profile/videos", body);
-}
-
 export function createVideoUpload(payload: { video: File; subtitle?: File; consentTextVersion: string }) {
   const body = new FormData();
   body.append("type", "UPLOAD");
@@ -337,17 +328,17 @@ export function moderateVideo(id: string, approved: boolean, reason?: string) {
   });
 }
 
-export type InteractionType = "VIEW" | "CONTACT" | "FAVORITE" | "LIKE";
+export type InteractionType = "VIEW" | "CONTACT" | "FAVORITE";
 
 export function logInteraction(payload: { profileId: string; type: "VIEW" | "CONTACT"; videoId?: string; subject?: string; message?: string }): Promise<void>;
-export function logInteraction(payload: { profileId: string; type: "FAVORITE" | "LIKE"; videoId?: string }): Promise<{ active: boolean }>;
+export function logInteraction(payload: { profileId: string; type: "FAVORITE"; videoId?: string }): Promise<{ active: boolean }>;
 export function logInteraction(payload: { profileId: string; type: InteractionType; videoId?: string; subject?: string; message?: string }) {
   return request<{ active: boolean } | void>("/interaction", { method: "POST", body: JSON.stringify(payload) });
 }
 
 export type Notification = {
   id: string;
-  type: "VIEW" | "CONTACT";
+  type: "VIEW" | "CONTACT" | "FAVORITE";
   subject: string | null;
   message: string | null;
   read: boolean;

@@ -16,6 +16,8 @@ async function serializeProfileVideos(profile: any) {
 
 import fs from 'fs';
 import path from 'path';
+import { deletePhysicalProfileFiles } from '../utils/profileFiles';
+import { getEnvInt } from '../utils/env';
 
 /**
  * Controller: Get profile of the current user
@@ -116,6 +118,20 @@ export const deleteProfile = async (req: Request, res: Response, next: NextFunct
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
+
+        const existing = await prisma.profile.findUnique({
+            where: { userId: user.id },
+            include: { videos: { select: { providerId: true } } },
+        });
+        if (!existing) {
+            return res.status(404).json({ error: 'Profile not found' });
+        }
+
+        // Physically delete media files (videos + avatar) before dropping the
+        // row, same cleanup as the /compliance/account deletion path.
+        const provider = ProviderFactory.getProvider();
+        await deletePhysicalProfileFiles(existing, provider);
+
         const profile = await prisma.profile.delete({ where: { userId: user.id } });
         return res.json(profile);
     } catch (error) {
@@ -192,7 +208,7 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
         }
 
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
-        const pageSize = 20;
+        const pageSize = getEnvInt('FEED_PAGE_SIZE', 20);
         const skip = (page - 1) * pageSize;
 
         const [profiles, total] = await Promise.all([
@@ -245,7 +261,10 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
         const profile = await prisma.profile.findUnique({
             where: { userId: req.params.id as string },
             include: {
-                user: true,
+                // Only the two fields actually used below (age/moderation
+                // gating) — never load passwordHash into memory at all,
+                // rather than fetch the full User row and strip it after.
+                user: { select: { dateOfBirth: true, moderationStatus: true } },
                 skills: true,
                 videos: {
                     select: {
