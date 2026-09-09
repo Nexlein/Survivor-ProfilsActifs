@@ -2,6 +2,19 @@ import { getEighteenYearsAgo } from '../utils/date';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma';
+import { ProviderFactory } from '../providers/ProviderFactory';
+
+async function serializeProfileVideos(profile: any) {
+    if (!profile || !profile.videos) return profile;
+    const provider = ProviderFactory.getProvider();
+    profile.videos = await Promise.all(profile.videos.map(async (v: any) => ({
+        ...v,
+        url: await provider.playbackUrl(v.providerId),
+        subtitleUrl: await provider.subtitleUrl(v.providerId)
+    })));
+    return profile;
+}
+
 import fs from 'fs';
 import path from 'path';
 
@@ -16,10 +29,11 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const profile = await prisma.profile.findUnique({
+        let profile = await prisma.profile.findUnique({
             where: { userId: user.id },
             include: { skills: true, videos: true }
         });
+        profile = await serializeProfileVideos(profile);
         return res.json(profile);
     } catch (error) {
         return next(error);
@@ -120,10 +134,11 @@ export const getCurrentProfile = async (req: Request, res: Response, next: NextF
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const profile = await prisma.profile.findUnique({
+        let profile = await prisma.profile.findUnique({
             where: { userId: user.id },
             include: { skills: true, videos: true }
         });
+        profile = await serializeProfileVideos(profile);
         return res.json(profile);
     } catch (error) {
         return next(error);
