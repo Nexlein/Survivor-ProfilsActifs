@@ -2,8 +2,10 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { Request } from 'express';
+import { getEnvInt } from '../utils/env.js';
 
 const uploadDir = path.resolve(__dirname, '../../storage/tmp');
+const MAX_VIDEO_BYTES = getEnvInt('MAX_VIDEO_SIZE_MB', 100) * 1024 * 1024;
 
 const storage = multer.diskStorage({
     destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
@@ -27,7 +29,7 @@ const allowedMimeTypes = [
 
 export const upload = multer({
     storage,
-    limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB Strict limit
+    limits: { fileSize: MAX_VIDEO_BYTES },
     fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
         if (allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true);

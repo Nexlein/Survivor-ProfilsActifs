@@ -1,21 +1,26 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { login, setToken, setUser, translateApiError } from "@/lib/api";
+import { login, setToken, setUser, translateApiError, useCurrentUser } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
 
 export default function LoginPage() {
   usePageTitle("Connexion");
   const router = useRouter();
+  const currentUser = useCurrentUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (currentUser) router.replace("/");
+  }, [currentUser, router]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();

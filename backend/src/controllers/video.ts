@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../prisma.js';
 import fs from 'fs';
 import { ProviderFactory } from '../providers/ProviderFactory.js';
+import { getEnvInt } from '../utils/env.js';
 
 export const createProfileVideo = async (req: Request, res: Response, next: NextFunction) => {
     // Multer (upstream middleware) has already written these to disk by the
@@ -116,34 +117,13 @@ export const deleteProfileVideo = async (req: Request, res: Response, next: Next
     }
 };
 
-export const getVideo = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const id = req.params.id || req.body.id;
-        if (!id) return res.status(400).json({ error: 'Video ID is required' });
-
-        const video = await prisma.video.findUnique({ where: { id: id } });
-        if (!video) return res.status(404).json({ error: 'Video not found' });
-
-        const user = (req as any).user || req.body?.user;
-        const userProfile = user ? await prisma.profile.findUnique({ where: { userId: user.id } }) : null;
-        const isOwner = userProfile?.id === video.profileId;
-        const isAdmin = user?.role === 'ADMIN';
-
-        if ((video.status === 'PENDING' || video.status === 'REJECTED') && !isOwner && !isAdmin) {
-            return res.status(403).json({ error: 'This video is not available.' });
-        }
-
-        return res.status(200).json(video);
-    } catch (error) { return next(error); }
-};
-
 export const getVideoFeed = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = (req as any).user || req.body?.user;
         if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
-        const pageSize = 20;
+        const pageSize = getEnvInt('FEED_PAGE_SIZE', 20);
         const skip = (page - 1) * pageSize;
 
         // Admin moderation queue: the public feed below only ever surfaces

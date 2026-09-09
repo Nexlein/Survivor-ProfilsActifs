@@ -534,185 +534,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /video/upload-file:
-    post:
-      summary: Upload Video File
-      tags:
-        - Video
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              required:
-                - video
-                - profileId
-              properties:
-                video:
-                  type: string
-                  format: binary
-                  description: The video file to upload
-                profileId:
-                  type: string
-                  format: uuid
-                  example: 123e4567-e89b-12d3-a456-426614174000
-                consentTextVersion:
-                  type: string
-                  example: v1.0
-      responses:
-        "201":
-          description: Video uploaded successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Video"
-        "400":
-          description: Bad request (missing file or profileId)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /video/upload-link:
-    post:
-      summary: Upload Video Link
-      tags:
-        - Video
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - videoUrl
-                - profileId
-              properties:
-                videoUrl:
-                  type: string
-                  example: https://www.youtube.com/watch?v=dQw4w9WgXcQ
-                profileId:
-                  type: string
-                  format: uuid
-                  example: 123e4567-e89b-12d3-a456-426614174000
-                consentTextVersion:
-                  type: string
-                  example: v1.0
-      responses:
-        "201":
-          description: Video link created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Video"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /video/delete:
-    delete:
-      summary: Delete Video Profile
-      tags:
-        - Video
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  example: 123e4567-e89b-12d3-a456-426614174000
-      responses:
-        "200":
-          description: Video deleted successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Video deleted successfully
-                  id:
-                    type: string
-                    format: uuid
-                    example: 123e4567-e89b-12d3-a456-426614174000
-        "400":
-          description: Video ID is required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /video/get:
-    get:
-      summary: Get Video Profile
-      tags:
-        - Video
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  example: 123e4567-e89b-12d3-a456-426614174000
-      responses:
-        "200":
-          description: Video retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Video"
-        "400":
-          description: Video ID is required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
   /compliance/data-export:
     get:
       summary: Personal Data Export (GDPR)
@@ -750,6 +571,7 @@ paths:
   /video/play/{id}:
     get:
       summary: Stream a video
+      description: Requires authentication (mandatory, not optional). A PENDING/REJECTED video is only playable by its owner or an admin.
       tags:
         - Media
       security:
@@ -767,10 +589,14 @@ paths:
           description: Full video stream
         "206":
           description: Partial video stream (Range)
-        "503":
-          description: Service Unavailable (Degraded Mode Active)
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "403":
-          description: Forbidden (Video is PENDING or REJECTED)
+          description: Forbidden (Video is PENDING or REJECTED, and requester is neither owner nor admin)
           content:
             application/json:
               schema:
@@ -781,6 +607,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "416":
+          description: Range Not Satisfiable (malformed or out-of-bounds Range header)
+        "503":
+          description: Service Unavailable (Degraded Mode Active)
+  /video/play/{id}/subtitle:
+    get:
+      summary: Stream a video's subtitle track (.vtt)
+      description: Requires authentication. Same access rule as the video itself — a PENDING/REJECTED video's subtitle is only accessible to its owner or an admin.
+      tags:
+        - Media
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        "200":
+          description: Subtitle file (text/vtt)
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden (Video is PENDING or REJECTED, and requester is neither owner nor admin)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Video or subtitle not found
   /video/feed:
     get:
       summary: Get public video feed
@@ -856,7 +719,8 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
   /profile/videos:
     post:
-      summary: Upload or link a new video to the profile
+      summary: Upload a new video to the profile
+      description: LINK-type videos are permanently disabled — only UPLOAD is accepted.
       tags:
         - Profile
       security:
@@ -867,31 +731,36 @@ paths:
           multipart/form-data:
             schema:
               type: object
+              required:
+                - video
               properties:
                 type:
                   type: string
                   enum:
                     - UPLOAD
-                    - LINK
-                videoUrl:
-                  type: string
-                  description: Required if type is LINK
-                subtitleUrl:
-                  type: string
-                  description: Optional, only used if type is LINK (ignored for UPLOAD — use the subtitle file field instead)
                 consentTextVersion:
                   type: string
                 video:
                   type: string
                   format: binary
-                  description: Required if type is UPLOAD
+                  description: The video file (MP4, MOV or AVI, max MAX_VIDEO_SIZE_MB)
                 subtitle:
                   type: string
                   format: binary
-                  description: Optional, only used if type is UPLOAD
+                  description: Optional .vtt subtitle file
       responses:
         "201":
           description: Video created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        "400":
+          description: Missing/invalid file, or type is LINK (permanently disabled)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /profile/videos/{id}:
     delete:
       summary: Delete a video physically and logically
@@ -910,7 +779,8 @@ paths:
           description: Video deleted
   /interaction:
     post:
-      summary: Enregistrer une interaction (Vue, Favori, Like, Contact)
+      summary: Enregistrer une interaction (Vue, Favori, Contact)
+      description: "LIKE n'est pas supporté : c'est un critère d'engagement banni par le cahier des charges du cabinet."
       tags: [Interaction]
       security:
         - bearerAuth: []
@@ -928,7 +798,7 @@ paths:
                   type: string
                 type:
                   type: string
-                  enum: [VIEW, CONTACT, FAVORITE, LIKE]
+                  enum: [VIEW, CONTACT, FAVORITE]
                 videoId:
                   type: string
                   nullable: true
@@ -942,7 +812,7 @@ paths:
         "201":
           description: Interaction créée
         "400":
-          description: Requête invalide (ex. objet manquant ou texte < 50 chars)
+          description: Requête invalide (ex. objet manquant, texte < 50 chars, ou type LIKE)
   /interaction/notifications:
     get:
       summary: Lister les notifications reçues par le candidat
@@ -1310,13 +1180,23 @@ components:
         type:
           type: string
           enum:
-            - LINK
             - UPLOAD
           example: UPLOAD
-        url:
+        status:
           type: string
-          example: /uploads/videos/172528765-video.mp4
-        subtitleUrl:
+          enum:
+            - PENDING
+            - APPROVED
+            - REJECTED
+          example: PENDING
+        providerId:
+          type: string
+          description: Opaque id used by the active VideoProvider to locate the stored file
+          example: 3e4a6b2c-1234-4a1b-9abc-0d1e2f3a4b5c
+        providerName:
+          type: string
+          example: local
+        rejectionReason:
           type: string
           nullable: true
           example: null

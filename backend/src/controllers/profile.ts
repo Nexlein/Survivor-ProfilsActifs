@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { ProviderFactory } from '../providers/ProviderFactory';
 import { deletePhysicalProfileFiles } from '../utils/profileFiles';
+import { getEnvInt } from '../utils/env';
 
 /**
  * Controller: Get profile of the current user
@@ -200,7 +201,7 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
         }
 
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
-        const pageSize = 20;
+        const pageSize = getEnvInt('FEED_PAGE_SIZE', 20);
         const skip = (page - 1) * pageSize;
 
         const [profiles, total] = await Promise.all([
@@ -260,7 +261,10 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
         const profile = await prisma.profile.findUnique({
             where: { userId: req.params.id as string },
             include: {
-                user: true,
+                // Only the two fields actually used below (age/moderation
+                // gating) — never load passwordHash into memory at all,
+                // rather than fetch the full User row and strip it after.
+                user: { select: { dateOfBirth: true, moderationStatus: true } },
                 skills: true,
                 videos: {
                     select: {

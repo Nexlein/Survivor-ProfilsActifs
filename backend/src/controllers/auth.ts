@@ -2,6 +2,13 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma';
+import { getEnvInt } from '../utils/env';
+
+// jsonwebtoken's expiresIn type only accepts its own branded string literals
+// (e.g. "24h"), not a general `string` — this value is trusted server
+// config (an env var), not user input, so the cast is safe.
+const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '24h') as jwt.SignOptions['expiresIn'];
+const BCRYPT_SALT_ROUNDS = getEnvInt('BCRYPT_SALT_ROUNDS', 10);
 
 /**
  * Controller: User Login
@@ -29,7 +36,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         }
 
         const secret = process.env.JWT_SECRET || 'dev-secret';
-        const token = jwt.sign({ id: user.id, role: user.role }, secret, { expiresIn: '24h' });
+        const token = jwt.sign({ id: user.id, role: user.role }, secret, { expiresIn: JWT_EXPIRES_IN });
 
         return res.json({
             token,
@@ -80,7 +87,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
             return res.status(400).json({ error: 'Maximum 10 skills allowed' });
         }
 
-        const passwordHash = await bcrypt.hash(password, 10);
+        const passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
         const userRole = role === 'RECRUITER' ? 'RECRUITER' : 'JOB_SEEKER';
 
         const profileData: any = { fullName };
@@ -175,7 +182,7 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const newToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET || 'dev-secret', { expiresIn: '24h' });
+        const newToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET || 'dev-secret', { expiresIn: JWT_EXPIRES_IN });
         return res.json({ token: newToken, user: { id: user.id, email: user.email, role: user.role } });
     } catch (error) {
         return next(error);

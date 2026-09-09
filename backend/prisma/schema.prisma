@@ -87,6 +87,8 @@ model Profile {
 
   @@index([visible, updatedAt(sort: Desc)])
   @@index([userId])
+  @@index([targetSector])
+  @@index([location])
 }
 
 model Video {

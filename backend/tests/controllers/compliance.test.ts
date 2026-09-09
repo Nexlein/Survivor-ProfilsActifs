@@ -18,7 +18,7 @@ vi.mock("../../src/utils/profileFiles.js", () => ({
 import prisma from "../../src/prisma";
 import { ProviderFactory } from "../../src/providers/ProviderFactory.js";
 import { deletePhysicalProfileFiles } from "../../src/utils/profileFiles.js";
-import { deleteAccount } from "../../src/controllers/compliance";
+import { deleteAccount, exportData } from "../../src/controllers/compliance";
 
 const mockRes = () => {
     const res: any = {};
@@ -62,5 +62,49 @@ describe("deleteAccount — physical file cleanup", () => {
 
         expect(deletePhysicalProfileFiles).not.toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(200);
+    });
+});
+
+describe("exportData — GDPR right of access", () => {
+    it("never includes passwordHash in the export", async () => {
+        (prisma.user.findUnique as any).mockResolvedValue({
+            id: "u1",
+            email: "a@b.com",
+            passwordHash: "super-secret-hash",
+            role: "JOB_SEEKER",
+            profile: { id: "p1", videos: [], interactions: [] },
+            interactions: [],
+            loginLogs: [],
+        });
+
+        const req: any = { body: { user: { id: "u1" } } };
+        const res = mockRes();
+
+        await exportData(req, res, next);
+
+        const payload = (res.json as any).mock.calls[0][0];
+        expect(payload.data).not.toHaveProperty("passwordHash");
+        expect(payload.data.email).toBe("a@b.com");
+    });
+
+    it("returns 401 when unauthenticated", async () => {
+        const req: any = { body: {} };
+        const res = mockRes();
+
+        await exportData(req, res, next);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(prisma.user.findUnique).not.toHaveBeenCalled();
+    });
+
+    it("returns 404 when the user no longer exists", async () => {
+        (prisma.user.findUnique as any).mockResolvedValue(null);
+
+        const req: any = { body: { user: { id: "gone" } } };
+        const res = mockRes();
+
+        await exportData(req, res, next);
+
+        expect(res.status).toHaveBeenCalledWith(404);
     });
 });

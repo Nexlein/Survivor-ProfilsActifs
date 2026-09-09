@@ -26,6 +26,13 @@ type QuestionnaireData = z.infer<typeof questionnaireFileSchema>;
 
 let cachedQuestionnaire: QuestionnaireData | null = null;
 
+// Versioning procedure: a new questionnaire revision gets its own file
+// (`questions.v2.json`, `v3.json`, ...) with its internal `version` field
+// matching the filename — never edit an existing file's questions/scoring
+// in place. Existing QuestionnaireProgress/QuestionnaireResult rows keep
+// the version they were created under (see `questionnaireVersion` below),
+// so past results stay tied to the ruleset that actually produced them.
+
 export const loadQuestionnaire = () => {
     try {
         const filePath = path.resolve(process.cwd(), '../certification/questions.v1.json');
