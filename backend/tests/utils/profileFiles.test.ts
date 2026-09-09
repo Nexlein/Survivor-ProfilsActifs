@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("fs", () => {
-    const fs = { unlink: vi.fn((_path: string, cb: (err: NodeJS.ErrnoException | null) => void) => cb(null)) };
+    const fs = { promises: { unlink: vi.fn().mockResolvedValue(undefined) } };
     return { default: fs, ...fs };
 });
 
@@ -49,9 +49,8 @@ describe("deletePhysicalProfileFiles", () => {
         const provider = mockProvider();
         await deletePhysicalProfileFiles({ avatarUrl: "/uploads/avatars/123-abc.jpg", videos: [] }, provider as any);
 
-        expect(fs.unlink).toHaveBeenCalledWith(
-            expect.stringContaining(require("path").join("uploads", "avatars", "123-abc.jpg")),
-            expect.any(Function)
+        expect(fs.promises.unlink).toHaveBeenCalledWith(
+            expect.stringContaining(require("path").join("uploads", "avatars", "123-abc.jpg"))
         );
     });
 
@@ -59,14 +58,14 @@ describe("deletePhysicalProfileFiles", () => {
         const provider = mockProvider();
         await deletePhysicalProfileFiles({ avatarUrl: "https://cdn.example.com/seed.jpg", videos: [] }, provider as any);
 
-        expect(fs.unlink).not.toHaveBeenCalled();
+        expect(fs.promises.unlink).not.toHaveBeenCalled();
     });
 
     it("does nothing for a profile with no avatar", async () => {
         const provider = mockProvider();
         await deletePhysicalProfileFiles({ avatarUrl: null, videos: [] }, provider as any);
 
-        expect(fs.unlink).not.toHaveBeenCalled();
+        expect(fs.promises.unlink).not.toHaveBeenCalled();
         expect(provider.delete).not.toHaveBeenCalled();
     });
 });

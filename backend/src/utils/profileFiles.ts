@@ -23,10 +23,12 @@ export async function deletePhysicalProfileFiles(profile: ProfileWithMedia, prov
 
     if (profile.avatarUrl?.startsWith('/uploads/avatars/')) {
         const avatarPath = path.resolve(__dirname, '../..', profile.avatarUrl.replace(/^\//, ''));
-        fs.unlink(avatarPath, (err) => {
-            if (err && err.code !== 'ENOENT') {
+        try {
+            await fs.promises.unlink(avatarPath);
+        } catch (err: any) {
+            if (err?.code !== 'ENOENT') {
                 console.error(`[RGPD] Failed to delete avatar ${avatarPath}`, err);
             }
-        });
+        }
     }
 }
