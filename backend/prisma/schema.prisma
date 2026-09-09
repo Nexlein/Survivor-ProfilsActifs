@@ -30,7 +30,6 @@ enum InteractionType {
   VIEW
   CONTACT
   FAVORITE
-  LIKE
 }
 
 enum ModerationStatus {

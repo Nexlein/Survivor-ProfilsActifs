@@ -336,7 +336,7 @@ export function logInteraction(payload: { profileId: string; type: InteractionTy
 
 export type Notification = {
   id: string;
-  type: "VIEW" | "CONTACT";
+  type: "VIEW" | "CONTACT" | "FAVORITE";
   subject: string | null;
   message: string | null;
   read: boolean;

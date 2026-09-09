@@ -90,7 +90,7 @@ export const getNotifications = async (req: Request, res: Response, next: NextFu
         if (!profile) return res.status(404).json({ error: 'Profile not found' });
 
         const notifications = await prisma.interaction.findMany({
-            where: { profileId: profile.id, type: { in: ['VIEW', 'CONTACT'] } },
+            where: { profileId: profile.id, type: { in: ['VIEW', 'CONTACT', 'FAVORITE'] } },
             orderBy: { createdAt: 'desc' },
             include: {
                 recruiter: {

@@ -10,6 +10,7 @@ const FILTERS = [
   { id: "unread", label: "Non lues" },
   { id: "seen", label: "Vues" },
   { id: "contact", label: "Contacts" },
+  { id: "favorite", label: "Favoris" },
 ] as const;
 
 type FilterId = (typeof FILTERS)[number]["id"];
@@ -28,6 +29,12 @@ function relativeTime(iso: string): string {
 function recruiterLabel(n: Notification): string {
   return n.recruiter.profile?.companyName || n.recruiter.profile?.fullName || "Un recruteur";
 }
+
+const NOTIFICATION_META = {
+  CONTACT: { icon: "✉", iconClass: "text-action", message: (n: Notification) => `${recruiterLabel(n)} vous a envoyé un message` },
+  FAVORITE: { icon: "★", iconClass: "text-badge-favorite-text", message: (n: Notification) => `${recruiterLabel(n)} a ajouté votre profil à ses favoris` },
+  VIEW: { icon: "👁", iconClass: "text-primary", message: (n: Notification) => `${recruiterLabel(n)} a consulté votre profil` },
+} as const;
 
 export default function NotificationsPage() {
   usePageTitle("Notifications");
@@ -66,6 +73,7 @@ export default function NotificationsPage() {
     if (filter === "unread") return !n.read;
     if (filter === "seen") return n.type === "VIEW";
     if (filter === "contact") return n.type === "CONTACT";
+    if (filter === "favorite") return n.type === "FAVORITE";
     return true;
   });
 
@@ -100,42 +108,42 @@ export default function NotificationsPage() {
         {notifications !== null && filtered.length === 0 && (
           <p className="text-text-secondary text-sm">Aucune notification pour ce filtre.</p>
         )}
-        {filtered.map((n) => (
-          <div
-            key={n.id}
-            className={`rounded-lg p-3.5 flex gap-3 items-start ${
-              n.read ? "bg-white border border-border" : "bg-chip-bg"
-            }`}
-          >
-            <span className={n.type === "CONTACT" ? "text-action text-lg" : "text-primary text-lg"}>
-              {n.type === "CONTACT" ? "✉" : "👁"}
-            </span>
-            <div className="flex-1">
-              <p className={`text-sm m-0 ${n.read ? "text-text-secondary" : "text-text"}`}>
-                {n.type === "CONTACT"
-                  ? `${recruiterLabel(n)} vous a envoyé un message`
-                  : `${recruiterLabel(n)} a consulté votre profil`}
-              </p>
-              {n.type === "CONTACT" && n.subject && (
-                <p className="text-sm font-semibold text-text mt-1">{n.subject}</p>
-              )}
-              {n.type === "CONTACT" && n.message && (
-                <p className="text-sm text-text-secondary mt-1 whitespace-pre-line">{n.message}</p>
-              )}
-              <p className="text-xs text-text-secondary mt-1">{relativeTime(n.createdAt)}</p>
-              {!n.read && (
-                <button
-                  onClick={() => handleMarkRead(n.id)}
-                  className="text-xs font-semibold text-primary mt-1.5 underline"
-                >
-                  Marquer comme lu
-                </button>
-              )}
+        {filtered.map((n) => {
+          const meta = NOTIFICATION_META[n.type];
+          return (
+            <div
+              key={n.id}
+              className={`rounded-lg p-3.5 flex gap-3 items-start ${
+                n.read ? "bg-white border border-border" : "bg-chip-bg"
+              }`}
+            >
+              <span className={`${meta.iconClass} text-lg`}>{meta.icon}</span>
+              <div className="flex-1">
+                <p className={`text-sm m-0 ${n.read ? "text-text-secondary" : "text-text"}`}>
+                  {meta.message(n)}
+                </p>
+                {n.type === "CONTACT" && n.subject && (
+                  <p className="text-sm font-semibold text-text mt-1">{n.subject}</p>
+                )}
+                {n.type === "CONTACT" && n.message && (
+                  <p className="text-sm text-text-secondary mt-1 whitespace-pre-line">{n.message}</p>
+                )}
+                <p className="text-xs text-text-secondary mt-1">{relativeTime(n.createdAt)}</p>
+                {!n.read && (
+                  <button
+                    onClick={() => handleMarkRead(n.id)}
+                    className="text-xs font-semibold text-primary mt-1.5 underline"
+                  >
+                    Marquer comme lu
+                  </button>
+                )}
+              </div>
+              {n.type === "VIEW" && !n.read && <Badge variant="vue">Vue</Badge>}
+              {n.type === "CONTACT" && <Badge variant="contact">Contact</Badge>}
+              {n.type === "FAVORITE" && <Badge variant="favorite">Favori</Badge>}
             </div>
-            {n.type === "VIEW" && !n.read && <Badge variant="vue">Vue</Badge>}
-            {n.type === "CONTACT" && <Badge variant="contact">Contact</Badge>}
-          </div>
-        ))}
+          );
+        })}
       </div>
     </main>
   );
