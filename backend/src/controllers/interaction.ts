@@ -10,9 +10,10 @@ const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
  * @route POST /api/interaction
  * @access Private (RECRUITER)
  *
- * FAVORITE/LIKE are toggles (one active record per recruiter+profile): a
- * second call removes the existing one instead of stacking duplicates.
- * VIEW/CONTACT are logs: every call creates a new row.
+ * FAVORITE is a toggle (one active record per recruiter+profile): a second
+ * call removes the existing one instead of stacking duplicates. VIEW/CONTACT
+ * are logs: every call creates a new row. LIKE is rejected outright — it's
+ * an engagement-metric affordance the cabinet's contract explicitly bans.
  */
 export const createInteraction = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -22,7 +23,12 @@ export const createInteraction = async (req: Request, res: Response, next: NextF
         }
 
         const { profileId, type, videoId, subject, message } = req.body;
-        const validTypes = ['VIEW', 'CONTACT', 'FAVORITE', 'LIKE'];
+
+        if (type === 'LIKE') {
+            return res.status(400).json({ error: 'LIKE is not supported.' });
+        }
+
+        const validTypes = ['VIEW', 'CONTACT', 'FAVORITE'];
         if (!profileId || !validTypes.includes(type)) {
             return res.status(400).json({ error: 'profileId and a valid type are required' });
         }
@@ -39,7 +45,7 @@ export const createInteraction = async (req: Request, res: Response, next: NextF
             }
         }
 
-        if (type === 'FAVORITE' || type === 'LIKE') {
+        if (type === 'FAVORITE') {
             const existing = await prisma.interaction.findFirst({
                 where: { recruiterId: user.id, profileId, type },
             });

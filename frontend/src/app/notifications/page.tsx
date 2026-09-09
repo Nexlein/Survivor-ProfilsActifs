@@ -53,8 +53,11 @@ export default function NotificationsPage() {
     setNotifications((prev) => prev?.map((n) => (n.id === id ? { ...n, read: true } : n)) ?? prev);
     try {
       await markNotificationRead(id);
-    } catch {
-      // best-effort — a failed read-state sync isn't worth surfacing here
+    } catch (err) {
+      // Roll back the optimistic update so the UI doesn't silently drift out
+      // of sync with the server on a failed write.
+      setNotifications((prev) => prev?.map((n) => (n.id === id ? { ...n, read: false } : n)) ?? prev);
+      setError(translateApiError(err));
     }
   }
 
