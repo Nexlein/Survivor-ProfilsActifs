@@ -63,6 +63,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
         if (targetSector !== undefined) updateData.targetSector = targetSector;
         if (location !== undefined) updateData.location = location;
         if (bio !== undefined) updateData.bio = bio;
+        if (visible !== undefined) updateData.visible = visible === true || visible === 'true';
 
         if (user.role === 'RECRUITER') {
             if (companyName !== undefined) updateData.companyName = companyName;
@@ -290,7 +291,7 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
         // RGPD: Missing Age or Explicitly Hidden (Ticket 16)
         if (!isOwner) {
             if (profile.visible === false) {
-                return res.status(403).json({ error: 'Access denied: Profile is hidden' });
+                return res.status(410).json({ error: 'Ce profil a été retiré et n\'est plus disponible.' });
             }
             if (profile.user.dateOfBirth === null) {
                 return res.status(403).json({ error: 'Access denied: Profile owner has not verified their age' });

@@ -26,6 +26,9 @@ function relativeTime(iso: string): string {
 }
 
 function recruiterLabel(n: Notification): string {
+  if (n.type === "VIEW") {
+    return n.recruiter.profile?.companyName || "Une organisation";
+  }
   return n.recruiter.profile?.companyName || n.recruiter.profile?.fullName || "Un recruteur";
 }
 
@@ -69,6 +72,9 @@ export default function NotificationsPage() {
   return (
     <main className="max-w-2xl mx-auto px-6 py-8">
       <h2 className="mb-4">Mes notifications</h2>
+      <p className="text-text-secondary text-sm mb-5 p-3.5 bg-bg-secondary rounded-md border border-border">
+        <strong>Traçabilité :</strong> Conformément à votre droit d'accès, les vues de votre profil par des recruteurs connectés sont enregistrées ci-dessous. Les consultations anonymes ne sont pas tracées.
+      </p>
       <div className="flex gap-2 flex-wrap mb-5">
         {FILTERS.map((f) => (
           <button
