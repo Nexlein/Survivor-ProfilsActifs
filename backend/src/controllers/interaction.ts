@@ -116,7 +116,7 @@ export const getSentContacts = async (req: Request, res: Response, next: NextFun
             orderBy: { createdAt: 'desc' },
             include: {
                 profile: {
-                    select: { userId: true, fullName: true, targetSector: true, certificationScore: true, hasCertificationBadge: true },
+                    select: { userId: true, fullName: true, visible: true, targetSector: true, certificationScore: true, hasCertificationBadge: true },
                 },
             },
         });

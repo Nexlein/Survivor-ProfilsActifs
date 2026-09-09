@@ -49,6 +49,7 @@ export default function EditProfilePage() {
   const [skillInput, setSkillInput] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
   const [bio, setBio] = useState("");
+  const [visible, setVisible] = useState(true);
 
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
@@ -84,6 +85,7 @@ export default function EditProfilePage() {
         setLocation(p.location ?? "");
         setSkills((p.skills ?? []).map((s) => s.name));
         setBio(p.bio ?? "");
+        setVisible(p.visible ?? true);
         setCompanyName(p.companyName ?? "");
         setIndustry(p.industry ?? "");
         setPosition(p.position ?? "");
@@ -110,6 +112,7 @@ export default function EditProfilePage() {
         location,
         bio,
         skills,
+        visible,
         ...(isRecruiter ? { companyName, industry, position } : {}),
       });
       router.push(`/profils/${profile.userId}`);
@@ -286,6 +289,23 @@ export default function EditProfilePage() {
           {isSubmitting ? "Enregistrement..." : "Enregistrer les modifications"}
         </Button>
       </form>
+
+            <div className="mt-8 pt-6 border-t border-border">
+        <h3 className="mb-1.5">Visibilité du profil</h3>
+        <p className="text-text-secondary text-sm mb-3">
+          Si vous désactivez cette option, votre profil sera retiré du catalogue public, 
+          des listes de recherche et ne sera plus consultable par les recruteurs.
+        </p>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={visible}
+            onChange={(e) => setVisible(e.target.checked)}
+            className="w-5 h-5 rounded text-primary focus:ring-primary"
+          />
+          <span className="text-sm font-semibold">Publier mon profil dans le catalogue</span>
+        </label>
+      </div>
 
       <div className="mt-8 pt-6 border-t border-border">
         <h3 className="mb-1.5">Vos données</h3>
