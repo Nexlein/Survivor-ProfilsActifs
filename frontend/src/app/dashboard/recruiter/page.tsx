@@ -119,6 +119,9 @@ export default function RecruiterDashboardPage() {
                 <div className="text-text-secondary min-w-[90px]">
                   {new Date(contact.createdAt).toLocaleDateString("fr-FR")}
                 </div>
+                <div className={`min-w-[70px] font-semibold ${contact.read ? "text-success" : "text-text-secondary"}`}>
+                  {contact.read ? "Vu" : "Non vu"}
+                </div>
                 <Link
                   href={`/profils/${contact.profile.userId}`}
                   className={buttonClasses("secondary", "sm", "shrink-0")}

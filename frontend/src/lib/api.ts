@@ -367,6 +367,7 @@ export type SentContact = {
   id: string;
   subject: string | null;
   message: string | null;
+  read: boolean;
   createdAt: string;
   profile: {
     userId: string;

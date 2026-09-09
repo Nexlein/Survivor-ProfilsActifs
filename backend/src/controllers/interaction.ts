@@ -114,7 +114,12 @@ export const getSentContacts = async (req: Request, res: Response, next: NextFun
         const contacts = await prisma.interaction.findMany({
             where: { recruiterId: user.id, type: 'CONTACT' },
             orderBy: { createdAt: 'desc' },
-            include: {
+            select: {
+                id: true,
+                subject: true,
+                message: true,
+                read: true, // candidate-side "seen" state — surfaced to the recruiter as a response-status proxy
+                createdAt: true,
                 profile: {
                     select: { userId: true, fullName: true, visible: true, targetSector: true, certificationScore: true, hasCertificationBadge: true },
                 },
