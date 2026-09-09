@@ -27,4 +27,12 @@ export class DummyVideoProvider implements IVideoProvider {
   async delete(providerId: string): Promise<void> {
     console.log(`[DummyVideoProvider] Mock delete signal sent for ${providerId}`);
   }
+
+  async getLocalFilePath(providerId: string): Promise<string | null> {
+    return null;
+  }
+
+  async getLocalSubtitlePath(providerId: string): Promise<string | null> {
+    return null;
+  }
 }
