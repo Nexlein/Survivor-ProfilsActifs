@@ -11,6 +11,7 @@ import {
   translateApiError,
 } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 type StatusFilter = "PENDING" | "APPROVED" | "REJECTED";
 
@@ -32,6 +33,7 @@ const ROW_GRID = "grid grid-cols-[40px_minmax(140px,1.4fr)_120px_100px_1fr] gap-
 
 export default function ModerationPage() {
   usePageTitle("Modération des vidéos");
+  const authReady = useRequireAuth(["ADMIN"]);
 
   const [status, setStatus] = useState<StatusFilter>("PENDING");
   const [page, setPage] = useState(1);
@@ -100,6 +102,8 @@ export default function ModerationPage() {
       setPendingActionId(null);
     }
   }
+
+  if (!authReady) return null;
 
   return (
     <main className="px-6 py-8">

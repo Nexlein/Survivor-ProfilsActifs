@@ -5,9 +5,11 @@ import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
 import { getInteractionStats, getSentContacts, RecruiterStats, SentContact, translateApiError } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 export default function RecruiterDashboardPage() {
   usePageTitle("Tableau de bord recruteur");
+  const authReady = useRequireAuth(["RECRUITER"]);
   const [stats, setStats] = useState<RecruiterStats | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [contacts, setContacts] = useState<SentContact[] | null>(null);
@@ -46,6 +48,8 @@ export default function RecruiterDashboardPage() {
     { value: stats ? String(stats.favorites) : "—", label: "Favoris enregistrés" },
     { value: stats ? String(stats.messagesSent) : "—", label: "Messages envoyés ce mois" },
   ];
+
+  if (!authReady) return null;
 
   return (
     <main className="px-6 py-8">
