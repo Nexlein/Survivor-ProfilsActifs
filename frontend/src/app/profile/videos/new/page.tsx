@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { Tabs } from "@/components/ui/Tabs";
 import { createVideoLink, createVideoUpload, translateApiError, useCurrentUser } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const CONSENT_VERSION = "v1.0 - 2026-09-01";
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
@@ -34,6 +35,7 @@ function toEmbedUrl(url: string): string | null {
 
 export default function AddVideoPage() {
   usePageTitle("Publier une vidéo");
+  const authReady = useRequireAuth();
   const router = useRouter();
   const currentUser = useCurrentUser();
 
@@ -119,6 +121,8 @@ export default function AddVideoPage() {
       setIsSubmitting(false);
     }
   }
+
+  if (!authReady) return null;
 
   return (
     <main className="max-w-xl mx-auto px-6 py-12">

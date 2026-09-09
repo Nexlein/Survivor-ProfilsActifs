@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma';
+import { getEnv } from '../utils/env';
 
 /**
  * Controller: User Login
@@ -28,7 +29,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        const secret = process.env.JWT_SECRET || 'dev-secret';
+        const secret = getEnv().JWT_SECRET;
         const token = jwt.sign({ id: user.id, role: user.role }, secret, { expiresIn: '24h' });
 
         return res.json({
@@ -61,6 +62,16 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
             return res.status(400).json({ error: 'Email, password and fullName are required' });
         }
 
+        const userRole = role === 'RECRUITER' ? 'RECRUITER' : 'JOB_SEEKER';
+
+        // dateOfBirth drives the age-verification/minor-protection logic
+        // throughout the app (RGPD/legal requirement) — it can't be left out
+        // for a JOB_SEEKER, since an absent value would otherwise bypass the
+        // under-16 check below entirely.
+        if (userRole === 'JOB_SEEKER' && !dateOfBirth) {
+            return res.status(400).json({ error: 'dateOfBirth is required for job seeker registration' });
+        }
+
         // Legal Requirement: Age verification (>= 16 years)
         if (dateOfBirth) {
             const dob = new Date(dateOfBirth);
@@ -81,7 +92,6 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
-        const userRole = role === 'RECRUITER' ? 'RECRUITER' : 'JOB_SEEKER';
 
         const profileData: any = { fullName };
 
@@ -164,7 +174,7 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
         }
         let decodedToken;
         try {
-            decodedToken = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret');
+            decodedToken = jwt.verify(token, getEnv().JWT_SECRET);
         } catch {
             // An expired/invalid token here is an expected client-side
             // condition (the whole point of this endpoint), not a server
@@ -175,7 +185,7 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const newToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET || 'dev-secret', { expiresIn: '24h' });
+        const newToken = jwt.sign({ id: user.id, role: user.role }, getEnv().JWT_SECRET, { expiresIn: '24h' });
         return res.json({ token: newToken, user: { id: user.id, email: user.email, role: user.role } });
     } catch (error) {
         return next(error);

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { getEnv } from '../utils/env';
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
@@ -10,7 +11,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'dev-secret';
+    const secret = getEnv().JWT_SECRET;
     const decoded = jwt.verify(token, secret) as any;
     (req as any).user = decoded;
     if (!req.body) {
@@ -32,7 +33,7 @@ export const optionalAuthenticateToken = (req: Request, res: Response, next: Nex
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'dev-secret';
+    const secret = getEnv().JWT_SECRET;
     const decoded = jwt.verify(token as string, secret) as any;
     (req as any).user = decoded;
   } catch (err) {

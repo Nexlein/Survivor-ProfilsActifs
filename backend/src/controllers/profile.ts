@@ -1,7 +1,19 @@
 import { getEighteenYearsAgo } from '../utils/date';
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 import prisma from '../prisma';
+import { ProviderFactory } from '../providers/ProviderFactory';
+
+async function serializeProfileVideos(profile: any) {
+    if (!profile || !profile.videos) return profile;
+    const provider = ProviderFactory.getProvider();
+    profile.videos = await Promise.all(profile.videos.map(async (v: any) => ({
+        ...v,
+        url: await provider.playbackUrl(v.providerId),
+        subtitleUrl: await provider.subtitleUrl(v.providerId)
+    })));
+    return profile;
+}
+
 import fs from 'fs';
 import path from 'path';
 
@@ -16,10 +28,11 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const profile = await prisma.profile.findUnique({
+        let profile = await prisma.profile.findUnique({
             where: { userId: user.id },
             include: { skills: true, videos: true }
         });
+        profile = await serializeProfileVideos(profile);
         return res.json(profile);
     } catch (error) {
         return next(error);
@@ -49,6 +62,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
         if (targetSector !== undefined) updateData.targetSector = targetSector;
         if (location !== undefined) updateData.location = location;
         if (bio !== undefined) updateData.bio = bio;
+        if (visible !== undefined) updateData.visible = visible === true || visible === 'true';
 
         if (user.role === 'RECRUITER') {
             if (companyName !== undefined) updateData.companyName = companyName;
@@ -120,10 +134,11 @@ export const getCurrentProfile = async (req: Request, res: Response, next: NextF
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-        const profile = await prisma.profile.findUnique({
+        let profile = await prisma.profile.findUnique({
             where: { userId: user.id },
             include: { skills: true, videos: true }
         });
+        profile = await serializeProfileVideos(profile);
         return res.json(profile);
     } catch (error) {
         return next(error);
@@ -158,17 +173,10 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
             });
         }
 
-        // Optional Auth Extraction — same pattern as getProfileByUserId.
-        let user: any = null;
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        if (token) {
-            try {
-                user = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret') as any;
-            } catch (err) {
-                // Invalid token -> treat as unauthenticated
-            }
-        }
+        // Auth is optional here (public catalog) — the optionalAuthenticateToken
+        // middleware on this route already populates req.user when a valid
+        // token is present, and leaves it undefined otherwise.
+        const user: any = (req as any).user ?? null;
 
         const eighteenYearsAgo = getEighteenYearsAgo();
 
@@ -228,18 +236,10 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
  */
 export const getProfileByUserId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let currentUser = null;
-
-        // Optional Auth Extraction
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        if (token) {
-            try {
-                currentUser = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret') as any;
-            } catch (err) {
-                // Invalid token -> treat as unauthenticated
-            }
-        }
+        // Auth is optional here — the optionalAuthenticateToken middleware on
+        // this route already populates req.user when a valid token is
+        // present, and leaves it undefined otherwise.
+        const currentUser: any = (req as any).user ?? null;
 
         const profile = await prisma.profile.findUnique({
             where: { userId: req.params.id as string },
@@ -275,7 +275,7 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
         // RGPD: Missing Age or Explicitly Hidden (Ticket 16)
         if (!isOwner) {
             if (profile.visible === false) {
-                return res.status(403).json({ error: 'Access denied: Profile is hidden' });
+                return res.status(410).json({ error: 'Ce profil a été retiré et n\'est plus disponible.' });
             }
             if (profile.user.dateOfBirth === null) {
                 return res.status(403).json({ error: 'Access denied: Profile owner has not verified their age' });

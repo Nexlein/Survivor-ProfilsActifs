@@ -5,9 +5,11 @@ import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
 import { getInteractionStats, getSentContacts, RecruiterStats, SentContact, translateApiError } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 export default function RecruiterDashboardPage() {
   usePageTitle("Tableau de bord recruteur");
+  const authReady = useRequireAuth(["RECRUITER"]);
   const [stats, setStats] = useState<RecruiterStats | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [contacts, setContacts] = useState<SentContact[] | null>(null);
@@ -47,6 +49,8 @@ export default function RecruiterDashboardPage() {
     { value: stats ? String(stats.messagesSent) : "—", label: "Messages envoyés ce mois" },
   ];
 
+  if (!authReady) return null;
+
   return (
     <main className="px-6 py-8">
       <h2 className="mb-5">Tableau de bord recruteur</h2>
@@ -82,8 +86,24 @@ export default function RecruiterDashboardPage() {
 
       {contacts !== null && contacts.length > 0 && (
         <div className="bg-white rounded-lg shadow-card overflow-x-auto">
-          <div className="min-w-[820px]">
-            {contacts.map((contact) => (
+          <div className="min-w-[720px]">
+            {contacts.map((contact) => {
+              if (contact.profile.visible === false) {
+                return (
+                  <div key={contact.id} className="flex gap-3 items-center px-4 py-3 border-b border-border last:border-b-0 flex-nowrap text-[13px] opacity-60 bg-[#fafafa]">
+                    <div className="w-8 h-8 rounded-full bg-border shrink-0" />
+                    <div className="flex-1 min-w-[120px] font-semibold text-text-secondary">Candidat retiré</div>
+                    <div className="text-text-secondary flex-1 italic">Ce candidat a retiré son profil du catalogue.</div>
+                    <div className="text-text-secondary min-w-[90px]">
+                      {new Date(contact.createdAt).toLocaleDateString("fr-FR")}
+                    </div>
+                    <button disabled className={buttonClasses("secondary", "sm", "shrink-0") + " opacity-50"}>
+                      Profil indisponible
+                    </button>
+                  </div>
+                );
+              }
+              return (
               <div
                 key={contact.id}
                 className="flex gap-3 items-center px-4 py-3 border-b border-border last:border-b-0 flex-nowrap text-[13px]"
@@ -109,7 +129,7 @@ export default function RecruiterDashboardPage() {
                   Voir le profil
                 </Link>
               </div>
-            ))}
+            ); })}
           </div>
         </div>
       )}
