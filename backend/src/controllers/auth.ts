@@ -68,6 +68,16 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
             return res.status(400).json({ error: 'Email, password and fullName are required' });
         }
 
+        const userRole = role === 'RECRUITER' ? 'RECRUITER' : 'JOB_SEEKER';
+
+        // dateOfBirth drives the age-verification/minor-protection logic
+        // throughout the app (RGPD/legal requirement) — it can't be left out
+        // for a JOB_SEEKER, since an absent value would otherwise bypass the
+        // under-16 check below entirely.
+        if (userRole === 'JOB_SEEKER' && !dateOfBirth) {
+            return res.status(400).json({ error: 'dateOfBirth is required for job seeker registration' });
+        }
+
         // Legal Requirement: Age verification (>= 16 years)
         if (dateOfBirth) {
             const dob = new Date(dateOfBirth);
@@ -171,7 +181,7 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
         }
         let decodedToken;
         try {
-            decodedToken = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret');
+            decodedToken = jwt.verify(token, getEnv().JWT_SECRET);
         } catch {
             // An expired/invalid token here is an expected client-side
             // condition (the whole point of this endpoint), not a server

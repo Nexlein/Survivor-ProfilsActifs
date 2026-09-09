@@ -86,3 +86,16 @@
 - [x] Script de peuplement (Load test) : 500 profils, 300 vidéos via `VideoProvider`.
 - [x] Tests de charge : 100 utilisateurs simultanés sur le catalogue (`autocannon`).
 - [x] Rapport de performance (médiane, p95, goulot d'étranglement, avant/après index).
+
+## 9. Retours Juridiques (Florine Pontaillac - Mercredi 9 Sept)
+
+- [ ] **Droit d'opposition (Retrait du catalogue)** :
+  - Le candidat peut basculer son profil hors du catalogue en toute autonomie (réversible).
+  - Le profil retiré n'apparaît plus dans le catalogue, la recherche, ni les listes filtrées.
+  - Lien direct vers un profil retiré : page sobre "Profil indisponible" (ne révèle pas si la personne était inscrite avant).
+  - Historique recruteur (profils sauvegardés/consultés) : affichage du profil avec mention explicite "Retiré" au lieu de le faire disparaître. Documenté en 3 lignes dans le code/doc.
+- [ ] **Traçabilité des consultations (Droit d'accès)** :
+  - Enregistrement de chaque vue de profil par un recruteur : date, heure, et organisation (pas la personne physique).
+  - Aucune donnée technique de surveillance (IP, user-agent, localisation).
+  - Interface côté candidat affichant ce journal en ordre chronologique inverse.
+  - Mention explicite côté candidat indiquant que les consultations anonymes (sans compte) ne sont pas tracées.

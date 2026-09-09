@@ -16,11 +16,13 @@ import {
   translateApiError,
 } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const PREVIEW_SIZE = 3;
 
 export default function AdminDashboardPage() {
   usePageTitle("Tableau de bord admin");
+  const authReady = useRequireAuth(["ADMIN"]);
   const [stats, setStats] = useState<AdminInteractionStats | null>(null);
   const [statsError, setStatsError] = useState<string | null>(null);
   const [pending, setPending] = useState<ModerationVideo[] | null>(null);
@@ -122,6 +124,8 @@ export default function AdminDashboardPage() {
   ];
 
   const maxWeeklySignups = Math.max(1, ...(stats?.weeklySignups.map((w) => w.count) ?? [1]));
+
+  if (!authReady) return null;
 
   return (
     <main className="px-6 py-8">

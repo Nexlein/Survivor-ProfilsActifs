@@ -145,7 +145,13 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
                 prisma.video.count({ where: { status: status as any } }),
             ]);
 
-            return res.status(200).json({ videos, total, page, pageSize });
+            const provider = ProviderFactory.getProvider();
+            const videosWithUrls = await Promise.all(videos.map(async (v) => ({
+                ...v,
+                url: await provider.playbackUrl(v.providerId),
+                subtitleUrl: await provider.subtitleUrl(v.providerId)
+            })));
+            return res.status(200).json({ videos: videosWithUrls, total, page, pageSize });
         }
 
         const eighteenYearsAgo = getEighteenYearsAgo();
@@ -169,7 +175,13 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
             prisma.video.count({ where: whereClause }),
         ]);
 
-        return res.status(200).json({ videos, total, page, pageSize });
+        const provider = ProviderFactory.getProvider();
+        const videosWithUrls = await Promise.all(videos.map(async (v) => ({
+            ...v,
+            url: await provider.playbackUrl(v.providerId),
+            subtitleUrl: await provider.subtitleUrl(v.providerId)
+        })));
+        return res.status(200).json({ videos: videosWithUrls, total, page, pageSize });
     } catch (error) { return next(error); }
 };
 
