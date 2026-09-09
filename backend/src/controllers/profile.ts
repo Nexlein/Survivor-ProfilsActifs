@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import prisma from '../prisma';
 import fs from 'fs';
 import path from 'path';
+import { ProviderFactory } from '../providers/ProviderFactory';
+import { deletePhysicalProfileFiles } from '../utils/profileFiles';
 
 /**
  * Controller: Get profile of the current user
@@ -102,6 +104,20 @@ export const deleteProfile = async (req: Request, res: Response, next: NextFunct
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
+
+        const existing = await prisma.profile.findUnique({
+            where: { userId: user.id },
+            include: { videos: { select: { providerId: true } } },
+        });
+        if (!existing) {
+            return res.status(404).json({ error: 'Profile not found' });
+        }
+
+        // Physically delete media files (videos + avatar) before dropping the
+        // row, same cleanup as the /compliance/account deletion path.
+        const provider = ProviderFactory.getProvider();
+        await deletePhysicalProfileFiles(existing, provider);
+
         const profile = await prisma.profile.delete({ where: { userId: user.id } });
         return res.json(profile);
     } catch (error) {

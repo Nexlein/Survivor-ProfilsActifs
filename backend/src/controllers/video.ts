@@ -6,6 +6,16 @@ import fs from 'fs';
 import { ProviderFactory } from '../providers/ProviderFactory.js';
 
 export const createProfileVideo = async (req: Request, res: Response, next: NextFunction) => {
+    // Multer (upstream middleware) has already written these to disk by the
+    // time this handler runs, regardless of which path below returns early —
+    // track whether the provider took ownership of them so the `finally`
+    // block can clean up orphans on every other exit path (404, LINK
+    // rejection, invalid content, thrown error).
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+    const videoFile = files?.['video']?.[0];
+    const subtitleFile = files?.['subtitle']?.[0];
+    let filesConsumed = false;
+
     try {
         const user = (req as any).user;
         if (!user) {
@@ -23,17 +33,11 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
             return res.status(400).json({ error: 'LINK integration is permanently disabled.' });
         }
 
-        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-        const videoFile = files?.['video']?.[0];
-        const subtitleFile = files?.['subtitle']?.[0];
-
         if (!videoFile) {
             return res.status(400).json({ error: 'No video file provided' });
         }
 
         if (!isValidVideoFile(videoFile.path)) {
-            fs.unlink(videoFile.path, () => { });
-            if (subtitleFile) fs.unlink(subtitleFile.path, () => { });
             return res.status(400).json({
                 error: 'Invalid file content',
                 message: 'The uploaded file is not a valid MP4, MOV or AVI video.',
@@ -43,6 +47,7 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
         const provider = ProviderFactory.getProvider();
         const providerName = ProviderFactory.getProviderName();
         const providerId = await provider.store(videoFile, subtitleFile);
+        filesConsumed = true; // provider.store() already moved/deleted the temp files
 
         const video = await prisma.video.create({
             data: {
@@ -59,6 +64,11 @@ export const createProfileVideo = async (req: Request, res: Response, next: Next
         return res.status(201).json(video);
     } catch (error) {
         return next(error);
+    } finally {
+        if (!filesConsumed) {
+            if (videoFile) fs.unlink(videoFile.path, () => { });
+            if (subtitleFile) fs.unlink(subtitleFile.path, () => { });
+        }
     }
 };
 
@@ -82,13 +92,20 @@ export const deleteProfileVideo = async (req: Request, res: Response, next: Next
             return res.status(403).json({ error: 'You do not have permission to delete this video' });
         }
 
+        // Delete the physical file before the DB row: if disk deletion fails,
+        // abort before the row is gone so the video can't become an
+        // untraceable orphan on disk.
+        const provider = ProviderFactory.getProvider();
+        try {
+            await provider.delete(existingVideo.providerId);
+        } catch (err) {
+            console.error(`[RGPD] Failed to delete video file for ${existingVideo.providerId}`, err);
+            return res.status(500).json({ error: 'Failed to delete video file. Please try again.' });
+        }
+
         const video = await prisma.video.delete({
             where: { id: videoId },
         });
-
-        // GDPR Right to Be Forgotten
-        const provider = ProviderFactory.getProvider();
-        await provider.delete(existingVideo.providerId);
 
         return res.status(200).json({
             message: 'Video deleted successfully',

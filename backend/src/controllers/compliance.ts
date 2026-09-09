@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../prisma.js';
 import { ProviderFactory } from '../providers/ProviderFactory.js';
+import { deletePhysicalProfileFiles } from '../utils/profileFiles.js';
 
 export const exportData = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -65,17 +66,10 @@ export const deleteAccount = async (req: Request, res: Response, next: NextFunct
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Physically delete media files via Provider abstraction
-        if (user.profile && user.profile.videos.length > 0) {
+        // Physically delete media files (videos + avatar) via the shared cleanup helper
+        if (user.profile) {
             const provider = ProviderFactory.getProvider();
-            for (const video of user.profile.videos) {
-                try {
-                    await provider.delete(video.providerId);
-                    console.log(`[RGPD] Physically deleted video via provider: ${video.providerId}`);
-                } catch (err) {
-                    console.error(`[RGPD] Failed to delete video ${video.providerId}`, err);
-                }
-            }
+            await deletePhysicalProfileFiles(user.profile, provider);
         }
 
         await prisma.user.delete({
