@@ -223,7 +223,8 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
 
         // A page past the end isn't an error — findMany/count already return
         // an empty result set cleanly, no bounds-check needed to avoid a crash.
-        return res.json({ profiles, total, page, pageSize });
+        const profilesWithUrls = await Promise.all(profiles.map(serializeProfileVideos));
+        return res.json({ profiles: profilesWithUrls, total, page, pageSize });
     } catch (error) {
         return next(error);
     }
@@ -299,7 +300,8 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
             }
         }
 
-        const { user: _, ...publicProfile } = profile;
+        let profileWithUrl = await serializeProfileVideos(profile);
+        const { user: _, ...publicProfile } = profileWithUrl;
         return res.json(publicProfile);
     } catch (error) {
         return next(error);
