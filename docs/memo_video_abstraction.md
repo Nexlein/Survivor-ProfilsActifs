@@ -1,13 +1,13 @@
 # Note d'Architecture : Abstraction du Stockage Vidéo
 
-**Date :** 07/09/2026
+**Date :** 07/09/2026 (Mise à jour le 08/09/2026 pour le sous-titrage)
 **Objet :** Choix de conception de l'interface `VideoProvider` et intégration future de PeerTube.
 
 ## 1. Choix de l'Interface (VideoProvider)
 
 L'interface `VideoProvider` a été conçue pour encapsuler totalement la logique de stockage et de distribution des médias. Elle expose les méthodes suivantes :
 
-- `store(videoFile, subtitleFile)` : Enregistre le fichier vidéo et son sous-titre optionnel, puis retourne un `providerId` opaque.
+- `store(videoFile, subtitleFile)` : Enregistre le fichier vidéo et son sous-titre, puis retourne un `providerId` opaque.
 - `status(providerId)` : Permet de connaître l'état du média (PENDING, READY, ERROR), ce qui est critique pour gérer les files d'attente de transcodage de prestataires externes.
 - `playbackUrl(providerId)` : Renvoie l'URL de streaming.
 - `subtitleUrl(providerId)` : *Méthode ajoutée pour garantir le respect strict du RGAA (Accessibilité).*
@@ -16,7 +16,16 @@ L'interface `VideoProvider` a été conçue pour encapsuler totalement la logiqu
 **La sécurité avant tout :**
 Les vidéos ne sont plus exposées via un répertoire statique public. L'implémentation locale (`LocalVideoProvider`) range les fichiers dans un dossier système sécurisé. Le streaming est opéré par un contrôleur Node.js (`videoPlayback.ts`) qui vérifie l'identité du demandeur. Une vidéo en attente de modération (PENDING) est instantanément bloquée, rendant tout "fuitage" impossible.
 
-## 2. Intégration future de l'instance souveraine (PeerTube)
+## 2. Sous-titrage Automatique Zéro-Cloud (Whisper)
+
+Afin de répondre à l'obligation d'accessibilité sans compromettre la souveraineté des données, `LocalVideoProvider.store()` intègre un processus de transcription 100% local :
+1. Si aucun fichier `.vtt` manuel n'est fourni, la méthode extrait une piste audio locale via `ffmpeg`.
+2. Le moteur `whisper.cpp` (encapsulé par `nodejs-whisper` en modèle `tiny`) transcrit le fichier audio.
+3. Le fichier VTT est enregistré de manière transparente.
+
+**Zéro dépendance Cloud :** Contrairement aux APIs Speech-to-Text de Google ou OpenAI, la voix des candidats ne quitte jamais le serveur. Le temps de transcription pour des vidéos courtes (30-60s) est tolérable en traitement synchrone (~10 à 30 secondes).
+
+## 3. Intégration future de l'instance souveraine (PeerTube)
 
 L'implémentation factice (`DummyVideoProvider`) prouve que le système peut basculer sur un nouveau prestataire simplement en changeant la variable d'environnement `VIDEO_PROVIDER`.
 

@@ -247,6 +247,7 @@ export type Video = {
 };
 
 export type Profile = {
+  visible: boolean;
   id: string;
   userId: string;
   fullName: string;
@@ -274,6 +275,7 @@ export function getProfileByUserId(userId: string) {
 }
 
 export type UpdateProfilePayload = {
+  visible?: boolean;
   fullName?: string;
   targetSector?: string;
   location?: string;
@@ -356,6 +358,7 @@ export type SentContact = {
   id: string;
   subject: string | null;
   message: string | null;
+  read: boolean;
   createdAt: string;
   profile: {
     userId: string;
@@ -363,6 +366,7 @@ export type SentContact = {
     targetSector: string | null;
     certificationScore: number | null;
     hasCertificationBadge: boolean;
+    visible: boolean;
   };
 };
 

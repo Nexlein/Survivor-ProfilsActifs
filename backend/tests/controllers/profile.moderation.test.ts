@@ -11,13 +11,7 @@ vi.mock("../../src/prisma", () => {
     return { default: prisma, prisma };
 });
 
-vi.mock("jsonwebtoken", () => ({
-    default: { verify: vi.fn() },
-    verify: vi.fn(),
-}));
-
 import prisma from "../../src/prisma";
-import jwt from "jsonwebtoken";
 import { getAllProfiles, getProfileByUserId } from "../../src/controllers/profile";
 
 const mockRes = () => {
@@ -33,12 +27,13 @@ beforeEach(() => {
     vi.clearAllMocks();
 });
 
+
 describe("getAllProfiles moderation gate", () => {
     it("only surfaces accounts approved by an admin, for an unauthenticated visitor", async () => {
         (prisma.profile.findMany as any).mockResolvedValue([]);
         (prisma.profile.count as any).mockResolvedValue(0);
 
-        const req: any = { query: {}, headers: {} };
+        const req: any = { query: {} };
         const res = mockRes();
 
         await getAllProfiles(req, res, next);
@@ -48,11 +43,10 @@ describe("getAllProfiles moderation gate", () => {
     });
 
     it("still applies the moderation gate for an authenticated recruiter", async () => {
-        (jwt.verify as any).mockReturnValue({ id: "r1", role: "RECRUITER" });
         (prisma.profile.findMany as any).mockResolvedValue([]);
         (prisma.profile.count as any).mockResolvedValue(0);
 
-        const req: any = { query: {}, headers: { authorization: "Bearer faketoken" } };
+        const req: any = { query: {}, user: { id: "r1", role: "RECRUITER" } };
         const res = mockRes();
 
         await getAllProfiles(req, res, next);
@@ -74,7 +68,7 @@ describe("getProfileByUserId moderation gate", () => {
     it("denies an anonymous visitor access to a not-yet-approved profile", async () => {
         (prisma.profile.findUnique as any).mockResolvedValue(pendingProfile);
 
-        const req: any = { params: { id: "u1" }, headers: {} };
+        const req: any = { params: { id: "u1" } };
         const res = mockRes();
 
         await getProfileByUserId(req, res, next);
@@ -84,10 +78,9 @@ describe("getProfileByUserId moderation gate", () => {
     });
 
     it("lets an admin see a not-yet-approved profile in order to moderate it", async () => {
-        (jwt.verify as any).mockReturnValue({ id: "admin1", role: "ADMIN" });
         (prisma.profile.findUnique as any).mockResolvedValue(pendingProfile);
 
-        const req: any = { params: { id: "u1" }, headers: { authorization: "Bearer admintoken" } };
+        const req: any = { params: { id: "u1" }, user: { id: "admin1", role: "ADMIN" } };
         const res = mockRes();
 
         await getProfileByUserId(req, res, next);
@@ -97,10 +90,9 @@ describe("getProfileByUserId moderation gate", () => {
     });
 
     it("lets the profile owner see their own pending profile", async () => {
-        (jwt.verify as any).mockReturnValue({ id: "u1", role: "JOB_SEEKER" });
         (prisma.profile.findUnique as any).mockResolvedValue(pendingProfile);
 
-        const req: any = { params: { id: "u1" }, headers: { authorization: "Bearer ownertoken" } };
+        const req: any = { params: { id: "u1" }, user: { id: "u1", role: "JOB_SEEKER" } };
         const res = mockRes();
 
         await getProfileByUserId(req, res, next);
@@ -114,7 +106,7 @@ describe("getProfileByUserId moderation gate", () => {
             user: { ...pendingProfile.user, moderationStatus: "APPROVED" },
         });
 
-        const req: any = { params: { id: "u1" }, headers: {} };
+        const req: any = { params: { id: "u1" } };
         const res = mockRes();
 
         await getProfileByUserId(req, res, next);

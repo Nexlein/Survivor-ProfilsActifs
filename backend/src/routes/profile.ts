@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { deleteProfile, getProfile, updateProfile, getCurrentProfile, getAllProfiles, getProfileByUserId, uploadProfileAvatar } from '../controllers/profile';
 import { createProfileVideo, deleteProfileVideo } from '../controllers/video';
-import { authenticateToken } from '../middlewares/auth';
+import { authenticateToken, optionalAuthenticateToken } from '../middlewares/auth';
 import { upload, uploadAvatar } from '../middlewares/upload';
 
 export const profileRouter = Router();
@@ -17,9 +17,10 @@ profileRouter.post('/avatar', authenticateToken, uploadAvatar.single('avatar'), 
 profileRouter.post('/videos', authenticateToken, upload.fields([{ name: 'video', maxCount: 1 }, { name: 'subtitle', maxCount: 1 }]), createProfileVideo);
 profileRouter.delete('/videos/:id', authenticateToken, deleteProfileVideo);
 
-// Public routes — browsable without an account; optional auth is handled
-// inside the controllers themselves (minors are only shown to recruiters).
-profileRouter.get('/all', getAllProfiles);
-profileRouter.get('/user/:id', getProfileByUserId);
+// Public routes — browsable without an account; optionalAuthenticateToken
+// populates req.user when a valid token is present (minors are only shown
+// to recruiters) without rejecting anonymous requests.
+profileRouter.get('/all', optionalAuthenticateToken, getAllProfiles);
+profileRouter.get('/user/:id', optionalAuthenticateToken, getProfileByUserId);
 
 export default profileRouter;

@@ -14,11 +14,13 @@ import {
   translateApiError,
 } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 type ViewState = "loading" | "intro" | "question" | "pass" | "fail" | "error";
 
 export default function QuestionnairePage() {
   usePageTitle("Questionnaire de certification JEB");
+  const authReady = useRequireAuth();
   const [view, setView] = useState<ViewState>("loading");
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -87,6 +89,8 @@ export default function QuestionnairePage() {
       setIsSubmitting(false);
     }
   }
+
+  if (!authReady) return null;
 
   if (view === "loading") {
     return <main className="p-12 text-center text-text-secondary">Chargement...</main>;
