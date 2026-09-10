@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
 import { ProfileCard } from "@/components/ui/Card";
-import { useCurrentUser } from "@/lib/api";
+import { Profile, getAllProfiles, resolveAvatarUrl, useCurrentUser } from "@/lib/api";
+
+const FEATURED_COUNT = 8;
 
 const STEPS = [
   {
@@ -21,17 +24,6 @@ const STEPS = [
     title: "Obtenez votre certification JEB",
     description: "Passez le questionnaire et décrochez votre badge.",
   },
-];
-
-const FEATURED_PROFILES = [
-  { name: "Amina K.", role: "Développeuse web", certified: true, avatarUrl: "/images/demo-avatars/avatar-1.jpg" },
-  { name: "Marie Dupont", role: "Assistante de gestion", certified: true, avatarUrl: "https://randomuser.me/api/portraits/women/68.jpg" },
-  { name: "Karim Belkacem", role: "Technicien logistique", certified: true, avatarUrl: "/images/demo-avatars/avatar-2.jpg" },
-  { name: "Sophie Martin", role: "Chargée de communication", certified: false, avatarUrl: "https://randomuser.me/api/portraits/women/23.jpg" },
-  { name: "Julien Petit", role: "Comptable", certified: true, avatarUrl: "/images/demo-avatars/avatar-3.jpg" },
-  { name: "Lucie Bernard", role: "Community manager", certified: false, avatarUrl: "https://randomuser.me/api/portraits/women/33.jpg" },
-  { name: "Thomas Roy", role: "Chargé de recrutement", certified: true, avatarUrl: "https://randomuser.me/api/portraits/men/76.jpg" },
-  { name: "Sonia Lefèvre", role: "Chef de projet", certified: false, avatarUrl: "https://randomuser.me/api/portraits/women/50.jpg" },
 ];
 
 function HeroActions() {
@@ -76,6 +68,22 @@ function HeroActions() {
 }
 
 export default function Home() {
+  const [featuredProfiles, setFeaturedProfiles] = useState<Profile[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getAllProfiles(1)
+      .then((res) => {
+        if (!cancelled) setFeaturedProfiles(res.profiles.slice(0, FEATURED_COUNT));
+      })
+      .catch(() => {
+        if (!cancelled) setFeaturedProfiles([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <main className="flex flex-col">
       <section className="bg-primary px-6 sm:px-12 py-20 sm:py-28 flex flex-col md:flex-row items-center gap-12 md:gap-16">
@@ -116,17 +124,26 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-6 sm:px-12 py-20 sm:py-24 bg-bg-secondary flex flex-col items-center gap-12">
-        <h2 className="text-center">Profils mis en avant</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-5xl w-full justify-items-center">
-          {FEATURED_PROFILES.map((profile) => (
-            <ProfileCard key={profile.name} {...profile} />
-          ))}
-        </div>
-        <Link href="/profils" className={buttonClasses("secondary")}>
-          Voir tous les profils
-        </Link>
-      </section>
+      {featuredProfiles === null || featuredProfiles.length > 0 ? (
+        <section className="px-6 sm:px-12 py-20 sm:py-24 bg-bg-secondary flex flex-col items-center gap-12">
+          <h2 className="text-center">Profils mis en avant</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-5xl w-full justify-items-center">
+            {(featuredProfiles ?? []).map((profile) => (
+              <Link key={profile.id} href={`/profils/${profile.userId}`} className="block">
+                <ProfileCard
+                  name={profile.fullName}
+                  role={profile.targetSector ?? "Secteur non renseigné"}
+                  avatarUrl={resolveAvatarUrl(profile.avatarUrl)}
+                  certified={profile.hasCertificationBadge}
+                />
+              </Link>
+            ))}
+          </div>
+          <Link href="/profils" className={buttonClasses("secondary")}>
+            Voir tous les profils
+          </Link>
+        </section>
+      ) : null}
     </main>
   );
 }
