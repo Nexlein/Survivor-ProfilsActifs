@@ -6,8 +6,6 @@ import { buttonClasses } from "@/components/ui/Button";
 import { ProfileCard } from "@/components/ui/Card";
 import { Profile, getAllProfiles, resolveAvatarUrl, useCurrentUser } from "@/lib/api";
 
-const FEATURED_COUNT = 8;
-
 const STEPS = [
   {
     icon: "◎",
@@ -21,10 +19,30 @@ const STEPS = [
   },
   {
     icon: "★",
-    title: "Obtenez votre certification JEB",
+    title: "Obtenez votre certification",
     description: "Passez le questionnaire et décrochez votre badge.",
   },
 ];
+
+function useFeaturedProfiles() {
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    getAllProfiles(1, { certifiedOnly: true })
+      .then((res) => {
+        if (!cancelled) setProfiles(res.profiles.slice(0, 8));
+      })
+      .catch(() => {
+        if (!cancelled) setProfiles([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return profiles;
+}
 
 function HeroActions() {
   const user = useCurrentUser();
@@ -68,21 +86,7 @@ function HeroActions() {
 }
 
 export default function Home() {
-  const [featuredProfiles, setFeaturedProfiles] = useState<Profile[] | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    getAllProfiles(1)
-      .then((res) => {
-        if (!cancelled) setFeaturedProfiles(res.profiles.slice(0, FEATURED_COUNT));
-      })
-      .catch(() => {
-        if (!cancelled) setFeaturedProfiles([]);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const featuredProfiles = useFeaturedProfiles();
 
   return (
     <main className="flex flex-col">
@@ -90,7 +94,7 @@ export default function Home() {
         <div className="flex-1 flex flex-col gap-7 max-w-lg">
           <h1 className="text-white">Valorisez vos compétences. Soyez vu.</h1>
           <p className="font-body text-lg leading-relaxed text-white/90 max-w-md">
-            ProfilsActifs relie candidats et recruteurs par la vidéo, avec certification officielle JEB.
+            ProfilsActifs relie candidats et recruteurs par la vidéo, avec certification officielle.
           </p>
           <div className="flex gap-3 flex-wrap justify-center md:justify-start w-full md:w-auto">
             <HeroActions />
@@ -124,26 +128,24 @@ export default function Home() {
         </div>
       </section>
 
-      {featuredProfiles === null || featuredProfiles.length > 0 ? (
-        <section className="px-6 sm:px-12 py-20 sm:py-24 bg-bg-secondary flex flex-col items-center gap-12">
-          <h2 className="text-center">Profils mis en avant</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-5xl w-full justify-items-center">
-            {(featuredProfiles ?? []).map((profile) => (
-              <Link key={profile.id} href={`/profils/${profile.userId}`} className="block">
-                <ProfileCard
-                  name={profile.fullName}
-                  role={profile.targetSector ?? "Secteur non renseigné"}
-                  avatarUrl={resolveAvatarUrl(profile.avatarUrl)}
-                  certified={profile.hasCertificationBadge}
-                />
-              </Link>
-            ))}
-          </div>
-          <Link href="/profils" className={buttonClasses("secondary")}>
-            Voir tous les profils
-          </Link>
-        </section>
-      ) : null}
+      <section className="px-6 sm:px-12 py-20 sm:py-24 bg-bg-secondary flex flex-col items-center gap-12">
+        <h2 className="text-center">Profils mis en avant</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-5xl w-full justify-items-center">
+          {featuredProfiles.map((profile) => (
+            <Link key={profile.id} href={`/profils/${profile.userId}`} className="block w-full sm:w-[220px]">
+              <ProfileCard
+                name={profile.fullName}
+                role={profile.targetSector ?? "Secteur non renseigné"}
+                avatarUrl={resolveAvatarUrl(profile.avatarUrl)}
+                certified={profile.hasCertificationBadge}
+              />
+            </Link>
+          ))}
+        </div>
+        <Link href="/profils" className={buttonClasses("secondary")}>
+          Voir tous les profils
+        </Link>
+      </section>
     </main>
   );
 }

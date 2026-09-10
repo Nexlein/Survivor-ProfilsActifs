@@ -462,8 +462,22 @@ export type ProfilePage = {
 // Server-side pagination is mandatory here (20/page, per Thomas Vignal's
 // spec) — fetches one page at a time rather than accumulating every page
 // into memory client-side.
-export function getAllProfiles(page = 1) {
-  return request<ProfilePage>(`/profile/all?page=${page}`);
+export type ProfileFilters = {
+  search?: string;
+  sector?: string;
+  skill?: string;
+  location?: string;
+  certifiedOnly?: boolean;
+};
+
+export function getAllProfiles(page = 1, filters: ProfileFilters = {}) {
+  const params = new URLSearchParams({ page: String(page) });
+  if (filters.search) params.set('search', filters.search);
+  if (filters.sector) params.set('sector', filters.sector);
+  if (filters.skill) params.set('skill', filters.skill);
+  if (filters.location) params.set('location', filters.location);
+  if (filters.certifiedOnly) params.set('certifiedOnly', 'true');
+  return request<ProfilePage>(`/profile/all?${params.toString()}`);
 }
 
 export type QuestionOption = {

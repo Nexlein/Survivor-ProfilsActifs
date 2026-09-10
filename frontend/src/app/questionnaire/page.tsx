@@ -19,7 +19,7 @@ import { useRequireAuth } from "@/lib/use-require-auth";
 type ViewState = "loading" | "intro" | "question" | "pass" | "fail" | "error";
 
 export default function QuestionnairePage() {
-  usePageTitle("Questionnaire de certification JEB");
+  usePageTitle("Questionnaire de certification");
   const authReady = useRequireAuth();
   const [view, setView] = useState<ViewState>("loading");
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -105,7 +105,7 @@ export default function QuestionnairePage() {
   if (view === "intro") {
     return (
       <main className="max-w-xl mx-auto px-6 py-16 text-center">
-        <h1 className="mb-4">Questionnaire de Certification JEB</h1>
+        <h1 className="mb-4">Questionnaire de Certification</h1>
         <p className="font-body text-[15px] leading-6 text-text mb-3">
           Ce questionnaire évalue vos aptitudes professionnelles transversales : communication,
           organisation, adaptabilité. Il comprend {questions.length} questions. Votre progression est
@@ -210,7 +210,7 @@ export default function QuestionnairePage() {
     return (
       <main className="bg-bg-secondary py-16 px-6 text-center">
         <div className="w-20 h-20 rounded-full bg-success text-white font-bold text-xl flex items-center justify-center mx-auto mb-5">
-          JEB ★
+          ★
         </div>
         <h1 className="text-success mb-2.5">
           Félicitations ! Vous avez obtenu votre badge de certification.
@@ -229,7 +229,7 @@ export default function QuestionnairePage() {
   return (
     <main className="bg-[#FFF5F5] py-16 px-6 text-center">
       <div className="w-20 h-20 rounded-full bg-border text-text-secondary font-bold text-xl flex items-center justify-center mx-auto mb-5">
-        JEB
+        ✕
       </div>
       <h1 className="mb-2.5">Certification non obtenue cette fois.</h1>
       <p className="font-bold text-text mb-1.5">Score final : {result?.totalScore}/1000</p>

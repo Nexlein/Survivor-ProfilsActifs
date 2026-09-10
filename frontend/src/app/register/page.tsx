@@ -8,9 +8,8 @@ export default function RegisterRolePage() {
   return (
     <main className="flex flex-col items-center px-6 py-16 gap-10">
       <div className="text-center flex flex-col items-center gap-3">
-        <div className="w-11 h-11 bg-primary text-white font-bold font-heading text-xs flex items-center justify-center">
-          JEB
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="ProfilsActifs" className="w-16 h-16 object-contain rounded-sm" />
         <h1>Rejoindre ProfilsActifs</h1>
         <p className="text-text-secondary">Êtes-vous ?</p>
       </div>
@@ -18,13 +17,13 @@ export default function RegisterRolePage() {
       <div className="flex flex-wrap gap-6 justify-center max-w-4xl">
         <div className="w-full max-w-[420px] border border-border rounded-lg p-7 shadow-card">
           <div className="text-2xl mb-2.5">👤🔍</div>
-          <h3 className="mb-2">Demandeur d&apos;emploi</h3>
+          <h3 className="mb-2">Demandeur demploi</h3>
           <p className="font-body text-sm text-text-secondary mb-4">
             Créez votre profil, publiez votre vidéo de présentation et obtenez votre certification
-            officielle JEB.
+            officielle.
           </p>
           <Link href="/register/candidate" className={buttonClasses("primary", "md", "w-full")}>
-            Je suis demandeur d&apos;emploi
+            Je suis demandeur d'emploi
           </Link>
         </div>
 

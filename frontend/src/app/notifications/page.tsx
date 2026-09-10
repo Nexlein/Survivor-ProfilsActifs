@@ -132,11 +132,10 @@ export default function NotificationsPage() {
                 <p className={`text-sm m-0 ${n.read ? "text-text-secondary" : "text-text"}`}>
                   {meta.message(n)}
                 </p>
-                {n.type === "CONTACT" && n.subject && (
-                  <p className="text-sm font-semibold text-text mt-1">{n.subject}</p>
-                )}
-                {n.type === "CONTACT" && n.message && (
-                  <p className="text-sm text-text-secondary mt-1 whitespace-pre-line">{n.message}</p>
+                {n.type === "CONTACT" && (
+                  <p className="text-sm text-text-secondary mt-1">
+                    Veuillez consulter la boîte de réception associée à votre compte pour lire son message et lui répondre.
+                  </p>
                 )}
                 <p className="text-xs text-text-secondary mt-1">{relativeTime(n.createdAt)}</p>
                 {!n.read && (

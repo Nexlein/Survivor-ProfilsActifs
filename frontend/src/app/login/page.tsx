@@ -42,9 +42,8 @@ export default function LoginPage() {
   return (
     <main className="flex flex-1">
       <div className="hidden md:flex flex-[0_0_45%] bg-primary flex-col items-center justify-center p-10 text-center gap-4">
-        <div className="w-14 h-14 border border-white text-white font-bold font-heading flex items-center justify-center">
-          JEB
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="ProfilsActifs" className="w-20 h-20 object-contain rounded-sm border border-white" />
         <p className="italic font-body text-lg text-white max-w-xs">
           Votre carrière commence ici.
         </p>
@@ -61,6 +60,7 @@ export default function LoginPage() {
             placeholder="votre@email.fr"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             required
           />
 
@@ -74,6 +74,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 required
                 className="w-full border border-border rounded-md px-3.5 py-2.5 pr-10 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
               />
@@ -95,7 +96,7 @@ export default function LoginPage() {
           </Button>
 
           <div className="text-center text-sm">
-            Pas encore de compte ? <Link href="/register">S&apos;inscrire</Link>
+            Pas encore de compte ? <Link href="/register">S'inscrire</Link>
           </div>
         </form>
       </div>

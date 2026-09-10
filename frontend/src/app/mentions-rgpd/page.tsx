@@ -7,7 +7,7 @@ export default function MentionsRgpdPage() {
     <main className="max-w-2xl mx-auto px-6 py-12">
       <h1 className="mb-2">Mentions RGPD</h1>
       <p className="text-text-secondary text-sm mb-6">
-        Ce texte est un brouillon de structure et n&apos;a pas de valeur juridique — il doit être
+        Ce texte est un brouillon de structure et n'a pas de valeur juridique — il doit être
         rédigé et validé par le service juridique / DPO du Ministère avant publication.
       </p>
 
@@ -16,14 +16,14 @@ export default function MentionsRgpdPage() {
           <h2 className="mb-2">Données collectées</h2>
           <p>
             ProfilsActifs collecte : e-mail, mot de passe (chiffré), date de naissance (vérification
-            d&apos;âge légale), nom, secteur recherché, localisation, compétences, et les vidéos
+            d'âge légale), nom, secteur recherché, localisation, compétences, et les vidéos
             publiées volontairement.
           </p>
         </section>
         <section>
           <h2 className="mb-2">Consentement vidéo</h2>
           <p>
-            La publication d&apos;une vidéo nécessite un consentement explicite, horodaté et
+            La publication d'une vidéo nécessite un consentement explicite, horodaté et
             révocable à tout moment. La révocation entraîne la suppression définitive du fichier
             vidéo.
           </p>
@@ -31,7 +31,7 @@ export default function MentionsRgpdPage() {
         <section>
           <h2 className="mb-2">Droits des personnes</h2>
           <p>
-            Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification et de
+            Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de
             suppression de vos données, exerçable depuis votre espace personnel ou via la page{" "}
             Contact.
           </p>

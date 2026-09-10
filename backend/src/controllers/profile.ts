@@ -207,6 +207,30 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
             whereClause.user.dateOfBirth = { lte: eighteenYearsAgo };
         }
 
+        const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+        if (search) {
+            whereClause.fullName = { contains: search, mode: 'insensitive' };
+        }
+
+        const sector = typeof req.query.sector === 'string' ? req.query.sector.trim() : '';
+        if (sector) {
+            whereClause.targetSector = sector;
+        }
+
+        const skill = typeof req.query.skill === 'string' ? req.query.skill.trim() : '';
+        if (skill) {
+            whereClause.skills = { some: { name: skill } };
+        }
+
+        const location = typeof req.query.location === 'string' ? req.query.location.trim() : '';
+        if (location) {
+            whereClause.location = { contains: location, mode: 'insensitive' };
+        }
+
+        if (req.query.certifiedOnly === 'true') {
+            whereClause.hasCertificationBadge = true;
+        }
+
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
         const pageSize = getEnvInt('FEED_PAGE_SIZE', 20);
         const skip = (page - 1) * pageSize;

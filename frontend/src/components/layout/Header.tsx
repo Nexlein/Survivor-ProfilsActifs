@@ -27,7 +27,6 @@ function getNavLinks(user: AuthUser | null): NavLink[] {
     return [
       { href: "/profils", label: "Parcourir les profils" },
       { href: "/dashboard/recruiter", label: "Tableau de bord" },
-      { href: "/notifications", label: "Notifications" },
     ];
   }
   if (user.role === "ADMIN") {
@@ -39,7 +38,7 @@ function getNavLinks(user: AuthUser | null): NavLink[] {
   return [
     { href: `/profils/${user.id}`, label: "Mon profil" },
     { href: "/notifications", label: "Notifications" },
-    { href: "/questionnaire", label: "Certification JEB" },
+    { href: "/questionnaire", label: "Certification" },
   ];
 }
 
@@ -88,9 +87,8 @@ export function Header() {
     <header className="border-b border-border bg-bg">
       <div className="h-16 px-6 flex items-center gap-6">
         <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="w-7 h-7 bg-primary text-white text-[9px] font-bold font-heading flex items-center justify-center">
-            JEB
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="ProfilsActifs" className="w-10 h-10 object-contain rounded-sm" />
           <span className="font-bold text-primary font-heading">ProfilsActifs</span>
         </Link>
 
@@ -111,7 +109,7 @@ export function Header() {
                 Se connecter
               </Link>
               <Link href="/register" className={buttonClasses("primary")}>
-                S&apos;inscrire
+                S'inscrire
               </Link>
             </>
           )}
@@ -153,7 +151,7 @@ export function Header() {
 
         <button
           type="button"
-          className="md:hidden ml-auto text-xl"
+          className="md:hidden ml-auto text-xl p-2.5"
           onClick={() => setIsMobileMenuOpen((v) => !v)}
           aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={isMobileMenuOpen}
@@ -175,7 +173,7 @@ export function Header() {
                 Se connecter
               </Link>
               <Link href="/register" className={buttonClasses("primary", "md", "flex-1")}>
-                S&apos;inscrire
+                S'inscrire
               </Link>
             </div>
           )}

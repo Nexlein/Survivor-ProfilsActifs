@@ -70,6 +70,7 @@ export default function RecruiterRegisterPage() {
           label="Adresse e-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
           required
         />
         <Input
@@ -78,6 +79,7 @@ export default function RecruiterRegisterPage() {
           label="Mot de passe"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete="new-password"
           required
         />
         <Input
@@ -86,6 +88,7 @@ export default function RecruiterRegisterPage() {
           label="Confirmer le mot de passe"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          autoComplete="new-password"
           required
         />
         <Input

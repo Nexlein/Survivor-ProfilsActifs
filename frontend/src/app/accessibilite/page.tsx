@@ -6,18 +6,18 @@ export const metadata: Metadata = { title: "Accessibilité" };
 export default function AccessibilitePage() {
   return (
     <main className="max-w-2xl mx-auto px-6 py-12">
-      <h1 className="mb-2">Déclaration d&apos;accessibilité</h1>
+      <h1 className="mb-2">Déclaration d'accessibilité</h1>
       <p className="text-text-secondary text-sm mb-6">
-        Brouillon de structure — l&apos;audit RGAA réel et le taux de conformité doivent être réalisés
-        et publiés par l&apos;équipe accessibilité avant mise en production.
+        Brouillon de structure — l'audit RGAA réel et le taux de conformité doivent être réalisés
+        et publiés par l'équipe accessibilité avant mise en production.
       </p>
 
       <div className="flex flex-col gap-5 font-body text-[15px] leading-6 text-text">
         <section>
           <h2 className="mb-2">État de conformité</h2>
           <p>
-            Le Ministère du Job et Bonheur s&apos;engage à rendre ProfilsActifs conforme au Référentiel
-            Général d&apos;Amélioration de l&apos;Accessibilité (RGAA), version 4.1.
+            Le Ministère du Job et Bonheur s'engage à rendre ProfilsActifs conforme au Référentiel
+            Général d'Amélioration de l'Accessibilité (RGAA), version 4.1.
           </p>
         </section>
         <section>
@@ -29,7 +29,7 @@ export default function AccessibilitePage() {
           </ul>
         </section>
         <section>
-          <h2 className="mb-2">Signaler un problème d&apos;accessibilité</h2>
+          <h2 className="mb-2">Signaler un problème d'accessibilité</h2>
           <p>
             Si vous rencontrez un obstacle sur ce site, vous pouvez nous le signaler via la page{" "}
             <Link href="/contact">Contact</Link>.

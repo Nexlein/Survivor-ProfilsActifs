@@ -28,7 +28,7 @@ export function ProfileCard({ name, role, avatarUrl, certified, className = "", 
         </div>
       </div>
       {certified ? (
-        <Badge variant="success">★ Certifié JEB</Badge>
+        <Badge variant="success">★ Certifié</Badge>
       ) : (
         <Badge variant="neutral">Certification en cours</Badge>
       )}

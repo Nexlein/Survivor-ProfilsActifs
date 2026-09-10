@@ -120,7 +120,7 @@ export default function PublicProfilePage() {
 
         {profile.hasCertificationBadge ? (
           <div className="mb-4">
-            <Badge variant="success">★ Certifié JEB</Badge>
+            <Badge variant="success">★ Certifié</Badge>
             {profile.certificationScore !== null && (
               <p className="text-center text-[13px] text-text-secondary mt-1.5">
                 Score : {profile.certificationScore}/1000
@@ -166,7 +166,7 @@ export default function PublicProfilePage() {
                     <div className="flex flex-col gap-3">
                       {isOwner && currentVideo.status === "PENDING" && (
                         <p className="bg-bg-secondary text-text-secondary text-sm rounded-md px-3.5 py-2.5">
-                          En attente de modération — seul vous pouvez la voir pour l&apos;instant.
+                          En attente de modération — seul vous pouvez la voir pour linstant.
                         </p>
                       )}
                       {isOwner && currentVideo.status === "REJECTED" && (
@@ -196,7 +196,7 @@ export default function PublicProfilePage() {
                   );
                 })() : (
                   <div className="flex flex-col gap-3">
-                    <p>Aucune vidéo publiée pour l&apos;instant.</p>
+                    <p>Aucune vidéo publiée pour l'instant.</p>
                     {isOwner && (
                       <Link href="/profile/videos/new" className={buttonClasses("primary", "sm")}>
                         Publier ma vidéo
@@ -216,7 +216,7 @@ export default function PublicProfilePage() {
                     ))}
                   </div>
                 ) : (
-                  <p>Aucune compétence renseignée pour l&apos;instant.</p>
+                  <p>Aucune compétence renseignée pour l'instant.</p>
                 ),
             },
             {
@@ -225,7 +225,7 @@ export default function PublicProfilePage() {
               content: profile.bio ? (
                 <p className="whitespace-pre-line">{profile.bio}</p>
               ) : (
-                <p>Aucune présentation renseignée pour l&apos;instant.</p>
+                <p>Aucune présentation renseignée pour l'instant.</p>
               ),
             },
           ]}
