@@ -73,6 +73,14 @@ async function main() {
       email: 'recruiter@techcorp.fr',
       passwordHash,
       role: 'RECRUITER',
+      profile: {
+        create: {
+          fullName: 'Alice Recruteur',
+          companyName: 'TechCorp',
+          industry: 'Informatique',
+          position: 'Talent Acquisition Manager',
+        },
+      },
     },
   });
 
@@ -81,6 +89,14 @@ async function main() {
       email: 'recrutement@startup-nation.fr',
       passwordHash,
       role: 'RECRUITER',
+      profile: {
+        create: {
+          fullName: 'Bruno Talent',
+          companyName: 'Startup Nation',
+          industry: 'Conseil',
+          position: 'Chargé de recrutement',
+        },
+      },
     },
   });
 
