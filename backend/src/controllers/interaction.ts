@@ -60,10 +60,11 @@ export const createInteraction = async (req: Request, res: Response, next: NextF
         }
 
                 if (type === 'CONTACT') {
+            const recruiterUser = await prisma.user.findUnique({ where: { id: user.id } });
             console.log('\n======================================================');
             console.log('[FAUX MAIL] SIMULATION D\'ENVOI');
             console.log('======================================================');
-            console.log('DE      : ' + user.email);
+            console.log('DE      : ' + (recruiterUser?.email || 'Inconnu'));
             console.log('À       : ' + profile.user.email);
             console.log('SUJET   : ' + subject.trim());
             console.log('MESSAGE :\n' + message.trim());
