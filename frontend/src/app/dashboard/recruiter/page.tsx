@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
-import { getInteractionStats, getSentContacts, RecruiterStats, SentContact, translateApiError } from "@/lib/api";
+import { getInteractionStats, getSentContacts, resolveAvatarUrl, RecruiterStats, SentContact, translateApiError } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
 import { useRequireAuth } from "@/lib/use-require-auth";
 
@@ -112,7 +112,12 @@ export default function RecruiterDashboardPage() {
                 key={contact.id}
                 className="flex gap-3 items-center px-4 py-3 border-b border-border last:border-b-0 flex-nowrap text-[13px]"
               >
-                <div className="w-8 h-8 rounded-full bg-border shrink-0" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={resolveAvatarUrl(contact.profile.avatarUrl)}
+                  alt=""
+                  className="w-8 h-8 rounded-full bg-border shrink-0 object-cover"
+                />
                 <div className="flex-1 min-w-[120px] font-semibold text-text">{contact.profile.fullName}</div>
                 <div className="text-text-secondary min-w-[100px]">{contact.profile.targetSector ?? "—"}</div>
                 <div className="text-primary font-semibold min-w-[90px]">

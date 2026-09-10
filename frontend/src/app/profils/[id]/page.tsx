@@ -34,7 +34,10 @@ export default function PublicProfilePage() {
 
   useEffect(() => {
     getProfileByUserId(params.id)
-      .then(setProfile)
+      .then((p) => {
+        setProfile(p);
+        setIsFavorite(p.isFavorite ?? false);
+      })
       .catch((err) => setError(translateApiError(err)))
       .finally(() => setIsLoading(false));
   }, [params.id]);
