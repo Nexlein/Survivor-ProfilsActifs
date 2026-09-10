@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/Button";
+import Link from "next/link";
+import { Button, buttonClasses } from "@/components/ui/Button";
 import { VideoPlayer } from "@/components/profile/VideoPlayer";
 import {
   ModerationVideo,
@@ -164,6 +165,9 @@ export default function ModerationPage() {
                 <div className="text-text-secondary">{TYPE_LABELS[video.type]}</div>
                 <div className="text-text-secondary">{new Date(video.createdAt).toLocaleDateString("fr-FR")}</div>
                 <div className="flex gap-2 flex-wrap">
+                  <Link href={`/profils/${video.profile.userId}`} className={buttonClasses("secondary", "sm")}>
+                    Voir le profil
+                  </Link>
                   <Button
                     variant="secondary"
                     size="sm"

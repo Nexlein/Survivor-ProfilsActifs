@@ -124,6 +124,7 @@ export default function AdminDashboardPage() {
   ];
 
   const maxWeeklySignups = Math.max(1, ...(stats?.weeklySignups.map((w) => w.count) ?? [1]));
+  const moreVideosPending = pending !== null && stats ? Math.max(0, stats.videosPending - pending.length) : 0;
 
   if (!authReady) return null;
 
@@ -181,7 +182,7 @@ export default function AdminDashboardPage() {
       )}
 
       {pending !== null && pending.length > 0 && (
-        <div className="bg-white rounded-lg shadow-card overflow-x-auto mb-8">
+        <div className={`bg-white rounded-lg shadow-card overflow-x-auto ${moreVideosPending > 0 ? "mb-2" : "mb-8"}`}>
           <div className="min-w-[480px]">
             {pending.map((video) => (
               <div
@@ -192,6 +193,9 @@ export default function AdminDashboardPage() {
                 <div className="text-text-secondary min-w-[90px]">
                   {new Date(video.createdAt).toLocaleDateString("fr-FR")}
                 </div>
+                <Link href={`/profils/${video.profile.userId}`} className={buttonClasses("secondary", "sm", "shrink-0")}>
+                  Voir le profil
+                </Link>
                 <Button
                   variant="success"
                   size="sm"
@@ -205,6 +209,9 @@ export default function AdminDashboardPage() {
             ))}
           </div>
         </div>
+      )}
+      {moreVideosPending > 0 && (
+        <p className="text-text-secondary text-xs mb-8">{moreVideosPending} de plus non affichées.</p>
       )}
 
       <div className="flex flex-wrap justify-between items-center gap-2 mb-3">

@@ -307,7 +307,7 @@ export function deleteVideo(id: string) {
 }
 
 export type ModerationVideo = Video & {
-  profile: { id: string; fullName: string; avatarUrl: string | null };
+  profile: { id: string; userId: string; fullName: string; avatarUrl: string | null };
 };
 
 export type ModerationVideoPage = {
