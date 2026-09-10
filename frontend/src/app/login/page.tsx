@@ -42,9 +42,8 @@ export default function LoginPage() {
   return (
     <main className="flex flex-1">
       <div className="hidden md:flex flex-[0_0_45%] bg-primary flex-col items-center justify-center p-10 text-center gap-4">
-        <div className="w-14 h-14 border border-white text-white font-bold font-heading flex items-center justify-center">
-          JEB
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="ProfilsActifs" className="w-20 h-20 object-contain rounded-sm border border-white" />
         <p className="italic font-body text-lg text-white max-w-xs">
           Votre carrière commence ici.
         </p>

@@ -4,9 +4,8 @@ import { buttonClasses } from "@/components/ui/Button";
 export default function NotFound() {
   return (
     <main className="text-center px-6 py-16">
-      <div className="w-9 h-9 bg-primary text-white font-bold text-[10px] inline-flex items-center justify-center mb-6">
-        JEB
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo.png" alt="ProfilsActifs" className="w-14 h-14 object-contain rounded-sm inline-flex mb-6" />
       <div className="text-[90px] font-extrabold text-primary opacity-15 font-heading leading-none">
         404
       </div>

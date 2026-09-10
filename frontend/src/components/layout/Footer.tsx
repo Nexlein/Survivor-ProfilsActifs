@@ -11,9 +11,8 @@ export function Footer() {
   return (
     <footer className="bg-text text-white px-6 py-8 flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 bg-primary border border-white text-white text-[8px] font-bold font-heading flex items-center justify-center">
-          JEB
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="ProfilsActifs" className="w-9 h-9 object-contain rounded-sm border border-white" />
         <strong className="font-heading">ProfilsActifs — Ministère du Job et Bonheur</strong>
       </div>
       <div className="flex gap-4 flex-wrap text-[13px]">

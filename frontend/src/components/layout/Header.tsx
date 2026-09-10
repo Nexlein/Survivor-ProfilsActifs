@@ -87,9 +87,8 @@ export function Header() {
     <header className="border-b border-border bg-bg">
       <div className="h-16 px-6 flex items-center gap-6">
         <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="w-7 h-7 bg-primary text-white text-[9px] font-bold font-heading flex items-center justify-center">
-            JEB
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="ProfilsActifs" className="w-10 h-10 object-contain rounded-sm" />
           <span className="font-bold text-primary font-heading">ProfilsActifs</span>
         </Link>
 

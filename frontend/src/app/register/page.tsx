@@ -8,9 +8,8 @@ export default function RegisterRolePage() {
   return (
     <main className="flex flex-col items-center px-6 py-16 gap-10">
       <div className="text-center flex flex-col items-center gap-3">
-        <div className="w-11 h-11 bg-primary text-white font-bold font-heading text-xs flex items-center justify-center">
-          JEB
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="ProfilsActifs" className="w-16 h-16 object-contain rounded-sm" />
         <h1>Rejoindre ProfilsActifs</h1>
         <p className="text-text-secondary">Êtes-vous ?</p>
       </div>
