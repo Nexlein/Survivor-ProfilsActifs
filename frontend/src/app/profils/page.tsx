@@ -103,7 +103,7 @@ export default function ProfileCatalogPage() {
   }
 
   return (
-    <main className="flex flex-col md:flex-row gap-8 px-6 py-8">
+    <main className="flex flex-col md:flex-row gap-8 px-6 py-8 max-w-[1600px] w-full mx-auto">
       <aside className="w-full md:w-[260px] flex-none">
         <h3 className="mb-3.5">Filtrer les profils</h3>
         <label htmlFor="filter-search" className="block text-xs font-bold text-text-secondary mb-2">
@@ -195,7 +195,7 @@ export default function ProfileCatalogPage() {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center">
+              <div className="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
                 {filtered.map((profile) => (
                   <ProfileCard
                     key={profile.id}
