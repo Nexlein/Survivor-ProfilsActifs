@@ -21,7 +21,7 @@ export default function RegisterRolePage() {
           <h3 className="mb-2">Demandeur demploi</h3>
           <p className="font-body text-sm text-text-secondary mb-4">
             Créez votre profil, publiez votre vidéo de présentation et obtenez votre certification
-            officielle JEB.
+            officielle.
           </p>
           <Link href="/register/candidate" className={buttonClasses("primary", "md", "w-full")}>
             Je suis demandeur d'emploi

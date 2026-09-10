@@ -19,7 +19,7 @@ const STEPS = [
   },
   {
     icon: "★",
-    title: "Obtenez votre certification JEB",
+    title: "Obtenez votre certification",
     description: "Passez le questionnaire et décrochez votre badge.",
   },
 ];
@@ -94,7 +94,7 @@ export default function Home() {
         <div className="flex-1 flex flex-col gap-7 max-w-lg">
           <h1 className="text-white">Valorisez vos compétences. Soyez vu.</h1>
           <p className="font-body text-lg leading-relaxed text-white/90 max-w-md">
-            ProfilsActifs relie candidats et recruteurs par la vidéo, avec certification officielle JEB.
+            ProfilsActifs relie candidats et recruteurs par la vidéo, avec certification officielle.
           </p>
           <div className="flex gap-3 flex-wrap justify-center md:justify-start w-full md:w-auto">
             <HeroActions />

@@ -120,7 +120,7 @@ export default function PublicProfilePage() {
 
         {profile.hasCertificationBadge ? (
           <div className="mb-4">
-            <Badge variant="success">★ Certifié JEB</Badge>
+            <Badge variant="success">★ Certifié</Badge>
             {profile.certificationScore !== null && (
               <p className="text-center text-[13px] text-text-secondary mt-1.5">
                 Score : {profile.certificationScore}/1000

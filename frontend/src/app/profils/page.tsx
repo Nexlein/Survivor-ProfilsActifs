@@ -160,7 +160,7 @@ export default function ProfileCatalogPage() {
         />
         <Checkbox
           id="filter-certified"
-          label="Certifié JEB uniquement"
+          label="Certifié uniquement"
           wrapperClassName="items-center mb-4"
           checked={certifiedOnly}
           onChange={(e) => setCertifiedOnly(e.target.checked)}

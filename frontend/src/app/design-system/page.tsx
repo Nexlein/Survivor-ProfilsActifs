@@ -56,7 +56,7 @@ export default function DesignSystemPage() {
       <section className="flex flex-col gap-4">
         <h2>Badges &amp; chips</h2>
         <div className="flex flex-wrap gap-3 items-center">
-          <Badge variant="success">★ Certifié JEB</Badge>
+          <Badge variant="success">★ Certifié</Badge>
           <Badge variant="neutral">Certification en cours</Badge>
           <Badge variant="admin">ADMIN</Badge>
           <Badge variant="vue">Vue</Badge>

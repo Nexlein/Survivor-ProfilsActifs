@@ -38,7 +38,7 @@ function getNavLinks(user: AuthUser | null): NavLink[] {
   return [
     { href: `/profils/${user.id}`, label: "Mon profil" },
     { href: "/notifications", label: "Notifications" },
-    { href: "/questionnaire", label: "Certification JEB" },
+    { href: "/questionnaire", label: "Certification" },
   ];
 }
 
