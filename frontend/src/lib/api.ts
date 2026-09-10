@@ -264,6 +264,9 @@ export type Profile = {
   videos?: Video[];
   createdAt: string;
   updatedAt: string;
+  // Only populated by getProfileByUserId, and only meaningful for a
+  // recruiter's own view of a candidate's profile.
+  isFavorite?: boolean;
 };
 
 export function getMyProfile() {
@@ -367,6 +370,7 @@ export type SentContact = {
     certificationScore: number | null;
     hasCertificationBadge: boolean;
     visible: boolean;
+    avatarUrl: string | null;
   };
 };
 

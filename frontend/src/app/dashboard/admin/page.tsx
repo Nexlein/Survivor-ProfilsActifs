@@ -123,7 +123,6 @@ export default function AdminDashboardPage() {
     { value: stats ? String(stats.interactionsThisMonth) : "—", label: "Interactions ce mois" },
   ];
 
-  const maxWeeklySignups = Math.max(1, ...(stats?.weeklySignups.map((w) => w.count) ?? [1]));
   const moreVideosPending = pending !== null && stats ? Math.max(0, stats.videosPending - pending.length) : 0;
 
   if (!authReady) return null;
@@ -153,17 +152,6 @@ export default function AdminDashboardPage() {
         ))}
       </div>
 
-      <h3 className="mb-3 hidden md:block">Nouvelles inscriptions par semaine</h3>
-      <div className="hidden md:flex items-end gap-2.5 h-24 mb-8">
-        {(stats?.weeklySignups ?? Array.from({ length: 7 }, () => ({ count: 0 }))).map((week, i) => (
-          <div
-            key={i}
-            className="w-7 bg-primary"
-            style={{ height: `${(week.count / maxWeeklySignups) * 100}%` }}
-          />
-        ))}
-      </div>
-
       <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
         <h3>Vidéos en attente de modération</h3>
         <Link href="/admin/moderation" className={buttonClasses("secondary", "sm")}>
@@ -182,7 +170,11 @@ export default function AdminDashboardPage() {
       )}
 
       {pending !== null && pending.length > 0 && (
-        <div className={`bg-white rounded-lg shadow-card overflow-x-auto ${moreVideosPending > 0 ? "mb-2" : "mb-8"}`}>
+        <>
+          <p className="md:hidden text-xs text-text-secondary mb-1.5">
+            ← Faites glisser pour voir toutes les actions →
+          </p>
+          <div className={`bg-white rounded-lg shadow-card overflow-x-auto ${moreVideosPending > 0 ? "mb-2" : "mb-8"}`}>
           <div className="min-w-[480px]">
             {pending.map((video) => (
               <div
@@ -208,7 +200,8 @@ export default function AdminDashboardPage() {
               </div>
             ))}
           </div>
-        </div>
+          </div>
+        </>
       )}
       {moreVideosPending > 0 && (
         <p className="text-text-secondary text-xs mb-8">{moreVideosPending} de plus non affichées.</p>
@@ -232,7 +225,11 @@ export default function AdminDashboardPage() {
       )}
 
       {accountQueue !== null && accountQueue.length > 0 && (
-        <div className="bg-white rounded-lg shadow-card overflow-x-auto">
+        <>
+          <p className="md:hidden text-xs text-text-secondary mb-1.5">
+            ← Faites glisser pour voir toutes les actions →
+          </p>
+          <div className="bg-white rounded-lg shadow-card overflow-x-auto">
           <div className="min-w-[560px]">
             {accountQueue.map((item) => (
               <div
@@ -270,7 +267,8 @@ export default function AdminDashboardPage() {
               </div>
             ))}
           </div>
-        </div>
+          </div>
+        </>
       )}
       {accountQueue !== null && accountQueueTotal > accountQueue.length && (
         <p className="text-text-secondary text-xs mt-2">

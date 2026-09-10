@@ -175,7 +175,7 @@ export default function EditProfilePage() {
   }
 
   return (
-    <main className="max-w-xl mx-auto px-6 py-12">
+    <main className="w-full max-w-xl mx-auto px-6 py-12">
       <h2 className="mb-6">Modifier mon profil</h2>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -269,19 +269,21 @@ export default function EditProfilePage() {
           </>
         )}
 
-        <div>
-          <label htmlFor="bio" className="block text-[13px] font-semibold text-text font-heading mb-1.5">
-            À propos
-          </label>
-          <textarea
-            id="bio"
-            rows={4}
-            placeholder="Présentez-vous en quelques lignes…"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
-          />
-        </div>
+        {!isRecruiter && (
+          <div>
+            <label htmlFor="bio" className="block text-[13px] font-semibold text-text font-heading mb-1.5">
+              À propos
+            </label>
+            <textarea
+              id="bio"
+              rows={4}
+              placeholder="Présentez-vous en quelques lignes…"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm focus:border-primary focus:outline-2 focus:outline-primary focus:outline-offset-2"
+            />
+          </div>
+        )}
 
         {error && <p role="alert" className="text-error text-sm">{error}</p>}
 
@@ -290,22 +292,24 @@ export default function EditProfilePage() {
         </Button>
       </form>
 
-            <div className="mt-8 pt-6 border-t border-border">
-        <h3 className="mb-1.5">Visibilité du profil</h3>
-        <p className="text-text-secondary text-sm mb-3">
-          Si vous désactivez cette option, votre profil sera retiré du catalogue public, 
-          des listes de recherche et ne sera plus consultable par les recruteurs.
-        </p>
-        <label className="flex items-center gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={visible}
-            onChange={(e) => setVisible(e.target.checked)}
-            className="w-5 h-5 rounded text-primary focus:ring-primary"
-          />
-          <span className="text-sm font-semibold">Publier mon profil dans le catalogue</span>
-        </label>
-      </div>
+      {!isRecruiter && (
+        <div className="mt-8 pt-6 border-t border-border">
+          <h3 className="mb-1.5">Visibilité du profil</h3>
+          <p className="text-text-secondary text-sm mb-3">
+            Si vous désactivez cette option, votre profil sera retiré du catalogue public,
+            des listes de recherche et ne sera plus consultable par les recruteurs.
+          </p>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={visible}
+              onChange={(e) => setVisible(e.target.checked)}
+              className="w-5 h-5 rounded text-primary focus:ring-primary"
+            />
+            <span className="text-sm font-semibold">Publier mon profil dans le catalogue</span>
+          </label>
+        </div>
+      )}
 
       <div className="mt-8 pt-6 border-t border-border">
         <h3 className="mb-1.5">Vos données</h3>

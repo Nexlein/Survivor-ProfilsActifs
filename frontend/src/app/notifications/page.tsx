@@ -85,7 +85,7 @@ export default function NotificationsPage() {
   if (!authReady) return null;
 
   return (
-    <main className="max-w-2xl mx-auto px-6 py-8">
+    <main className="w-full max-w-2xl mx-auto px-6 py-8">
       <h2 className="mb-4">Mes notifications</h2>
       <p className="text-text-secondary text-sm mb-5 p-3.5 bg-bg-secondary rounded-md border border-border">
         <strong>Traçabilité :</strong> Conformément à votre droit d'accès, les vues de votre profil par des recruteurs connectés sont enregistrées ci-dessous. Les consultations anonymes ne sont pas tracées.

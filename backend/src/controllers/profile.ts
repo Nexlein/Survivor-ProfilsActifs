@@ -345,7 +345,20 @@ export const getProfileByUserId = async (req: Request, res: Response, next: Next
 
         let profileWithUrl = await serializeProfileVideos(profile);
         const { user: _, ...publicProfile } = profileWithUrl;
-        return res.json(publicProfile);
+
+        // Lets the profile page restore the "already favorited" star state on
+        // load instead of always starting unfavorited (which let a recruiter
+        // toggle blindly back to "favorited" after just unfavoriting it).
+        let isFavorite = false;
+        if (currentUser?.role === 'RECRUITER') {
+            const favorite = await prisma.interaction.findFirst({
+                where: { recruiterId: currentUser.id, profileId: profile.id, type: 'FAVORITE' },
+                select: { id: true },
+            });
+            isFavorite = !!favorite;
+        }
+
+        return res.json({ ...publicProfile, isFavorite });
     } catch (error) {
         return next(error);
     }

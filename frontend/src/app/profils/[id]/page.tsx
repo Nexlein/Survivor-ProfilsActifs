@@ -34,7 +34,10 @@ export default function PublicProfilePage() {
 
   useEffect(() => {
     getProfileByUserId(params.id)
-      .then(setProfile)
+      .then((p) => {
+        setProfile(p);
+        setIsFavorite(p.isFavorite ?? false);
+      })
       .catch((err) => setError(translateApiError(err)))
       .finally(() => setIsLoading(false));
   }, [params.id]);
@@ -100,7 +103,7 @@ export default function PublicProfilePage() {
   const skills = profile.skills ?? [];
 
   return (
-    <main className="flex flex-col lg:flex-row gap-8 p-6 sm:p-12 max-w-5xl mx-auto">
+    <main className="flex flex-col lg:flex-row gap-8 p-6 sm:p-12 max-w-5xl mx-auto w-full">
       <aside className="flex-none w-full lg:max-w-[260px]">
         <div className="w-[110px] h-[110px] rounded-full bg-border mx-auto mb-3 overflow-hidden">
           {resolveAvatarUrl(profile.avatarUrl) && (
@@ -166,7 +169,7 @@ export default function PublicProfilePage() {
                     <div className="flex flex-col gap-3">
                       {isOwner && currentVideo.status === "PENDING" && (
                         <p className="bg-bg-secondary text-text-secondary text-sm rounded-md px-3.5 py-2.5">
-                          En attente de modération — seul vous pouvez la voir pour linstant.
+                          En attente de modération
                         </p>
                       )}
                       {isOwner && currentVideo.status === "REJECTED" && (

@@ -8,6 +8,12 @@ import { Button } from "@/components/ui/Button";
 import { login, setToken, setUser, translateApiError, useCurrentUser } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
 
+function postLoginPath(role: string): string {
+  if (role === "ADMIN") return "/dashboard/admin";
+  if (role === "RECRUITER") return "/dashboard/recruiter";
+  return "/";
+}
+
 export default function LoginPage() {
   usePageTitle("Connexion");
   const router = useRouter();
@@ -19,7 +25,7 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (currentUser) router.replace("/");
+    if (currentUser) router.replace(postLoginPath(currentUser.role));
   }, [currentUser, router]);
 
   async function handleSubmit(event: FormEvent) {
@@ -31,7 +37,7 @@ export default function LoginPage() {
       const { token, user } = await login(email, password);
       setToken(token);
       setUser(user);
-      router.push("/");
+      router.push(postLoginPath(user.role));
     } catch (err) {
       setError(translateApiError(err));
     } finally {

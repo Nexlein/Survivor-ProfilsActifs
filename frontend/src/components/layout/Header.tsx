@@ -136,6 +136,15 @@ export function Header() {
                       Mon profil
                     </Link>
                   )}
+                  {user.role === "RECRUITER" && (
+                    <Link
+                      href="/profile/edit"
+                      className="block px-4 py-2 text-sm text-text hover:bg-bg-secondary"
+                      onClick={() => setIsAccountMenuOpen(false)}
+                    >
+                      Options
+                    </Link>
+                  )}
                   <button
                     type="button"
                     onClick={handleLogout}

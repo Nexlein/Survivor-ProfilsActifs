@@ -61,8 +61,8 @@ export function ContactModal({ isOpen, onClose, candidateName, profileId }: Cont
         }
       >
         <p className="text-success text-sm">
-          Votre message a bien été envoyé à {candidateName}. Il/elle pourra vous répondre depuis son
-          espace de notifications.
+          Votre message a bien été envoyé par e-mail (simulation) à {candidateName}. Il/elle pourra
+          vous répondre directement depuis sa boîte de réception.
         </p>
       </Modal>
     );
@@ -109,8 +109,8 @@ export function ContactModal({ isOpen, onClose, candidateName, profileId }: Cont
           </p>
         </div>
         <p className="text-xs text-text-secondary">
-          Votre message sera transmis au candidat par notification. Il pourra y répondre depuis son
-          espace.
+          Votre message sera envoyé par e-mail au candidat. Il pourra vous répondre
+          directement depuis sa boîte de réception.
         </p>
         {error && (
           <p role="alert" className="text-error text-sm">

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buttonClasses } from "@/components/ui/Button";
-import { getInteractionStats, getSentContacts, RecruiterStats, SentContact, translateApiError } from "@/lib/api";
+import { getInteractionStats, getSentContacts, resolveAvatarUrl, RecruiterStats, SentContact, translateApiError } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
 import { useRequireAuth } from "@/lib/use-require-auth";
 
@@ -85,7 +85,11 @@ export default function RecruiterDashboardPage() {
       )}
 
       {contacts !== null && contacts.length > 0 && (
-        <div className="bg-white rounded-lg shadow-card overflow-x-auto">
+        <>
+          <p className="md:hidden text-xs text-text-secondary mb-1.5">
+            ← Faites glisser pour voir toutes les colonnes →
+          </p>
+          <div className="bg-white rounded-lg shadow-card overflow-x-auto">
           <div className="min-w-[720px]">
             {contacts.map((contact) => {
               if (contact.profile.visible === false) {
@@ -108,7 +112,12 @@ export default function RecruiterDashboardPage() {
                 key={contact.id}
                 className="flex gap-3 items-center px-4 py-3 border-b border-border last:border-b-0 flex-nowrap text-[13px]"
               >
-                <div className="w-8 h-8 rounded-full bg-border shrink-0" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={resolveAvatarUrl(contact.profile.avatarUrl)}
+                  alt=""
+                  className="w-8 h-8 rounded-full bg-border shrink-0 object-cover"
+                />
                 <div className="flex-1 min-w-[120px] font-semibold text-text">{contact.profile.fullName}</div>
                 <div className="text-text-secondary min-w-[100px]">{contact.profile.targetSector ?? "—"}</div>
                 <div className="text-primary font-semibold min-w-[90px]">
@@ -131,7 +140,8 @@ export default function RecruiterDashboardPage() {
               </div>
             ); })}
           </div>
-        </div>
+          </div>
+        </>
       )}
     </main>
   );
