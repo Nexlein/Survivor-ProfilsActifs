@@ -21,7 +21,7 @@ export default function ContactPage() {
     <main className="max-w-xl mx-auto px-6 py-12">
       <h1 className="mb-2">Contact</h1>
       <p className="text-text-secondary text-sm mb-6">
-        Une question, un signalement, un problème d&apos;accessibilité ? Écrivez-nous.
+        Une question, un signalement, un problème d'accessibilité ? Écrivez-nous.
       </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">

@@ -110,7 +110,7 @@ export function Header() {
                 Se connecter
               </Link>
               <Link href="/register" className={buttonClasses("primary")}>
-                S&apos;inscrire
+                S'inscrire
               </Link>
             </>
           )}
@@ -174,7 +174,7 @@ export function Header() {
                 Se connecter
               </Link>
               <Link href="/register" className={buttonClasses("primary", "md", "flex-1")}>
-                S&apos;inscrire
+                S'inscrire
               </Link>
             </div>
           )}

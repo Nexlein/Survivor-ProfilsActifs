@@ -80,7 +80,7 @@ export default function RecruiterDashboardPage() {
 
       {contacts !== null && contacts.length === 0 && !contactsError && (
         <p className="text-text-secondary text-sm">
-          Vous n&apos;avez encore contacté aucun candidat.
+          Vous n'avez encore contacté aucun candidat.
         </p>
       )}
 

@@ -197,7 +197,7 @@ export default function EditProfilePage() {
         </div>
         {photoFile && (
           <p className="text-text-secondary text-xs -mt-2">
-            Nouvelle photo sélectionnée — elle sera envoyée à l&apos;enregistrement.
+            Nouvelle photo sélectionnée — elle sera envoyée à l'enregistrement.
           </p>
         )}
 

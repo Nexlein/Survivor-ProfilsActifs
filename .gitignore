@@ -26,3 +26,5 @@ next-env.d.ts
 # Local File Storage
 backend/storage/
 backend/uploads/
+
+.agents

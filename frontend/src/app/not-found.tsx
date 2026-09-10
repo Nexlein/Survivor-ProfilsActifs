@@ -10,13 +10,13 @@ export default function NotFound() {
       <div className="text-[90px] font-extrabold text-primary opacity-15 font-heading leading-none">
         404
       </div>
-      <h2 className="mb-2">Cette page n&apos;existe pas.</h2>
+      <h2 className="mb-2">Cette page n'existe pas.</h2>
       <p className="text-text-secondary mb-5">
         Le profil ou la page que vous recherchez est introuvable.
       </p>
       <div className="flex gap-3 justify-center flex-wrap">
         <Link href="/" className={buttonClasses("primary")}>
-          Retour à l&apos;accueil
+          Retour à l'accueil
         </Link>
         <Link href="/profils" className={buttonClasses("secondary")}>
           Parcourir les profils

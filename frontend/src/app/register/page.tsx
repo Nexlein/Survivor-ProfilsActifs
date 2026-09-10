@@ -18,13 +18,13 @@ export default function RegisterRolePage() {
       <div className="flex flex-wrap gap-6 justify-center max-w-4xl">
         <div className="w-full max-w-[420px] border border-border rounded-lg p-7 shadow-card">
           <div className="text-2xl mb-2.5">👤🔍</div>
-          <h3 className="mb-2">Demandeur d&apos;emploi</h3>
+          <h3 className="mb-2">Demandeur demploi</h3>
           <p className="font-body text-sm text-text-secondary mb-4">
             Créez votre profil, publiez votre vidéo de présentation et obtenez votre certification
             officielle JEB.
           </p>
           <Link href="/register/candidate" className={buttonClasses("primary", "md", "w-full")}>
-            Je suis demandeur d&apos;emploi
+            Je suis demandeur d'emploi
           </Link>
         </div>
 

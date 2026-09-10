@@ -181,8 +181,8 @@ export default function CandidateRegisterPage() {
               required
             />
             <p className="text-error text-xs -mt-2">
-              Les personnes de moins de 16 ans ne peuvent pas s&apos;inscrire. Les 16-18 ans relèvent
-              d&apos;un régime spécifique.
+              Les personnes de moins de 16 ans ne peuvent pas s'inscrire. Les 16-18 ans relèvent
+              d'un régime spécifique.
             </p>
             {error && <p role="alert" className="text-error text-sm">{error}</p>}
             <Button type="button" variant="primary" onClick={goNext} className="self-start">
@@ -306,9 +306,9 @@ export default function CandidateRegisterPage() {
               onChange={(e) => setConsent1(e.target.checked)}
               label={
                 <span>
-                  J&apos;ai lu et j&apos;accepte les{" "}
+                  J'ai lu et j'accepte les{" "}
                   <a href="/cgu" target="_blank" rel="noopener noreferrer">
-                    Conditions Générales d&apos;Utilisation
+                    Conditions Générales d'Utilisation
                   </a>.
                 </span>
               }

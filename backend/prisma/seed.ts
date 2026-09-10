@@ -76,12 +76,16 @@ async function main() {
     skills.push(s);
   }
 
-  console.log('Creating 25+ Candidates...');
-  // We need exactly 25 candidates to test pagination (20 per page).
+  const TOTAL_CANDIDATES = parseInt(process.env.SEED_CANDIDATE_COUNT || '25', 10);
+  const adultsCutoff = Math.max(20, Math.round(TOTAL_CANDIDATES * 0.8));
+  const minorsCutoff = Math.max(adultsCutoff + 3, Math.round(TOTAL_CANDIDATES * 0.92));
+
+  console.log(`Creating ${TOTAL_CANDIDATES}+ Candidates...`);
+  // We need at least 25 candidates to test pagination (20 per page).
   let firstProfileId: string | null = null;
   let secondProfileId: string | null = null;
 
-  for (let i = 1; i <= 25; i++) {
+  for (let i = 1; i <= TOTAL_CANDIDATES; i++) {
     const firstName = getRandom(FIRST_NAMES);
     const lastName = getRandom(LAST_NAMES);
     const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@example.com`;
@@ -97,12 +101,12 @@ async function main() {
     // of the video's own status above.
     let accountModerationStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED' = 'APPROVED';
 
-    if (i > 20 && i <= 23) {
+    if (i > adultsCutoff && i <= minorsCutoff) {
       // Minor (17 years old)
       const minorDate = new Date();
       minorDate.setFullYear(minorDate.getFullYear() - 17);
       dob = minorDate;
-    } else if (i > 23) {
+    } else if (i > minorsCutoff) {
       // Ghost (No age, explicitly hidden) — an incomplete signup still
       // awaiting admin validation.
       dob = null;
@@ -112,10 +116,10 @@ async function main() {
     }
 
     // Randomize some statuses for adults
-    if (i % 5 === 0 && i <= 20) status = 'PENDING';
-    if (i % 7 === 0 && i <= 20) status = 'REJECTED';
-    if (i % 4 === 0 && i <= 20) accountModerationStatus = 'PENDING';
-    if (i === 20) accountModerationStatus = 'SUSPENDED';
+    if (i % 5 === 0 && i <= adultsCutoff) status = 'PENDING';
+    if (i % 7 === 0 && i <= adultsCutoff) status = 'REJECTED';
+    if (i % 4 === 0 && i <= adultsCutoff) accountModerationStatus = 'PENDING';
+    if (i === adultsCutoff) accountModerationStatus = 'SUSPENDED';
 
     const user = await prisma.user.create({
       data: {
@@ -194,7 +198,7 @@ async function main() {
     },
   });
 
-  console.log('Seeding finished successfully! 25+ Candidates created.');
+  console.log(`Seeding finished successfully! ${TOTAL_CANDIDATES} Candidates created.`);
 }
 
 main()
