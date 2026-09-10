@@ -61,7 +61,7 @@ export const createInteraction = async (req: Request, res: Response, next: NextF
 
                 if (type === 'CONTACT') {
             console.log('\n======================================================');
-            console.log('[FAUX MAIL] SIMULATION D\'ENVOI (Mode Démo Epitech)');
+            console.log('[FAUX MAIL] SIMULATION D\'ENVOI');
             console.log('======================================================');
             console.log('DE      : ' + user.email);
             console.log('À       : ' + profile.user.email);
