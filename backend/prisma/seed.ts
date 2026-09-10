@@ -24,6 +24,22 @@ const LOCATIONS = ['Paris, France', 'Lyon, France', 'Marseille, France', 'Bordea
 
 const getRandom = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
 
+// Seeded videos need a real file on disk for LocalVideoProvider to serve —
+// a Video row with a fake providerId and no matching file in storage/videos
+// makes playback fall back to the "Mode Dégradé Actif" 503 (see
+// backend/src/providers/LocalVideoProvider.ts + videoPlayback.ts). We reuse
+// one small synthetic clip (generated with ffmpeg, see prisma/fixtures) for
+// every seeded candidate rather than shipping/downloading real footage.
+const STORAGE_DIR = path.resolve(process.cwd(), 'storage/videos');
+const FIXTURE_VIDEO = path.resolve(process.cwd(), 'prisma/fixtures/seed-demo-video.mp4');
+const FIXTURE_SUBTITLE = path.resolve(process.cwd(), 'prisma/fixtures/seed-demo-video.vtt');
+
+function seedVideoFile(providerId: string): void {
+  fs.mkdirSync(STORAGE_DIR, { recursive: true });
+  fs.copyFileSync(FIXTURE_VIDEO, path.join(STORAGE_DIR, `${providerId}.mp4`));
+  fs.copyFileSync(FIXTURE_SUBTITLE, path.join(STORAGE_DIR, `${providerId}.vtt`));
+}
+
 async function main() {
   console.log('Starting database seeding...');
 
@@ -150,7 +166,7 @@ async function main() {
           create: [
             {
               type: 'UPLOAD',
-              providerId: 'seed-demo-video-1',
+              providerId: `seed-demo-video-${i}`,
               providerName: 'local',
               consentDate: new Date(),
               consentTextVersion: 'v1.0 - 2026-09-01',
@@ -160,6 +176,7 @@ async function main() {
         },
       },
     });
+    seedVideoFile(`seed-demo-video-${i}`);
     if (!firstProfileId) {
       firstProfileId = profile.id;
     } else if (!secondProfileId) {
