@@ -152,7 +152,7 @@ export function Header() {
 
         <button
           type="button"
-          className="md:hidden ml-auto text-xl"
+          className="md:hidden ml-auto text-xl p-2.5"
           onClick={() => setIsMobileMenuOpen((v) => !v)}
           aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={isMobileMenuOpen}

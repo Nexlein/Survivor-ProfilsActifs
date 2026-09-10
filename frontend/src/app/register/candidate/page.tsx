@@ -154,6 +154,7 @@ export default function CandidateRegisterPage() {
               label="Adresse e-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
             <Input
@@ -162,6 +163,7 @@ export default function CandidateRegisterPage() {
               label="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
               required
             />
             <Input
@@ -170,6 +172,7 @@ export default function CandidateRegisterPage() {
               label="Confirmer le mot de passe"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="new-password"
               required
             />
             <Input
