@@ -140,7 +140,7 @@ export const getVideoFeed = async (req: Request, res: Response, next: NextFuncti
                     take: pageSize,
                     skip,
                     orderBy: { createdAt: 'asc' },
-                    include: { profile: { select: { id: true, fullName: true, avatarUrl: true } } },
+                    include: { profile: { select: { id: true, userId: true, fullName: true, avatarUrl: true } } },
                 }),
                 prisma.video.count({ where: { status: status as any } }),
             ]);

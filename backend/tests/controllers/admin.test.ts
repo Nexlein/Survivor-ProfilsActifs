@@ -39,7 +39,7 @@ beforeEach(() => {
 });
 
 describe("getModerationQueue", () => {
-    it("lists only PENDING accounts, most recently registered last", async () => {
+    it("defaults to PENDING accounts, scoped to job seekers, most recently registered last", async () => {
         (prisma.user.findMany as any).mockResolvedValue([{ id: "u1", email: "a@a.com" }]);
         (prisma.user.count as any).mockResolvedValue(1);
 
@@ -50,7 +50,7 @@ describe("getModerationQueue", () => {
 
         expect(prisma.user.findMany).toHaveBeenCalledWith(
             expect.objectContaining({
-                where: { moderationStatus: "PENDING" },
+                where: { moderationStatus: "PENDING", role: "JOB_SEEKER" },
                 take: 20,
                 skip: 0,
                 orderBy: { createdAt: "asc" },
@@ -58,6 +58,34 @@ describe("getModerationQueue", () => {
         );
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({ users: [{ id: "u1", email: "a@a.com" }], total: 1, page: 1, pageSize: 20 });
+    });
+
+    it("filters by the requested status, e.g. APPROVED accounts eligible for a ban", async () => {
+        (prisma.user.findMany as any).mockResolvedValue([]);
+        (prisma.user.count as any).mockResolvedValue(0);
+
+        const req: any = { query: { status: "approved" } };
+        const res = mockRes();
+
+        await getModerationQueue(req, res, next);
+
+        expect(prisma.user.findMany).toHaveBeenCalledWith(
+            expect.objectContaining({ where: { moderationStatus: "APPROVED", role: "JOB_SEEKER" } })
+        );
+    });
+
+    it("falls back to PENDING for an unrecognized status value", async () => {
+        (prisma.user.findMany as any).mockResolvedValue([]);
+        (prisma.user.count as any).mockResolvedValue(0);
+
+        const req: any = { query: { status: "not-a-real-status" } };
+        const res = mockRes();
+
+        await getModerationQueue(req, res, next);
+
+        expect(prisma.user.findMany).toHaveBeenCalledWith(
+            expect.objectContaining({ where: { moderationStatus: "PENDING", role: "JOB_SEEKER" } })
+        );
     });
 
     it("paginates using the page query param", async () => {

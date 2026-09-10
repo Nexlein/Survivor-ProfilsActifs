@@ -123,6 +123,8 @@ export default function AdminDashboardPage() {
     { value: stats ? String(stats.interactionsThisMonth) : "—", label: "Interactions ce mois" },
   ];
 
+  const moreVideosPending = pending !== null && stats ? Math.max(0, stats.videosPending - pending.length) : 0;
+
   if (!authReady) return null;
 
   return (
@@ -172,7 +174,7 @@ export default function AdminDashboardPage() {
           <p className="md:hidden text-xs text-text-secondary mb-1.5">
             ← Faites glisser pour voir toutes les actions →
           </p>
-          <div className="bg-white rounded-lg shadow-card overflow-x-auto mb-8">
+          <div className={`bg-white rounded-lg shadow-card overflow-x-auto ${moreVideosPending > 0 ? "mb-2" : "mb-8"}`}>
           <div className="min-w-[480px]">
             {pending.map((video) => (
               <div
@@ -183,6 +185,9 @@ export default function AdminDashboardPage() {
                 <div className="text-text-secondary min-w-[90px]">
                   {new Date(video.createdAt).toLocaleDateString("fr-FR")}
                 </div>
+                <Link href={`/profils/${video.profile.userId}`} className={buttonClasses("secondary", "sm", "shrink-0")}>
+                  Voir le profil
+                </Link>
                 <Button
                   variant="success"
                   size="sm"
@@ -198,9 +203,15 @@ export default function AdminDashboardPage() {
           </div>
         </>
       )}
+      {moreVideosPending > 0 && (
+        <p className="text-text-secondary text-xs mb-8">{moreVideosPending} de plus non affichées.</p>
+      )}
 
       <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
         <h3>Comptes en attente de validation</h3>
+        <Link href="/admin/moderation" className={buttonClasses("secondary", "sm")}>
+          Voir tout
+        </Link>
       </div>
 
       {accountQueueError && (
