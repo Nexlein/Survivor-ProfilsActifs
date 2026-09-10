@@ -27,7 +27,6 @@ function getNavLinks(user: AuthUser | null): NavLink[] {
     return [
       { href: "/profils", label: "Parcourir les profils" },
       { href: "/dashboard/recruiter", label: "Tableau de bord" },
-      { href: "/notifications", label: "Notifications" },
     ];
   }
   if (user.role === "ADMIN") {

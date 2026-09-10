@@ -87,7 +87,7 @@ export const getNotifications = async (req: Request, res: Response, next: NextFu
         if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
         const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
-        if (!profile) return res.status(404).json({ error: 'Profile not found' });
+        if (!profile) return res.status(200).json([]);
 
         const notifications = await prisma.interaction.findMany({
             where: { profileId: profile.id, type: { in: ['VIEW', 'CONTACT', 'FAVORITE'] } },
