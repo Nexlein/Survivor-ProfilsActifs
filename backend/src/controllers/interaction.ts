@@ -33,7 +33,7 @@ export const createInteraction = async (req: Request, res: Response, next: NextF
             return res.status(400).json({ error: 'profileId and a valid type are required' });
         }
 
-        const profile = await prisma.profile.findUnique({ where: { id: profileId } });
+        const profile = await prisma.profile.findUnique({ where: { id: profileId }, include: { user: true } });
         if (!profile) return res.status(404).json({ error: 'Profile not found' });
 
         if (type === 'CONTACT') {
@@ -59,14 +59,25 @@ export const createInteraction = async (req: Request, res: Response, next: NextF
             return res.status(201).json({ active: true, interaction: created });
         }
 
+                if (type === 'CONTACT') {
+            console.log('\n======================================================');
+            console.log('[FAUX MAIL] SIMULATION D\'ENVOI (Mode Démo Epitech)');
+            console.log('======================================================');
+            console.log('DE      : ' + user.email);
+            console.log('À       : ' + profile.user.email);
+            console.log('SUJET   : ' + subject.trim());
+            console.log('MESSAGE :\n' + message.trim());
+            console.log('======================================================\n');
+        }
+
         const interaction = await prisma.interaction.create({
             data: {
                 recruiterId: user.id,
                 profileId,
                 videoId: videoId || null,
                 type,
-                subject: type === 'CONTACT' ? subject.trim() : null,
-                message: type === 'CONTACT' ? message.trim() : null,
+                subject: null,
+                message: null,
             },
         });
 
