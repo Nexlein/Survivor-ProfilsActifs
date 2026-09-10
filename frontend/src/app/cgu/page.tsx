@@ -4,7 +4,7 @@ export const metadata: Metadata = { title: "CGU" };
 
 export default function CguPage() {
   return (
-    <main className="max-w-2xl mx-auto px-6 py-12">
+    <main className="w-full max-w-2xl mx-auto px-6 py-12">
       <h1 className="mb-2">Conditions Générales dUtilisation</h1>
       <p className="text-text-secondary text-sm mb-6">
         Bienvenue sur ProfilsActifs, l'espace de mise en relation professionnelle du Ministère du Job et Bonheur.

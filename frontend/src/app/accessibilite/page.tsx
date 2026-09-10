@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Accessibilité" };
 
 export default function AccessibilitePage() {
   return (
-    <main className="max-w-2xl mx-auto px-6 py-12">
+    <main className="w-full max-w-2xl mx-auto px-6 py-12">
       <h1 className="mb-2">Déclaration d'accessibilité</h1>
       <p className="text-text-secondary text-sm mb-6">
         Brouillon de structure — l'audit RGAA réel et le taux de conformité doivent être réalisés

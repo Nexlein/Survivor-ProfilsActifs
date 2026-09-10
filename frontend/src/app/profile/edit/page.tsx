@@ -175,7 +175,7 @@ export default function EditProfilePage() {
   }
 
   return (
-    <main className="max-w-xl mx-auto px-6 py-12">
+    <main className="w-full max-w-xl mx-auto px-6 py-12">
       <h2 className="mb-6">Modifier mon profil</h2>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">

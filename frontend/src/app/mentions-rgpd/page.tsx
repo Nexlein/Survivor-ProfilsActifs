@@ -4,7 +4,7 @@ export const metadata: Metadata = { title: "Mentions RGPD" };
 
 export default function MentionsRgpdPage() {
   return (
-    <main className="max-w-2xl mx-auto px-6 py-12">
+    <main className="w-full max-w-2xl mx-auto px-6 py-12">
       <h1 className="mb-2">Mentions RGPD</h1>
       <p className="text-text-secondary text-sm mb-6">
         Ce texte est un brouillon de structure et n'a pas de valeur juridique — il doit être

@@ -18,7 +18,6 @@ export default function AddVideoPage() {
   const currentUser = useCurrentUser();
 
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [subtitleFile, setSubtitleFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
 
   const [consent, setConsent] = useState(false);
@@ -42,12 +41,6 @@ export default function AddVideoPage() {
     setVideoFile(file);
   }
 
-  function handleSubtitleFileChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    setSubtitleFile(file);
-  }
-
   async function handlePublish() {
     setError(null);
     setIsSubmitting(true);
@@ -59,7 +52,6 @@ export default function AddVideoPage() {
       }
       await createVideoUpload({
         video: videoFile,
-        subtitle: subtitleFile ?? undefined,
         consentTextVersion: CONSENT_VERSION,
       });
       router.push(currentUser ? `/profils/${currentUser.id}` : "/");
@@ -73,14 +65,12 @@ export default function AddVideoPage() {
   if (!authReady) return null;
 
   return (
-    <main className="max-w-xl mx-auto px-6 py-12">
+    <main className="w-full max-w-xl mx-auto px-6 py-12">
       <h2 className="mb-5">Publier une vidéo</h2>
 
       <VideoUploadForm
         videoFile={videoFile}
         onVideoFileChange={handleVideoFileChange}
-        subtitleFile={subtitleFile}
-        onSubtitleFileChange={handleSubtitleFileChange}
         fileError={fileError}
       />
 
@@ -115,14 +105,10 @@ export default function AddVideoPage() {
 function VideoUploadForm({
   videoFile,
   onVideoFileChange,
-  subtitleFile,
-  onSubtitleFileChange,
   fileError,
 }: {
   videoFile: File | null;
   onVideoFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  subtitleFile: File | null;
-  onSubtitleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
   fileError: string | null;
 }) {
   return (
@@ -140,18 +126,6 @@ function VideoUploadForm({
           {fileError}
         </p>
       )}
-      <div>
-        <label className="block text-[13px] font-semibold text-text font-heading mb-1.5">
-          Sous-titres (fichier .vtt, optionnel)
-        </label>
-        <input
-          type="file"
-          accept=".vtt,text/vtt"
-          onChange={onSubtitleFileChange}
-          className="w-full border border-border rounded-md px-3.5 py-2.5 text-sm file:mr-3 file:border-0 file:bg-bg-secondary file:rounded file:px-3 file:py-1.5"
-        />
-        {subtitleFile && <p className="text-xs text-text-secondary mt-1.5">{subtitleFile.name}</p>}
-      </div>
     </div>
   );
 }

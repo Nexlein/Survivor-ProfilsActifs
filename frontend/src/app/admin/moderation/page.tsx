@@ -136,6 +136,12 @@ export default function ModerationPage() {
         <p className="text-text-secondary">Aucune vidéo dans cette catégorie.</p>
       )}
 
+      {videos && videos.length > 0 && (
+        <p className="md:hidden text-xs text-text-secondary mb-1.5">
+          ← Faites glisser pour voir toutes les actions →
+        </p>
+      )}
+
       <div className="bg-white rounded-lg shadow-card overflow-x-auto">
         <div className="min-w-[820px]">
           {videos && videos.length > 0 && (

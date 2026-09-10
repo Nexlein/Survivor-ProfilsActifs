@@ -85,7 +85,11 @@ export default function RecruiterDashboardPage() {
       )}
 
       {contacts !== null && contacts.length > 0 && (
-        <div className="bg-white rounded-lg shadow-card overflow-x-auto">
+        <>
+          <p className="md:hidden text-xs text-text-secondary mb-1.5">
+            ← Faites glisser pour voir toutes les colonnes →
+          </p>
+          <div className="bg-white rounded-lg shadow-card overflow-x-auto">
           <div className="min-w-[720px]">
             {contacts.map((contact) => {
               if (contact.profile.visible === false) {
@@ -131,7 +135,8 @@ export default function RecruiterDashboardPage() {
               </div>
             ); })}
           </div>
-        </div>
+          </div>
+        </>
       )}
     </main>
   );

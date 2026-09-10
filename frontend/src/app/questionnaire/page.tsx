@@ -104,7 +104,7 @@ export default function QuestionnairePage() {
 
   if (view === "intro") {
     return (
-      <main className="max-w-xl mx-auto px-6 py-16 text-center">
+      <main className="w-full max-w-xl mx-auto px-6 py-16 text-center">
         <h1 className="mb-4">Questionnaire de Certification</h1>
         <p className="font-body text-[15px] leading-6 text-text mb-3">
           Ce questionnaire évalue vos aptitudes professionnelles transversales : communication,
@@ -130,7 +130,7 @@ export default function QuestionnairePage() {
     const selectedOptionId = answers[question.id];
 
     return (
-      <main className="max-w-xl mx-auto px-6 py-8">
+      <main className="w-full max-w-xl mx-auto px-6 py-8">
         <div className="mb-6">
           <ProgressBar current={currentIndex + 1} total={questions.length} />
         </div>

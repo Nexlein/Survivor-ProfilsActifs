@@ -181,7 +181,11 @@ export default function AdminDashboardPage() {
       )}
 
       {pending !== null && pending.length > 0 && (
-        <div className="bg-white rounded-lg shadow-card overflow-x-auto mb-8">
+        <>
+          <p className="md:hidden text-xs text-text-secondary mb-1.5">
+            ← Faites glisser pour voir toutes les actions →
+          </p>
+          <div className="bg-white rounded-lg shadow-card overflow-x-auto mb-8">
           <div className="min-w-[480px]">
             {pending.map((video) => (
               <div
@@ -204,7 +208,8 @@ export default function AdminDashboardPage() {
               </div>
             ))}
           </div>
-        </div>
+          </div>
+        </>
       )}
 
       <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
@@ -222,7 +227,11 @@ export default function AdminDashboardPage() {
       )}
 
       {accountQueue !== null && accountQueue.length > 0 && (
-        <div className="bg-white rounded-lg shadow-card overflow-x-auto">
+        <>
+          <p className="md:hidden text-xs text-text-secondary mb-1.5">
+            ← Faites glisser pour voir toutes les actions →
+          </p>
+          <div className="bg-white rounded-lg shadow-card overflow-x-auto">
           <div className="min-w-[560px]">
             {accountQueue.map((item) => (
               <div
@@ -260,7 +269,8 @@ export default function AdminDashboardPage() {
               </div>
             ))}
           </div>
-        </div>
+          </div>
+        </>
       )}
       {accountQueue !== null && accountQueueTotal > accountQueue.length && (
         <p className="text-text-secondary text-xs mt-2">

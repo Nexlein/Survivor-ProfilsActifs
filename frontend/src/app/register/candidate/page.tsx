@@ -333,9 +333,6 @@ export default function CandidateRegisterPage() {
                 {isSubmitting ? "Création..." : "Créer mon compte"}
               </Button>
             </div>
-            <p className="text-text-secondary text-[11px]">
-              Texte de consentement v1.2 — horodatage enregistré à la création du compte.
-            </p>
           </div>
         )}
       </form>

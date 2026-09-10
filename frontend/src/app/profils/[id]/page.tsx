@@ -100,7 +100,7 @@ export default function PublicProfilePage() {
   const skills = profile.skills ?? [];
 
   return (
-    <main className="flex flex-col lg:flex-row gap-8 p-6 sm:p-12 max-w-5xl mx-auto">
+    <main className="flex flex-col lg:flex-row gap-8 p-6 sm:p-12 max-w-5xl mx-auto w-full">
       <aside className="flex-none w-full lg:max-w-[260px]">
         <div className="w-[110px] h-[110px] rounded-full bg-border mx-auto mb-3 overflow-hidden">
           {resolveAvatarUrl(profile.avatarUrl) && (

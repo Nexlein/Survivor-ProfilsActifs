@@ -19,7 +19,7 @@ export default function DesignSystemPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <main className="flex flex-col gap-12 p-6 sm:p-12 max-w-3xl mx-auto">
+    <main className="flex flex-col gap-12 p-6 sm:p-12 max-w-3xl mx-auto w-full">
       <h1>Design System</h1>
 
       <section className="flex flex-col gap-4">
