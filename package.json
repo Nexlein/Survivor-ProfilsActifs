@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "setup": "npm install && npm run db:start && cd backend && npx prisma db push && npx prisma generate",
-    "db:start": "docker compose -f backend/docker-compose.yml up -d",
+    "db:start": "docker compose -f backend/docker-compose.yml up -d --wait",
     "db:stop": "docker compose -f backend/docker-compose.yml down",
     "db:clean": "docker compose -f backend/docker-compose.yml down -v",
     "db:seed": "cd backend && npx prisma db seed",

@@ -4,6 +4,7 @@
 
 - Node.js (v18+)
 - Docker & Docker Compose (required for local PostgreSQL)
+- FFmpeg (required for local video processing and subtitle generation)
 
 ## 1. Clone Repository
 
