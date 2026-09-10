@@ -388,11 +388,14 @@ export function getInteractionStats() {
   return request<RecruiterStats | AdminInteractionStats>("/interaction/stats");
 }
 
+export type AccountModerationStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUSPENDED";
+
 export type ModerationQueueUser = {
   id: string;
   email: string;
   role: string;
   createdAt: string;
+  moderationStatus: AccountModerationStatus;
   profile: { fullName: string; avatarUrl: string | null } | null;
 };
 
@@ -403,8 +406,8 @@ export type ModerationQueuePage = {
   pageSize: number;
 };
 
-export function getModerationQueue(page = 1) {
-  return request<ModerationQueuePage>(`/admin/moderation/queue?page=${page}`);
+export function getModerationQueue(status: AccountModerationStatus = "PENDING", page = 1) {
+  return request<ModerationQueuePage>(`/admin/moderation/queue?status=${status}&page=${page}`);
 }
 
 export function approveAccount(userId: string) {

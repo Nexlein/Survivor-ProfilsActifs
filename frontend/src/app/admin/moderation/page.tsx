@@ -5,21 +5,40 @@ import Link from "next/link";
 import { Button, buttonClasses } from "@/components/ui/Button";
 import { VideoPlayer } from "@/components/profile/VideoPlayer";
 import {
+  AccountModerationStatus,
+  ModerationQueueUser,
   ModerationVideo,
+  approveAccount,
+  getModerationQueue,
   getModerationVideoFeed,
   moderateVideo,
+  rejectAccount,
   resolveAvatarUrl,
+  suspendAccount,
   translateApiError,
 } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
 import { useRequireAuth } from "@/lib/use-require-auth";
 
-type StatusFilter = "PENDING" | "APPROVED" | "REJECTED";
+type VideoStatusFilter = "PENDING" | "APPROVED" | "REJECTED";
+type Resource = "videos" | "accounts";
 
-const STATUS_LABELS: Record<StatusFilter, string> = {
+const RESOURCE_LABELS: Record<Resource, string> = {
+  videos: "Vidéos",
+  accounts: "Comptes",
+};
+
+const VIDEO_STATUS_LABELS: Record<VideoStatusFilter, string> = {
   PENDING: "En attente",
   APPROVED: "Approuvées",
   REJECTED: "Rejetées",
+};
+
+const ACCOUNT_STATUS_LABELS: Record<AccountModerationStatus, string> = {
+  PENDING: "En attente",
+  APPROVED: "Approuvés",
+  REJECTED: "Rejetés",
+  SUSPENDED: "Bannis",
 };
 
 const TYPE_LABELS: Record<"LINK" | "UPLOAD", string> = {
@@ -31,12 +50,29 @@ const TYPE_LABELS: Record<"LINK" | "UPLOAD", string> = {
 // exactly regardless of content length (a flex row with per-cell min-widths
 // drifts as soon as one cell's content is wider than its neighbour's).
 const ROW_GRID = "grid grid-cols-[40px_minmax(140px,1.4fr)_120px_100px_1fr] gap-3 items-center px-4";
+const ACCOUNT_ROW_GRID = "grid grid-cols-[40px_minmax(160px,1.4fr)_120px_1fr] gap-3 items-center px-4";
 
-export default function ModerationPage() {
-  usePageTitle("Modération des vidéos");
-  const authReady = useRequireAuth(["ADMIN"]);
+function ResourceSwitcher({ resource, onChange }: { resource: Resource; onChange: (r: Resource) => void }) {
+  return (
+    <div className="flex gap-2 flex-wrap mb-5">
+      {(Object.keys(RESOURCE_LABELS) as Resource[]).map((r) => (
+        <button
+          key={r}
+          type="button"
+          onClick={() => onChange(r)}
+          className={`rounded-md px-4 py-2 text-sm font-semibold font-heading border ${
+            resource === r ? "bg-primary text-white border-primary" : "bg-white text-text border-border"
+          }`}
+        >
+          {RESOURCE_LABELS[r]}
+        </button>
+      ))}
+    </div>
+  );
+}
 
-  const [status, setStatus] = useState<StatusFilter>("PENDING");
+function VideoModerationView() {
+  const [status, setStatus] = useState<VideoStatusFilter>("PENDING");
   const [page, setPage] = useState(1);
   const [videos, setVideos] = useState<ModerationVideo[] | null>(null);
   const [total, setTotal] = useState(0);
@@ -49,7 +85,7 @@ export default function ModerationPage() {
 
   // Changing the status filter re-queries from page 1 — a page number
   // that made sense for one status queue rarely exists in another.
-  function changeStatus(next: StatusFilter) {
+  function changeStatus(next: VideoStatusFilter) {
     setStatus(next);
     setPage(1);
   }
@@ -104,14 +140,10 @@ export default function ModerationPage() {
     }
   }
 
-  if (!authReady) return null;
-
   return (
-    <main className="px-6 py-8">
-      <h2 className="mb-4">Modération des vidéos</h2>
-
+    <>
       <div className="flex gap-2 flex-wrap mb-4">
-        {(Object.keys(STATUS_LABELS) as StatusFilter[]).map((s) => (
+        {(Object.keys(VIDEO_STATUS_LABELS) as VideoStatusFilter[]).map((s) => (
           <button
             key={s}
             type="button"
@@ -120,7 +152,7 @@ export default function ModerationPage() {
               status === s ? "border-primary text-primary bg-bg-secondary" : "border-border text-text-secondary"
             }`}
           >
-            {STATUS_LABELS[s]}
+            {VIDEO_STATUS_LABELS[s]}
           </button>
         ))}
       </div>
@@ -175,28 +207,28 @@ export default function ModerationPage() {
                   >
                     {expandedId === video.id ? "Masquer" : "Voir"}
                   </Button>
-                  {status === "PENDING" && (
-                    <>
-                      <Button
-                        variant="success"
-                        size="sm"
-                        disabled={pendingActionId === video.id}
-                        onClick={() => handleApprove(video.id)}
-                      >
-                        Approuver
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        disabled={pendingActionId === video.id}
-                        onClick={() => {
-                          setRejectingId(rejectingId === video.id ? null : video.id);
-                          setReason("");
-                        }}
-                      >
-                        Rejeter
-                      </Button>
-                    </>
+                  {(status === "PENDING" || status === "REJECTED") && (
+                    <Button
+                      variant="success"
+                      size="sm"
+                      disabled={pendingActionId === video.id}
+                      onClick={() => handleApprove(video.id)}
+                    >
+                      {status === "REJECTED" ? "Réapprouver" : "Approuver"}
+                    </Button>
+                  )}
+                  {(status === "PENDING" || status === "APPROVED") && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      disabled={pendingActionId === video.id}
+                      onClick={() => {
+                        setRejectingId(rejectingId === video.id ? null : video.id);
+                        setReason("");
+                      }}
+                    >
+                      Rejeter
+                    </Button>
                   )}
                 </div>
               </div>
@@ -240,12 +272,7 @@ export default function ModerationPage() {
 
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4 mt-8">
-          <Button
-            variant="secondary"
-            size="sm"
-            disabled={page === 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-          >
+          <Button variant="secondary" size="sm" disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
             ← Précédent
           </Button>
           <span className="text-sm text-text-secondary">
@@ -261,6 +288,207 @@ export default function ModerationPage() {
           </Button>
         </div>
       )}
+    </>
+  );
+}
+
+function AccountModerationView() {
+  const [status, setStatus] = useState<AccountModerationStatus>("PENDING");
+  const [page, setPage] = useState(1);
+  const [accounts, setAccounts] = useState<ModerationQueueUser[] | null>(null);
+  const [total, setTotal] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
+  const [error, setError] = useState<string | null>(null);
+  const [pendingActionId, setPendingActionId] = useState<string | null>(null);
+
+  function changeStatus(next: AccountModerationStatus) {
+    setStatus(next);
+    setPage(1);
+  }
+
+  useEffect(() => {
+    let cancelled = false;
+    setAccounts(null);
+    setError(null);
+    getModerationQueue(status, page)
+      .then((res) => {
+        if (cancelled) return;
+        setAccounts(res.users);
+        setTotal(res.total);
+        setPageSize(res.pageSize);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(translateApiError(err));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [status, page]);
+
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  // Every action moves the account out of whichever status queue is
+  // currently being viewed, so the row is simply dropped from the list
+  // rather than re-fetched.
+  async function runAction(id: string, action: () => Promise<unknown>) {
+    setPendingActionId(id);
+    try {
+      await action();
+      setAccounts((prev) => prev?.filter((u) => u.id !== id) ?? prev);
+      setTotal((t) => Math.max(0, t - 1));
+    } catch (err) {
+      setError(translateApiError(err));
+    } finally {
+      setPendingActionId(null);
+    }
+  }
+
+  function handleBan(id: string, name: string) {
+    if (!window.confirm(`Bannir ${name} ? Son profil ne sera plus visible publiquement.`)) return;
+    runAction(id, () => suspendAccount(id));
+  }
+
+  return (
+    <>
+      <div className="flex gap-2 flex-wrap mb-4">
+        {(Object.keys(ACCOUNT_STATUS_LABELS) as AccountModerationStatus[]).map((s) => (
+          <button
+            key={s}
+            type="button"
+            onClick={() => changeStatus(s)}
+            className={`border rounded-md px-3 py-2 text-[13px] ${
+              status === s ? "border-primary text-primary bg-bg-secondary" : "border-border text-text-secondary"
+            }`}
+          >
+            {ACCOUNT_STATUS_LABELS[s]}
+          </button>
+        ))}
+      </div>
+
+      {error && (
+        <p role="alert" className="text-error mb-4">
+          {error}
+        </p>
+      )}
+
+      {accounts === null && !error && <p className="text-text-secondary">Chargement...</p>}
+
+      {accounts !== null && accounts.length === 0 && (
+        <p className="text-text-secondary">Aucun compte dans cette catégorie.</p>
+      )}
+
+      <div className="bg-white rounded-lg shadow-card overflow-x-auto">
+        <div className="min-w-[680px]">
+          {accounts && accounts.length > 0 && (
+            <div className={`${ACCOUNT_ROW_GRID} py-2 text-xs font-bold text-text-secondary border-b border-border`}>
+              <div />
+              <div>CANDIDAT</div>
+              <div>DATE</div>
+              <div>ACTIONS</div>
+            </div>
+          )}
+          {accounts?.map((account) => (
+            <div key={account.id} className="border-b border-border last:border-b-0">
+              <div className={`${ACCOUNT_ROW_GRID} py-3 text-[13px]`}>
+                {account.profile?.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={resolveAvatarUrl(account.profile.avatarUrl)}
+                    alt=""
+                    className="w-7 h-7 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-border" />
+                )}
+                <div className="font-semibold text-text truncate">{account.profile?.fullName ?? account.email}</div>
+                <div className="text-text-secondary">{new Date(account.createdAt).toLocaleDateString("fr-FR")}</div>
+                <div className="flex gap-2 flex-wrap">
+                  <Link href={`/profils/${account.id}`} className={buttonClasses("secondary", "sm")}>
+                    Voir le profil
+                  </Link>
+                  {status === "PENDING" && (
+                    <>
+                      <Button
+                        variant="success"
+                        size="sm"
+                        disabled={pendingActionId === account.id}
+                        onClick={() => runAction(account.id, () => approveAccount(account.id))}
+                      >
+                        Valider
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        disabled={pendingActionId === account.id}
+                        onClick={() => runAction(account.id, () => rejectAccount(account.id))}
+                      >
+                        Rejeter
+                      </Button>
+                    </>
+                  )}
+                  {status === "APPROVED" && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      disabled={pendingActionId === account.id}
+                      onClick={() => handleBan(account.id, account.profile?.fullName ?? account.email)}
+                    >
+                      Bannir
+                    </Button>
+                  )}
+                  {(status === "REJECTED" || status === "SUSPENDED") && (
+                    <Button
+                      variant="success"
+                      size="sm"
+                      disabled={pendingActionId === account.id}
+                      onClick={() => runAction(account.id, () => approveAccount(account.id))}
+                    >
+                      Réactiver
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <Button variant="secondary" size="sm" disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+            ← Précédent
+          </Button>
+          <span className="text-sm text-text-secondary">
+            Page {page} sur {totalPages}
+          </span>
+          <Button
+            variant="secondary"
+            size="sm"
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          >
+            Suivant →
+          </Button>
+        </div>
+      )}
+    </>
+  );
+}
+
+export default function ModerationPage() {
+  usePageTitle("Modération");
+  const authReady = useRequireAuth(["ADMIN"]);
+  const [resource, setResource] = useState<Resource>("videos");
+
+  if (!authReady) return null;
+
+  return (
+    <main className="px-6 py-8">
+      <h2 className="mb-4">Modération</h2>
+
+      <ResourceSwitcher resource={resource} onChange={setResource} />
+
+      {resource === "videos" ? <VideoModerationView /> : <AccountModerationView />}
     </main>
   );
 }

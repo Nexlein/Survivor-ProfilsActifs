@@ -1,20 +1,32 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma';
 
+const VALID_MODERATION_STATUSES = ['PENDING', 'APPROVED', 'REJECTED', 'SUSPENDED'];
+
 /**
- * Controller: List accounts pending moderation
+ * Controller: List candidate accounts by moderation status
  * @route GET /admin/moderation/queue
  * @access Private (ADMIN)
+ *
+ * Defaults to PENDING (the original behavior) — pass ?status=APPROVED to
+ * find accounts eligible for a ban, or REJECTED/SUSPENDED to find ones
+ * eligible for reactivation. Scoped to JOB_SEEKER: RECRUITER/ADMIN accounts
+ * are always APPROVED and were never meant to appear in this queue.
  */
 export const getModerationQueue = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const requestedStatus = (req.query.status as string || 'PENDING').toUpperCase();
+        const status = VALID_MODERATION_STATUSES.includes(requestedStatus) ? requestedStatus : 'PENDING';
+
         const page = Math.max(1, parseInt(req.query.page as string) || 1);
         const pageSize = 20;
         const skip = (page - 1) * pageSize;
 
+        const where = { moderationStatus: status as any, role: 'JOB_SEEKER' as const };
+
         const [users, total] = await Promise.all([
             prisma.user.findMany({
-                where: { moderationStatus: 'PENDING' },
+                where,
                 take: pageSize,
                 skip,
                 orderBy: { createdAt: 'asc' },
@@ -23,10 +35,11 @@ export const getModerationQueue = async (req: Request, res: Response, next: Next
                     email: true,
                     role: true,
                     createdAt: true,
+                    moderationStatus: true,
                     profile: { select: { fullName: true, avatarUrl: true } },
                 },
             }),
-            prisma.user.count({ where: { moderationStatus: 'PENDING' } }),
+            prisma.user.count({ where }),
         ]);
 
         return res.status(200).json({ users, total, page, pageSize });

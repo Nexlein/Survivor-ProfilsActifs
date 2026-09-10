@@ -216,6 +216,9 @@ export default function AdminDashboardPage() {
 
       <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
         <h3>Comptes en attente de validation</h3>
+        <Link href="/admin/moderation" className={buttonClasses("secondary", "sm")}>
+          Voir tout
+        </Link>
       </div>
 
       {accountQueueError && (
