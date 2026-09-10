@@ -123,8 +123,6 @@ export default function AdminDashboardPage() {
     { value: stats ? String(stats.interactionsThisMonth) : "—", label: "Interactions ce mois" },
   ];
 
-  const maxWeeklySignups = Math.max(1, ...(stats?.weeklySignups.map((w) => w.count) ?? [1]));
-
   if (!authReady) return null;
 
   return (
@@ -149,17 +147,6 @@ export default function AdminDashboardPage() {
             <div className="text-xl font-extrabold text-primary font-heading">{kpi.value}</div>
             <div className="text-xs text-text-secondary">{kpi.label}</div>
           </div>
-        ))}
-      </div>
-
-      <h3 className="mb-3 hidden md:block">Nouvelles inscriptions par semaine</h3>
-      <div className="hidden md:flex items-end gap-2.5 h-24 mb-8">
-        {(stats?.weeklySignups ?? Array.from({ length: 7 }, () => ({ count: 0 }))).map((week, i) => (
-          <div
-            key={i}
-            className="w-7 bg-primary"
-            style={{ height: `${(week.count / maxWeeklySignups) * 100}%` }}
-          />
         ))}
       </div>
 
