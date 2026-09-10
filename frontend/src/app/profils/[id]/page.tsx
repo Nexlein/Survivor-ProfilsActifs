@@ -169,7 +169,7 @@ export default function PublicProfilePage() {
                     <div className="flex flex-col gap-3">
                       {isOwner && currentVideo.status === "PENDING" && (
                         <p className="bg-bg-secondary text-text-secondary text-sm rounded-md px-3.5 py-2.5">
-                          En attente de modération — seul vous pouvez la voir pour linstant.
+                          En attente de modération
                         </p>
                       )}
                       {isOwner && currentVideo.status === "REJECTED" && (
