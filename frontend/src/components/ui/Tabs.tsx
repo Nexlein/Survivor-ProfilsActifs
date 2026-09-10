@@ -63,7 +63,6 @@ export function Tabs({ tabs, defaultTabId, onChange }: TabsProps) {
               id={`tab-${tab.id}`}
               aria-selected={isActive}
               aria-controls={`tabpanel-${tab.id}`}
-              tabIndex={isActive ? 0 : -1}
               onClick={() => selectTab(tab.id)}
               onKeyDown={(event) => handleKeyDown(event, index)}
               className={`px-4 py-2.5 border-b-2 font-bold text-sm font-heading whitespace-nowrap ${
