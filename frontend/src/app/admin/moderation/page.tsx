@@ -82,6 +82,12 @@ function VideoModerationView() {
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [reason, setReason] = useState("");
   const [pendingActionId, setPendingActionId] = useState<string | null>(null);
+  // No separate isLoading state to set synchronously on every filter/page
+  // change — derived instead from whether the currently-rendered data
+  // matches the requested query (same pattern as profils/page.tsx).
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const currentKey = `${status}:${page}`;
+  const isLoading = loadedKey !== currentKey;
 
   // Changing the status filter re-queries from page 1 — a page number
   // that made sense for one status queue rarely exists in another.
@@ -92,17 +98,19 @@ function VideoModerationView() {
 
   useEffect(() => {
     let cancelled = false;
-    setVideos(null);
-    setError(null);
     getModerationVideoFeed(status, page)
       .then((res) => {
         if (cancelled) return;
         setVideos(res.videos);
         setTotal(res.total);
         setPageSize(res.pageSize);
+        setError(null);
+        setLoadedKey(`${status}:${page}`);
       })
       .catch((err) => {
-        if (!cancelled) setError(translateApiError(err));
+        if (cancelled) return;
+        setError(translateApiError(err));
+        setLoadedKey(`${status}:${page}`);
       });
     return () => {
       cancelled = true;
@@ -163,15 +171,15 @@ function VideoModerationView() {
         </p>
       )}
 
-      {videos === null && !error && <p className="text-text-secondary">Chargement...</p>}
+      {isLoading && !error && <p className="text-text-secondary">Chargement...</p>}
 
-      {videos !== null && videos.length === 0 && (
+      {!isLoading && videos !== null && videos.length === 0 && (
         <p className="text-text-secondary">Aucune vidéo dans cette catégorie.</p>
       )}
 
       <div className="bg-white rounded-lg shadow-card overflow-x-auto">
         <div className="min-w-[820px]">
-          {videos && videos.length > 0 && (
+          {!isLoading && videos && videos.length > 0 && (
             <div className={`${ROW_GRID} py-2 text-xs font-bold text-text-secondary border-b border-border`}>
               <div />
               <div>CANDIDAT</div>
@@ -180,7 +188,7 @@ function VideoModerationView() {
               <div>ACTIONS</div>
             </div>
           )}
-          {videos?.map((video) => (
+          {!isLoading && videos?.map((video) => (
             <div key={video.id} className="border-b border-border last:border-b-0">
               <div className={`${ROW_GRID} py-3 text-[13px]`}>
                 {video.profile.avatarUrl ? (
@@ -300,6 +308,12 @@ function AccountModerationView() {
   const [pageSize, setPageSize] = useState(20);
   const [error, setError] = useState<string | null>(null);
   const [pendingActionId, setPendingActionId] = useState<string | null>(null);
+  // No separate isLoading state to set synchronously on every filter/page
+  // change — derived instead from whether the currently-rendered data
+  // matches the requested query (same pattern as profils/page.tsx).
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const currentKey = `${status}:${page}`;
+  const isLoading = loadedKey !== currentKey;
 
   function changeStatus(next: AccountModerationStatus) {
     setStatus(next);
@@ -308,17 +322,19 @@ function AccountModerationView() {
 
   useEffect(() => {
     let cancelled = false;
-    setAccounts(null);
-    setError(null);
     getModerationQueue(status, page)
       .then((res) => {
         if (cancelled) return;
         setAccounts(res.users);
         setTotal(res.total);
         setPageSize(res.pageSize);
+        setError(null);
+        setLoadedKey(`${status}:${page}`);
       })
       .catch((err) => {
-        if (!cancelled) setError(translateApiError(err));
+        if (cancelled) return;
+        setError(translateApiError(err));
+        setLoadedKey(`${status}:${page}`);
       });
     return () => {
       cancelled = true;
@@ -371,15 +387,15 @@ function AccountModerationView() {
         </p>
       )}
 
-      {accounts === null && !error && <p className="text-text-secondary">Chargement...</p>}
+      {isLoading && !error && <p className="text-text-secondary">Chargement...</p>}
 
-      {accounts !== null && accounts.length === 0 && (
+      {!isLoading && accounts !== null && accounts.length === 0 && (
         <p className="text-text-secondary">Aucun compte dans cette catégorie.</p>
       )}
 
       <div className="bg-white rounded-lg shadow-card overflow-x-auto">
         <div className="min-w-[680px]">
-          {accounts && accounts.length > 0 && (
+          {!isLoading && accounts && accounts.length > 0 && (
             <div className={`${ACCOUNT_ROW_GRID} py-2 text-xs font-bold text-text-secondary border-b border-border`}>
               <div />
               <div>CANDIDAT</div>
@@ -387,7 +403,7 @@ function AccountModerationView() {
               <div>ACTIONS</div>
             </div>
           )}
-          {accounts?.map((account) => (
+          {!isLoading && accounts?.map((account) => (
             <div key={account.id} className="border-b border-border last:border-b-0">
               <div className={`${ACCOUNT_ROW_GRID} py-3 text-[13px]`}>
                 {account.profile?.avatarUrl ? (
