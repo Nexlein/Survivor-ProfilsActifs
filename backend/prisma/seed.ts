@@ -150,7 +150,7 @@ async function main() {
           create: [
             {
               type: 'UPLOAD',
-              providerId: i === 1 ? 'seed-demo-video-1' : `seed-dummy-video-${i}`,
+              providerId: 'seed-demo-video-1',
               providerName: 'local',
               consentDate: new Date(),
               consentTextVersion: 'v1.0 - 2026-09-01',
