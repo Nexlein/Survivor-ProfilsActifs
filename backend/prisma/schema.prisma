@@ -40,14 +40,14 @@ enum ModerationStatus {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  passwordHash String
-  role         Role
-  dateOfBirth  DateTime? // Legal: Age verification (16-18 rules)
+  id               String           @id @default(uuid())
+  email            String           @unique
+  passwordHash     String
+  role             Role
+  dateOfBirth      DateTime? // Legal: Age verification (16-18 rules)
   moderationStatus ModerationStatus @default(APPROVED)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
   profile      Profile?
   interactions Interaction[] @relation("RecruiterInteractions")
@@ -164,7 +164,7 @@ model QuestionnaireResult {
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   totalScore            Int
-  hasCertificationBadge Boolean @default(false)
+  hasCertificationBadge Boolean  @default(false)
   questionnaireVersion  Int      @default(1)
   completedAt           DateTime @default(now())
 }
